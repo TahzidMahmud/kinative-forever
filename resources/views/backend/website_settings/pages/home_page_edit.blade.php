@@ -122,7 +122,7 @@
 						<label class="col-md-3 col-from-label">{{translate('Title')}}</label>
 						<div class="col-md-8">
 							<div class="form-group">
-								<input type="hidden" name="types[][{{ $lang }}]" value="home_about_title">
+								<input type="hidden" name="types[][{{ $lang }}]" value="project_about_title">
 								<input type="text" class="form-control" placeholder="" name="home_about_title" value="{{ get_setting('home_about_title', null, $lang) }}">
 							</div>
 						</div>
@@ -343,6 +343,324 @@
 				</form>
 			</div>
 		</div>
+
+        {{-- Customer review --}}
+		<div class="card">
+			<div class="card-header">
+				<h6 class="mb-0">{{ translate('Product Features') }}</h6>
+			</div>
+			<div class="card-body">
+				<form action="{{ route('business_settings.update') }}" method="POST" enctype="multipart/form-data">
+					@csrf
+
+					<div class="form-group">
+						<label>{{ translate('Reviews') }}</label>
+						<div class="customer-review-target">
+							<input type="hidden" name="types[]" value="customer_reviews_image">
+							<input type="hidden" name="types[]" value="customer_reviews_name">
+							<input type="hidden" name="types[]" value="customer_reviews_title">
+							<input type="hidden" name="types[]" value="customer_reviews_details">
+							@if (get_setting('customer_reviews_image') != null)
+								@foreach (json_decode(get_setting('customer_reviews_image'), true) as $key => $value)
+									<div class="row gutters-5">
+										<div class="col-lg-5">
+											<div class="form-group">
+												<div class="input-group" data-toggle="aizuploader" data-type="image">
+					                                <div class="input-group-prepend">
+					                                    <div class="input-group-text bg-soft-secondary font-weight-medium">{{ translate('Browse')}}</div>
+					                                </div>
+					                                <div class="form-control file-amount">{{ translate('Choose File') }}</div>
+													<input type="hidden" name="types[]" value="customer_reviews_image">
+					                                <input type="hidden" name="customer_reviews_image[]" class="selected-files" value="{{ json_decode(get_setting('customer_reviews_image'), true)[$key] }}">
+					                            </div>
+					                            <div class="file-preview box sm">
+					                            </div>
+				                            </div>
+										</div>
+										{{-- <div class="col-lg-2">
+											<div class="form-group">
+												<input type="hidden" name="types[]" value="customer_reviews_name">
+												<input type="text" class="form-control" placeholder="{{ translate('Name') }}" name="customer_reviews_name[]" value="{{ json_decode(get_setting('customer_reviews_name'), true)[$key] }}">
+											</div>
+										</div> --}}
+										<div class="col-lg-5">
+											<div class="form-group">
+												<input type="hidden" name="types[]" value="customer_reviews_title">
+												<input type="text" class="form-control" placeholder="{{ translate('Title') }}" name="customer_reviews_title[]" value="{{ json_decode(get_setting('customer_reviews_title'), true)[$key] }}">
+											</div>
+										</div>
+										{{-- <div class="col-lg">
+											<div class="form-group">
+												<input type="hidden" name="types[]" value="customer_reviews_details">
+												<input type="text" class="form-control" placeholder="{{ translate('Details') }}" name="customer_reviews_details[]" value="{{ json_decode(get_setting('customer_reviews_details'), true)[$key] }}">
+											</div>
+										</div> --}}
+										<div class="col-auto">
+											<button type="button" class="mt-1 btn btn-icon btn-circle btn-sm btn-soft-danger" data-toggle="remove-parent" data-parent=".row">
+												<i class="las la-times"></i>
+											</button>
+										</div>
+									</div>
+								@endforeach
+							@endif
+						</div>
+
+						<button
+							type="button"
+							class="btn btn-soft-secondary btn-sm"
+							data-toggle="add-more"
+							data-content='
+							<div class="row gutters-5">
+								<div class="col-lg-5">
+									<div class="form-group">
+										<div class="input-group" data-toggle="aizuploader" data-type="image">
+			                                <div class="input-group-prepend">
+			                                    <div class="input-group-text bg-soft-secondary font-weight-medium">{{ translate('Browse')}}</div>
+			                                </div>
+			                                <div class="form-control file-amount">{{ translate('Choose File') }}</div>
+											<input type="hidden" name="types[]" value="customer_reviews_image">
+			                                <input type="hidden" name="customer_reviews_image[]" class="selected-files" >
+			                            </div>
+			                            <div class="file-preview box sm">
+			                            </div>
+		                            </div>
+								</div>
+								{{-- <div class="col-lg-2">
+									<div class="form-group">
+										<input type="hidden" name="types[]" value="customer_reviews_name">
+										<input type="text" class="form-control" placeholder="{{ translate('Title') }}" name="customer_reviews_name[]" >
+									</div>
+								</div> --}}
+								<div class="col-lg-5">
+									<div class="form-group">
+										<input type="hidden" name="types[]" value="customer_reviews_title">
+										<input type="text" class="form-control" placeholder="{{ translate('Title') }}" name="customer_reviews_title[]" >
+									</div>
+								</div>
+								{{-- <div class="col-lg">
+									<div class="form-group">
+										<input type="hidden" name="types[]" value="customer_reviews_details">
+										<input type="text" class="form-control" placeholder="{{ translate('Details') }}" name="customer_reviews_details[]" >
+									</div>
+								</div> --}}
+								<div class="col-auto">
+									<button type="button" class="mt-1 btn btn-icon btn-circle btn-sm btn-soft-danger" data-toggle="remove-parent" data-parent=".row">
+										<i class="las la-times"></i>
+									</button>
+								</div>
+							</div>'
+							data-target=".customer-review-target">
+							{{ translate('Add New') }}
+						</button>
+					</div>
+
+					<div class="text-right">
+						<button type="submit" class="btn btn-primary">{{ translate('Update') }}</button>
+					</div>
+				</form>
+			</div>
+		</div>
+
+        {{-- Our Projects --}}
+        <div class="card">
+			<div class="card-header">
+				<h6 class="mb-0">{{ translate('Our Projects') }}</h6>
+			</div>
+			<div class="card-body">
+				<form action="{{ route('business_settings.update') }}" method="POST" enctype="multipart/form-data">
+					@csrf
+	                <div class="form-group row">
+						<label class="col-md-2 col-from-label">{{translate('Title')}}</label>
+						<div class="col-md-4">
+							<div class="form-group">
+								<input type="hidden" name="types[][{{ $lang }}]" value="project_about_title">
+								<input type="text" class="form-control" placeholder="" name="project_about_title" value="{{ get_setting('project_about_title', null, $lang) }}">
+							</div>
+						</div>
+                        <label class="col-md-2 col-from-label">{{translate('Link')}}</label>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <input type="hidden" name="types[]" value="project_about_link">
+                                    <input type="text" class="form-control" placeholder="http://" name="project_about_link" value="{{get_setting('project_about_link') }}">
+                            </div>
+                        </div>
+					</div>
+                    <div class="form-group">
+                        <label>{{ translate('Description') }}</label>
+                        <input type="hidden" name="types[][{{ $lang }}]" value="project_about">
+                        <textarea class="aiz-text-editor form-control" name="project_about" data-buttons='[["font", ["bold", "underline", "italic"]],["insert", ["link"]],["para", ["ul", "ol"]],["view", ["undo","redo"]]]' placeholder="Type.." data-min-height="150">
+                            @php echo get_setting('project_about', null, $lang); @endphp
+                        </textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label>{{ translate('Project Details') }}</label>
+                        <div class="home-banner4-target">
+                            <input type="hidden" name="types[]" value="project_text_images">
+                            <input type="hidden" name="types[][{{ $lang }}]" value="project_text_titles">
+
+                            <input type="hidden" name="types[]" value="project_text_links">
+                        </div>
+                        @if (get_setting('project_text_images') != null)
+                            @foreach (json_decode(get_setting('project_text_images'), true) as $key => $value)
+                                <div class="row gutters-5">
+                                    <div class="col-xl">
+                                        <div class="form-group">
+                                            <div class="input-group " data-toggle="aizuploader" data-type="image">
+                                                <div class="input-group-prepend">
+                                                    <div class="input-group-text bg-soft-secondary font-weight-medium">{{ translate('Browse') }}</div>
+                                                </div>
+                                                <div class="form-control file-amount">{{ translate('Choose File') }}</div>
+                                                <input type="hidden" name="project_text_images[]" class="selected-files" value="{{ $value }}">
+                                            </div>
+                                            <div class="file-preview"></div>
+                                        </div>
+                                    </div>
+                                    <div class="col-xl">
+                                        <div class="form-group">
+                                            <input type="text" class="form-control" placeholder="{{ translate('Title') }}" name="project_text_titles[]" value="{{ json_decode(get_setting('project_text_titles',null,$lang),true)[$key] }}">
+                                        </div>
+                                    </div>
+                                    <div class="col-xl">
+                                        <div class="form-group">
+                                            <input type="text" class="form-control" placeholder="{{ translate('Link') }}" name="project_text_links[]" value="{{ json_decode(get_setting('project_text_links'),true)[$key] }}">
+                                        </div>
+                                    </div>
+
+                                    <div class="col-auto">
+                                        <button type="button" class="mt-1 btn btn-icon btn-circle btn-sm btn-soft-danger" data-toggle="remove-parent" data-parent=".row">
+                                            <i class="las la-times"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            @endforeach
+                        @endif
+                        <button
+                            type="button"
+                            class="btn btn-soft-secondary btn-sm"
+                            data-toggle="add-more"
+                            data-content='
+                                    <div class="row gutters-5">
+                                        <div class="col-xl">
+                                            <div class="form-group">
+                                                <div class="input-group " data-toggle="aizuploader" data-type="image">
+                                                    <div class="input-group-prepend">
+                                                        <div class="input-group-text bg-soft-secondary font-weight-medium">{{ translate('Browse') }}</div>
+                                                    </div>
+                                                    <div class="form-control file-amount">{{ translate('Choose File') }}</div>
+                                                    <input type="hidden" name="project_text_images[]" class="selected-files">
+                                                </div>
+                                                <div class="file-preview"></div>
+                                            </div>
+                                        </div>
+                                        <div class="col-xl">
+                                            <div class="form-group">
+                                                <input type="text" class="form-control" placeholder="{{ translate('Title') }}" name="project_text_titles[]">
+                                            </div>
+                                        </div>
+                                        <div class="col-xl">
+                                            <div class="form-group">
+                                                <input type="text" class="form-control" placeholder="{{ translate('Link') }}" name="project_text_links[]">
+                                            </div>
+                                        </div>
+
+                                        <div class="col-auto">
+                                            <button type="button" class="mt-1 btn btn-icon btn-circle btn-sm btn-soft-danger" data-toggle="remove-parent" data-parent=".row">
+                                                <i class="las la-times"></i>
+                                            </button>
+                                        </div>
+                                    </div>'
+                            data-target=".home-banner4-target">
+                            {{ translate('Add New') }}
+                        </button>
+                    </div>
+
+					<div class="text-right">
+						<button type="submit" class="btn btn-primary">{{ translate('Update') }}</button>
+					</div>
+				</form>
+			</div>
+		</div>
+
+        <div class="card">
+            <div class="card-header">
+                <h6 class="mb-0">{{ translate('Frequently Asked Questions & Answers') }}</h6>
+            </div>
+            <div class="card-body">
+				<form action="{{ route('business_settings.update') }}" method="POST" enctype="multipart/form-data">
+					@csrf
+                    <div class="form-group">
+
+                        <div class="home-banner6-target">
+
+                            <input type="hidden" name="types[][{{ $lang }}]" value="faq_questions">
+                            <input type="hidden" name="types[][{{ $lang }}]" value="faq_answers">
+
+                        </div>
+                        @if (get_setting('faq_questions') != null)
+                            @foreach (json_decode(get_setting('faq_questions'), true) as $key => $value)
+                                <div class="row gutters-5">
+
+                                    <div class="col-xl">
+                                        <div class="form-group">
+                                            <input type="text" class="form-control" placeholder="{{ translate('Title') }}" name="faq_questions[]" value="{{ json_decode(get_setting('faq_questions',null,$lang),true)[$key] }}">
+                                        </div>
+                                    </div>
+
+                                    <div class="col-xl">
+                                        <div class="form-group">
+                                            <textarea class="form-control" placeholder="" name="faq_answers[]">{{ json_decode(get_setting('faq_answers',null,$lang),true)[$key] }}</textarea>
+                                        </div>
+                                    </div>
+                                    <div class="col-auto">
+                                        <button type="button" class="mt-1 btn btn-icon btn-circle btn-sm btn-soft-danger" data-toggle="remove-parent" data-parent=".row">
+                                            <i class="las la-times"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            @endforeach
+                        @endif
+                        <button
+                            type="button"
+                            class="btn btn-soft-secondary btn-sm"
+                            data-toggle="add-more"
+                            data-content='
+                                    <div class="row gutters-5">
+
+                                        <div class="col-xl">
+                                            <div class="form-group">
+                                                <input type="text" class="form-control" placeholder="{{ translate('Title') }}" name="faq_questions[]">
+                                            </div>
+                                        </div>
+
+                                        <div class="col-xl">
+                                            <div class="form-group">
+                                                <textarea class="form-control" placeholder="" name="faq_answers[]"></textarea>
+                                            </div>
+                                        </div>
+                                        <div class="col-auto">
+                                            <button type="button" class="mt-1 btn btn-icon btn-circle btn-sm btn-soft-danger" data-toggle="remove-parent" data-parent=".row">
+                                                <i class="las la-times"></i>
+                                            </button>
+                                        </div>
+                                    </div>'
+                            data-target=".home-banner6-target">
+                            {{ translate('Add New') }}
+                        </button>
+                    </div>
+
+					<div class="text-right">
+						<button type="submit" class="btn btn-primary">{{ translate('Update') }}</button>
+					</div>
+				</form>
+			</div>
+        </div>
+
+
+
+
+
+
 	</div>
 </div>
 

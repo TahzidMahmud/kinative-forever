@@ -97,6 +97,78 @@
     </section>
 
 
+    {{-- project about --}}
+   <div class="container">
+    <div class="row my-5 py-5 ">
+        <div class="col-md-5 d-flex align-items-center">
+           <div>
+            <h2 class="text-uppercase text-alter-6 fs-18 fw-700">
+                <a href="{{ get_setting('project_about_link') }}"  class="d-inline-block text-reset">{{ get_setting('project_about_title',null,App::getLocale()) }}</a>
+            </h2>
+            <div class="lh-1-9 my-4 mr-1 text-justify">{{ get_setting('project_about',null,App::getLocale()) }}</div>
+            <a href="{{ json_decode(get_setting('project_about_link'),true) }}"  class="btn btn-primary text-uppercase btn-md fs-12 fw-600 " style="border-radius: 0px;">{{ translate('view products') }}</a>
+           </div>
+        </div>
+        <div class="col-md-7">
+
+            <div class="aiz-carousel gutters-5  dot-small-white" data-items="3" data-xl-items="3" data-lg-items="3"  data-md-items="3" data-sm-items="2" data-xs-items="2" data-infinite='true' data-dots="true" data-autoplay="true">
+
+                @foreach (json_decode(get_setting('project_text_images'),true) as $key => $img)
+                <div class="carousel-box ">
+                    <div class="aiz-card-box has-transition hov-shadow-md mb-2 ">
+                        <div class="position-relative">
+                            <a href="{{ json_decode(get_setting('project_text_links'),true)[$key]   }}" class="d-block">
+                                <img
+                                    class="img-fit lazyload mx-auto"
+                                    src="{{ static_asset('assets/img/placeholder.jpg') }}"
+                                    data-src="{{ uploaded_asset($img) }}"
+                                    alt="{{  $product->getTranslation('name')  }}"
+                                    onerror="this.onerror=null;this.src='{{ static_asset('assets/img/placeholder.jpg') }}';"
+                                >
+                            </a>
+                        </div>
+                        <div class="px-md-3 px-2 pt-3 text-center pb-0">
+
+                            <div class="fs-13 mb-2 fw-500">
+
+                                <span class="fw-500 text-dark">{{ json_decode(get_setting('project_text_titles',null,App::getLocale()),true)[$key]  }}</span>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+                @endforeach
+            </div>
+        </div>
+    </div>
+   </div>
+
+    {{-- product features --}}
+    <div class="mb-5">
+        <div class="container">
+            <h3 class="text text-alter-6 text-center my-4">{{ translate('Our Pruduct Features') }}</h3>
+            <div class="aiz-carousel gutters-10 dot-small-black" data-items="5" data-xl-items="5" data-lg-items="5"  data-md-items="5" data-sm-items="2" data-xs-items="2" data-dots='false' data-autoplay="true" data-infinite='true'>
+                @if (get_setting('customer_reviews_image') != null)
+                    @foreach (json_decode(get_setting('customer_reviews_image'), true) as $key => $value)
+                        <div class="carousel-box">
+                            <div class="p-4 text-center">
+                                <img src="{{ uploaded_asset($value) }}" class="size-90px rounded-circle img-fit mb-3 mx-auto">
+
+
+                                <div class="my-4 fw-500 ">
+
+                                    <span class="ml-2 text-dark" >{{ json_decode(get_setting('customer_reviews_title'), true)[$key] }}</span>
+                                </div>
+                            </div>
+                        </div>
+                    @endforeach
+                @endif
+            </div>
+        </div>
+    </div>
+
+
+
     {{-- blog --}}
     <section class="py-5">
         <div class="container">
@@ -142,9 +214,70 @@
         </div>
     </section>
 
+{{-- FAQ section  --}}
+<div class="container my-5">
+    <div class="row">
+        <div class="col d-flex justify-content-center align-items-center">
+            <h5 class="text trex-center text-alter-6 text-uppercase my-3">{{ translate('Frequently Asked Questions') }}</h5>
+
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-2 d-none d-lg-block"></div>
+        <div class="col-md-8">
+            @if (get_setting('faq_questions') != null)
+            @foreach (json_decode(get_setting('faq_questions'), true) as $key => $value)
+                <div class="row">
+                   <div class="col-12  text-white accordion" style="background-color: #eb1011;" data-toggle="collapse" href="#faq-{{ $key }}" role="button" aria-expanded="false" aria-controls="faq-{{ $key }}">
+                    <a class="btn text-white fs-14 fw-600 ">{{ json_decode(get_setting('faq_questions',null,App::getLocale()),true)[$key] }}</a>
+                   </div>
+                </div>
+
+               <div class="row">
+                    <div class="col-12 p-1">
+                        <div class="collapse multi-collapse border " id="faq-{{ $key }}">
+                            <div class="card-body">
+                                {{ json_decode(get_setting('faq_answers',null,App::getLocale()),true)[$key]  }}
+                            </div>
+                        </div>
+                    </div>
+               </div>
+            @endforeach
+            @endif
+
+        </div>
+    </div>
+</div>
+
 @endsection
 
+<style>
+
+
+/* Add a background color to the button if it is clicked on (add the .active class with JS), and when you move the mouse over it (hover) */
+.active {
+  background-color:rgb(30, 141, 30)!important;
+}
+
+
+</style>
+
 @section('script')
+<script>
+    var acc = document.getElementsByClassName("accordion");
+var i;
+
+for (i = 0; i < acc.length; i++) {
+  acc[i].addEventListener("click", function() {
+
+    /* Toggle between adding and removing the "active" class,
+    to highlight the button that controls the panel */
+
+    this.classList.toggle("active");
+
+  });
+}
+</script>
     <script>
         $(document).ready(function(){
             $.post('{{ route('home.section.featured') }}', {_token:'{{ csrf_token() }}'}, function(data){
