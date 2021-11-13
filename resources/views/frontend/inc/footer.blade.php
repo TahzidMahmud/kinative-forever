@@ -229,7 +229,7 @@
             }
         }
     @endphp
-    <button class="cart-toggler cart-trigger bg-base-1 rounded-left text-center px-3 z-1021" type="button" data-toggle="class-toggle" data-target=".cart-sidebar" style="min-width: 72px">
+    {{-- <button class="cart-toggler cart-trigger bg-base-1 rounded-left text-center px-3 z-1021" type="button" data-toggle="class-toggle" data-target=".cart-sidebar" style="min-width: 72px">
         <span class="d-inline-block position-relative">
             <i class="la la-shopping-cart la-2x text-white pr-1"></i>
             <span class="absolute-top-right badge bg-white badge-inline badge-pill text-dark fw-700 mr-n1 shadow-md cart-count">
@@ -244,7 +244,7 @@
         <span class="d-block strong-700 c-base-1">
             <span class="total-price">{{ single_price($total) }}</span>
         </span>
-    </button>
+    </button> --}}
     <div class="collapse-sidebar-wrap sidebar-all sidebar-right z-1035 cart-sidebar">
         <div class="overlay overlay-fixed dark c-pointer" data-toggle="class-toggle" data-target=".cart-sidebar" data-same=".cart-trigger"></div>
         <div class="bg-white d-flex flex-column shadow-lg cart-sidebar collapse-sidebar c-scrollbar-light" id="sidebar-cart">

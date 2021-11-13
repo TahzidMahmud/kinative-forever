@@ -163,7 +163,17 @@ h1,h2,h3,h4,h5,h6,.h1,.h2,.h3,.h4,.h5,.h6,.a{
     right: 0;
     top: 100%;
 }
+.mob{
+    display: none!important;
+}
+
 @media (max-width: 767.98px) {
+    .desk{
+        display: none!important;
+    }
+    .mob{
+        display: block!important;
+    }
     .flg{
         padding-top: 3px!important;
     }

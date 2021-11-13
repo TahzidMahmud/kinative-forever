@@ -24,7 +24,7 @@
                     <img src="{{ uploaded_asset(get_setting('home_about_image')) }}" class="img-fluid w-100" alt="">
                 </div>
                 <div class="col-lg-6">
-                    <h2 class="text-uppercase text-alter-6 fs-18 fw-700">{{ get_setting('home_about_title', null, App::getLocale()) }}</h2>
+                    <h2 class="text-uppercase text-alter-6 fs-18 fw-700 my-2">{{ get_setting('home_about_title', null, App::getLocale()) }}</h2>
                     <div class="lh-1-9 my-4 mr-1 text-justify ">{{ get_setting('home_about', null, App::getLocale()) }}</div>
                     <a href="{{ json_decode(get_setting('home_about_link'), true) }}" class="btn btn-md btn-primary text-white text-uppercase" style="border-radius: 0px!important;"> learn more </a>
                 </div>
@@ -58,14 +58,30 @@
 <div class="container py-5">
     @if (get_setting('banner_text_images') != null)
             @foreach (json_decode(get_setting('banner_text_images'), true) as $key => $value)
-            <div class="row align-items-center py-4">
+            <div class="row align-items-center py-4  desk">
                 <div class="col-lg-6 @if(($key % 2) != 0) order-1 @endif">
                     <a href="{{ json_decode(get_setting('banner_text_links'),true)[$key] }}" class="d-block text-reset">
                         <img src="{{ uploaded_asset($value) }}" class="img-fluid w-100">
                     </a>
                 </div>
                 <div class="col-lg-6 my-4">
-                    <h2 class="text-uppercase text-alter-6 fs-18 fw-700">
+                    <h2 class="text-uppercase text-alter-6 fs-18 fw-700 text-truncate-2  h-35px">
+                        <a href="{{ json_decode(get_setting('banner_text_links'),true)[$key] }}"  class="d-inline-block text-reset">{{ json_decode(get_setting('banner_text_titles',null,App::getLocale()),true)[$key] }}</a>
+                    </h2>
+                    <div class="lh-1-9 my-4 mr-1 text-justify">{{ json_decode(get_setting('banner_text_details',null,App::getLocale()),true)[$key] }}</div>
+                    <a href="{{ json_decode(get_setting('banner_text_links'),true)[$key] }}"  class="btn btn-primary text-uppercase btn-md fs-12 fw-600 " style="border-radius: 0px;">{{ translate('view products') }}</a>
+                </div>
+            </div>
+            @endforeach
+            @foreach (json_decode(get_setting('banner_text_images'), true) as $key => $value)
+            <div class="row align-items-center py-4 mob">
+                <div class="col-lg-6 ">
+                    <a href="{{ json_decode(get_setting('banner_text_links'),true)[$key] }}" class="d-block text-reset">
+                        <img src="{{ uploaded_asset($value) }}" class="img-fluid w-100">
+                    </a>
+                </div>
+                <div class="col-lg-6 my-4">
+                    <h2 class="text-uppercase text-alter-6 fs-18 fw-700 text-truncate-2  h-35px">
                         <a href="{{ json_decode(get_setting('banner_text_links'),true)[$key] }}"  class="d-inline-block text-reset">{{ json_decode(get_setting('banner_text_titles',null,App::getLocale()),true)[$key] }}</a>
                     </h2>
                     <div class="lh-1-9 my-4 mr-1 text-justify">{{ json_decode(get_setting('banner_text_details',null,App::getLocale()),true)[$key] }}</div>
@@ -106,7 +122,7 @@
                 <a href="{{ get_setting('project_about_link') }}"  class="d-inline-block text-reset">{{ get_setting('project_about_title',null,App::getLocale()) }}</a>
             </h2>
             <div class="lh-1-9 my-4 mr-1 text-justify">{{ get_setting('project_about',null,App::getLocale()) }}</div>
-            <a href="{{ json_decode(get_setting('project_about_link'),true) }}"  class="btn btn-primary text-uppercase btn-md fs-12 fw-600 " style="border-radius: 0px;">{{ translate('view products') }}</a>
+            <a href="{{ json_decode(get_setting('project_about_link'),true) }}"  class="btn btn-primary text-uppercase btn-md fs-12 fw-600 mb-2" style="border-radius: 0px;">{{ translate('view products') }}</a>
            </div>
         </div>
         <div class="col-md-7">
@@ -185,7 +201,7 @@
             @if (!empty($latest_blogs))
                 <div class="row ">
                     @foreach($latest_blogs as $blog)
-                        <div class="col mb-3 overflow-hidden shadow-sm">
+                        <div class="col-md-4 col-12 mb-3 overflow-hidden shadow-sm">
                             <a href="{{ route('blog.details', $blog->slug) }}" class="">
                                 <img
                                     src="{{ static_asset('assets/img/placeholder-rect.jpg') }}"
@@ -219,7 +235,6 @@
     <div class="row">
         <div class="col d-flex justify-content-center align-items-center">
             <h5 class="text trex-center text-alter-6 text-uppercase my-3">{{ translate('Frequently Asked Questions') }}</h5>
-
         </div>
     </div>
     <div class="row">

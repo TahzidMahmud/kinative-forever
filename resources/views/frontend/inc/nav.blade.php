@@ -35,24 +35,11 @@
                </div> --}}
             </div>
             <div class="col-6 col-lg-3 d-flex justify-content-end">
-                {{-- <div class="">
-                    @auth
-                        @if(isAdmin())
-                            <a href="{{ route('admin.dashboard') }}" class="text-reset fs-12 d-inline-block">{{ translate('My Panel')}}</a>
-                        @else
-                            <a href="{{ route('dashboard') }}" class="text-reset fs-12 d-inline-block">{{ translate('My Panel')}}</a>
-                        @endif
-                            | <a href="{{ route('logout') }}" class="text-reset fs-12 d-inline-block">{{ translate('Logout')}}</a>
-                    @else
-                        <a href="{{ route('user.login') }}" class="text-reset fs-12 d-inline-block">{{ translate('Login')}}</a>
-                        | <a href="{{ route('user.registration') }}" class="text-reset fs-12 d-inline-block">{{ translate('Registration')}}</a>
-                    @endauth
-                </div> --}}
                 <ul class="list-inline mb-0 pl-0 mobile-hor-swipe text-center d-flex justify-content-between align-items-center">
                     <li  class="list-inline-item mr-0 ">FAQ</li>
                     <li  class="list-inline-item mr-0 mx-2 ">|</li>
-                    <li  class="list-inline-item mr-0  ">Policies</li>
-                    <li  class="list-inline-item mr-0 mx-2">|</li>
+                    <li  class="list-inline-item mr-0  d-none d-lg-block ">Policies</li>
+                    <li  class="list-inline-item mr-0 mx-2  d-none d-lg-block">|</li>
                     <li  class="list-inline-item mr-0 ">Contact US</li>
 
                 </ul>
@@ -65,7 +52,7 @@
 <header class="@if(get_setting('header_stikcy') == 'on') sticky-top @endif z-1021 bg-white border-bottom shadow-sm" >
     <div class="position-relative logo-bar-area z-1" style="background-image: url({{ static_asset("assets/img/header_patern.png") }});">
         <div class="container">
-            <div class="d-flex align-items-center">
+            <div class="d-flex align-items-center justify-content-between">
 
                 <div class="pl-0 pr-2 d-flex align-items-center pr-xl-3 t-logo">
                     <a class="d-block py-25px mr-3 ml-0" href="{{ route('home') }}">
@@ -97,7 +84,7 @@
                 </div> --}}
 
                 <div class="d-lg-none ml-auto mr-0">
-                    <a class="p-1 d-block text-reset" href="javascript:void(0);" data-toggle="class-toggle" data-target=".front-header-search">
+                    <a class="p-1 d-block text-reset text-primary fw-600" href="javascript:void(0);" data-toggle="class-toggle" data-target=".front-header-search">
                         <i class="las la-search la-flip-horizontal la-2x"></i>
                     </a>
                 </div>
@@ -107,9 +94,9 @@
                         <form action="{{ route('search') }}" method="GET" class="stop-propagation">
                             <div class="d-flex position-relative align-items-center">
                                 <div class="d-lg-none" data-toggle="class-toggle" data-target=".front-header-search">
-                                    <button class="btn px-3" type="button"><i class="la la-2x la-long-arrow-left"></i></button>
+                                    <button class="btn pl-2 pr-1" type="button"><i class="la la-2x la-long-arrow-left"></i></button>
                                 </div>
-                                <div class="d-flex flex-grow-1 border overflow-hidden src-br align-items-center brdr" style="height:2.4rem;">
+                                <div class="d-flex flex-grow-1 border overflow-hidden src-br align-items-center brdr mx-2" style="height:2.4rem;">
                                     <input type="text" class="form-control src-input px-1 " id="search" name="q" placeholder="{{translate('   Search Product')}}" autocomplete="off">
                                     <div class="d-none d-lg-block">
                                         <button class="btn btn-icon text-white btn-primary brdr " style="border-right: 0px!important;" type="submit">
@@ -140,16 +127,16 @@
                         </a>
                     </div>
                 </div>
-                <div class="">
+                <div class="d-none d-lg-block">
                     @if ( get_setting('header_menu_labels') !=  null )
-                        <div class="col-xl d-none d-xl-block">
+                        <div class="col-xl d-none d-xl-block d-lg-block mx-auto">
                             <ul class="list-inline mb-0 pl-0 mobile-hor-swipe text-center">
                                 @foreach (json_decode( get_setting('header_menu_labels', null, App::getLocale()), true) as $key => $value)
 
                                 <li class="list-inline-item mr-0 ml-0 text-dark">
 
                                     <div class="dropdown">
-                                        <a href="{{ json_decode( get_setting('header_menu_links'), true)[$key] }}" class="fs-13 px-3 py-2 d-inline-block fw-500 hov-opacity-100 text-reset  text-uppercase">
+                                        <a href="{{ json_decode( get_setting('header_menu_links'), true)[$key] }}" class="fs-13 px-3 py-2 d-inline-block fw-600 hov-opacity-100 text-reset  text-uppercase">
                                             {{ $value }}
                                         </a>
                                 @if( get_setting('sub_menu_labels')!=null)
@@ -178,42 +165,49 @@
                         </div>
                     @endif
                </div>
-                <div class="mr-0  border-white ml-2 pl-1" data-hover="dropdown">
-                    <div class="dropdown h-100">
-                        <a href="javascript:void(0)" class="d-flex align-items-center text-primary h-100" data-toggle="dropdown" data-display="static">
-                            <i class="la la-user-circle " style="font-size: 1.9rem;"></i>
-                        </a>
-                        <div class="dropdown-menu dropdown-menu-right p-0 stop-propagation">
-                            <ul class="pl-0 list-unstyled mb-0">
-                                @auth
-                                    @if(isAdmin())
-                                        <li><a href="{{ route('admin.dashboard') }}" class="py-2 px-3 text-reset d-inline-block">{{ translate('My Panel')}}</a></li>
-                                    @else
-                                        <li><a href="{{ route('dashboard') }}" class="py-2 px-3 text-reset d-inline-block">{{ translate('My Panel')}}</a></li>
-                                    @endif
-                                    <li><a href="{{ route('logout') }}" class="py-2 px-3 text-reset d-inline-block">{{ translate('Logout')}}</a></li>
-                                @else
-                                    <li><a href="{{ route('user.login') }}" class="py-2 px-3 text-reset d-inline-block">{{ translate('Login')}}</a></li>
-                                    <li><a href="{{ route('user.registration') }}" class="py-2 px-3 text-reset d-inline-block">{{ translate('Sign Up')}}</a></li>
-                                @endauth
-                            </ul>
+               
+                   <div class="d-none d-lg-block ml-auto">
+                       <div class=" d-flex justify-content-between align-items-center">
+                        <div class="mr-0 d-none d-lg-block  border-white ml-2 pl-1" data-hover="dropdown">
+                            <div class="dropdown h-100">
+                                <a href="javascript:void(0)" class="d-flex align-items-center text-primary h-100" data-toggle="dropdown" data-display="static">
+                                    <i class="la la-user-circle " style="font-size: 1.9rem;"></i>
+                                </a>
+                                <div class=" dropdown-menu dropdown-menu-right p-0 stop-propagation">
+                                    <ul class="pl-0 list-unstyled mb-0">
+                                        @auth
+                                            @if(isAdmin())
+                                                <li><a href="{{ route('admin.dashboard') }}" class="py-2 px-3 text-reset d-inline-block">{{ translate('My Panel')}}</a></li>
+                                            @else
+                                                <li><a href="{{ route('dashboard') }}" class="py-2 px-3 text-reset d-inline-block">{{ translate('My Panel')}}</a></li>
+                                            @endif
+                                            <li><a href="{{ route('logout') }}" class="py-2 px-3 text-reset d-inline-block">{{ translate('Logout')}}</a></li>
+                                        @else
+                                            <li><a href="{{ route('user.login') }}" class="py-2 px-3 text-reset d-inline-block">{{ translate('Login')}}</a></li>
+                                            <li><a href="{{ route('user.registration') }}" class="py-2 px-3 text-reset d-inline-block">{{ translate('Sign Up')}}</a></li>
+                                        @endauth
+                                    </ul>
+                                </div>
+                            </div>
                         </div>
-                    </div>
-                </div>
-                <div class="d-none d-lg-block mr-0 border-right border-left pr-3 pl-2 ml-2">
-                    <div class="" id="wishlist">
-                        @include('frontend.partials.wishlist')
-                    </div>
-                </div>
-
-                <div class="d-none d-lg-block align-self-stretch mx-3" data-hover="dropdown">
-                    <div class="nav-cart-box dropdown h-100" id="cart_items">
-                        @include('frontend.partials.cart')
-                    </div>
-                </div>
+                        <div class="d-none d-lg-block mr-0 border-right border-left pr-3 pl-2 ml-2">
+                            <div class="" id="wishlist">
+                                @include('frontend.partials.wishlist')
+                            </div>
+                        </div>
+        
+                        <div class="d-none d-lg-block align-self-stretch mx-3" data-hover="dropdown">
+                            <div class="nav-cart-box dropdown h-100" id="cart_items">
+                                @include('frontend.partials.cart')
+                            </div>
+                        </div>
+                       </div>
+                       
+                   </div>
+             
 
                 @if(get_setting('topbar_call_icon') || get_setting('topbar_call_text') || get_setting('topbar_call_number'))
-                    <div class="d-none d-md-flex border-left pl-3 align-items-center">
+                    <div class="d-none d-md-flex border-left  align-items-center">
 
                         <img src="{{ uploaded_asset(get_setting('topbar_call_icon')) }}" class="pb-1" >
 
