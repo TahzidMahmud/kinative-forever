@@ -35,33 +35,7 @@
 @endsection
 
 @section('content')
-    <section class="">
-        <div class="container-fluid px-0">
-            <div class="aiz-carousel dot-small-white dots-inside-bottom "  data-items="1" data-dots="true" data-arrows="true" data-autoplay="true"  data-infinite='true'>
-                @foreach(explode(",",get_setting('shop_banners')) as $value)
-                <div class="carousel-box">
-                    <img src="{{ uploaded_asset($value) }}" class="img-fluid w-100">
-                </div>
-                @endforeach
-            </div>
-        </div>
-        @if(get_setting('shop_slider_images') != null)
-          @if(Route::currentRouteName() == 'home.shop')
-            <div class="container pt-3">
-                <div class="aiz-carousel dot-small-black gutters-5 outside-arrow af-arrow" data-items="3" data-md-items="2" data-xs-items="2" data-dots="true" data-arrows="true" data-autoplay="true"  data-infinite='true'>
-                    @php $slider_images = json_decode(get_setting('shop_slider_images'), true);  @endphp
-                    @foreach ($slider_images as $key => $value)
-                        <div class="carousel-box">
-                            <a href="{{ json_decode(get_setting('shop_slider_links'), true)[$key] }}" class="text-reset d-block">
-                                <img src="{{ uploaded_asset($value) }}" class="img-fluid w-100">
-                            </a>
-                        </div>
-                    @endforeach
-                </div>
-            </div>
-            @endif
-        @endif
-    </section>
+
     <section class="mb-4 pt-5">
         <div class="container sm-px-0">
             <form class="" id="search-form" action="" method="GET">

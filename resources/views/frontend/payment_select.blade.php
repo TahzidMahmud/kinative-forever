@@ -2,17 +2,6 @@
 
 @section('content')
 
-<section class="mb-4">
-    <div class="">
-        <div class="aiz-carousel mobile-img-auto-height dot-small-white dots-inside-bottom " data-dots="true" data-autoplay="true">
-            @foreach(explode(",",get_setting('product_banner')) as $value)
-            <div class="carousel-box">
-                <img src="{{ uploaded_asset($value) }}" class="img-fluid w-100">
-            </div>
-            @endforeach
-        </div>
-    </div>
-</section>
 <section class="pt-5 mb-4">
     <div class="container">
         <div class="row">

@@ -19,12 +19,17 @@
 				</div>
 				<div class="card-body">
                     <div class="form-group">
-						<label>{{ translate('Contact numbers') }}</label>
+						<label>{{ translate('Contact Us Link') }}</label>
 						<input type="hidden" name="types[]" value="topbar_left">
 						<input type="text" class="form-control" placeholder="" name="topbar_left" value="{{ get_setting('topbar_left') }}">
 					</div>
+					<div class="form-group">
+						<label>{{ translate('Policies Link') }}</label>
+						<input type="hidden" name="types[]" value="policy_link">
+						<input type="text" class="form-control" placeholder="" name="policy_link" value="{{ get_setting('policy_link') }}">
+					</div>
                     <div class="form-group">
-						<label>{{ translate('Center Text') }}</label>
+						<label>{{ translate('TopBar Text') }}</label>
 						<input type="hidden" name="types[]" value="topbar_center">
 						<input type="text" class="form-control" placeholder="" name="topbar_center" value="{{ get_setting('topbar_center') }}">
 					</div>

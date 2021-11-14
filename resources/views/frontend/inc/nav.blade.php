@@ -15,8 +15,8 @@
         <div class="row align-items-center">
             <div class="col-6 col-lg-3">
                 <div class="text-left">
-                    {{-- {{ get_setting('topbar_left') }} --}}
-                    Welcome to Forever Strength
+                    {{ get_setting('topbar_center') }}
+                    {{-- Welcome to Forever Strength --}}
                 </div>
             </div>
             <div class="col-12 col-lg-6 text-center d-none d-lg-block ml-auto">
@@ -36,11 +36,11 @@
             </div>
             <div class="col-6 col-lg-3 d-flex justify-content-end">
                 <ul class="list-inline mb-0 pl-0 mobile-hor-swipe text-center d-flex justify-content-between align-items-center">
-                    <li  class="list-inline-item mr-0 ">FAQ</li>
+                    <li  class="list-inline-item mr-0 "> <a href="#faq" class="text-white">FAQ</a> </li>
                     <li  class="list-inline-item mr-0 mx-2 ">|</li>
-                    <li  class="list-inline-item mr-0  d-none d-lg-block ">Policies</li>
+                    <li  class="list-inline-item mr-0  d-none d-lg-block "><a href=" {{ get_setting('policy_link') }}" class="text-white">Policies</a></li>
                     <li  class="list-inline-item mr-0 mx-2  d-none d-lg-block">|</li>
-                    <li  class="list-inline-item mr-0 ">Contact US</li>
+                    <li  class="list-inline-item mr-0 "><a href=" {{ get_setting('topbar_left') }}" class="text-white">Contact US</a></li>
 
                 </ul>
             </div>
@@ -256,7 +256,7 @@
   display: block;
 }
 /* Change color of dropdown links on hover */
-.dropdown-content a:hover {background-color: #123798;color: white;}
+.dropdown-content a:hover {background-color: #e40404;color: rgb(255, 255, 255);}
 .dropdown-content a:hover .dropdown-content{display: block;}
 
 /* Show the dropdown menu on hover */

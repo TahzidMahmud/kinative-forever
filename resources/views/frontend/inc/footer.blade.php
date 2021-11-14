@@ -55,8 +55,8 @@
                     </div>
                     <ul class="list-inline mt-4 mb-2  social colored text-center">
                         @if ( get_setting('facebook_link') !=  null )
-                        <li class="list-inline-item">
-                            <a href="{{ get_setting('facebook_link') }}" target="_blank" class="facebook"><i class="lab la-facebook-f"></i></a>
+                        <li class="list-inline-item ">
+                            <a href="{{ get_setting('facebook_link') }}" target="_blank" class="facebook "><i class="lab la-facebook-f"></i></a>
                         </li>
                         @endif
                         @if ( get_setting('twitter_link') !=  null )
@@ -144,13 +144,27 @@
             </a>
         </div>
         <div class="col-auto">
-            <a href="{{ route('home.shop') }}" class="text-reset d-block text-center pb-2 pt-3">
+            @php
+            if(auth()->user() != null) {
+                $user_id = Auth::user()->id;
+                $cart = \App\Cart::where('user_id', $user_id)->get();
+            } else {
+                $temp_user_id = Session()->get('temp_user_id');
+                if($temp_user_id) {
+                    $cart = \App\Cart::where('temp_user_id', $temp_user_id)->get();
+                }
+            }
+            @endphp
+            <a href="javascript:void(0)" class="text-reset d-block text-center pb-2 pt-3 cart-toggler cart-trigger" data-toggle="class-toggle" data-target=".cart-sidebar"  data-toggle="dropdown" data-display="static">
                 <span class="align-items-center bg-primary border border-white border-width-4 d-flex justify-content-center position-relative rounded-circle size-50px" style="margin-top: -33px;box-shadow: 0px -5px 10px rgb(0 0 0 / 15%);border-color: #fff !important;">
-                    <i class="las la-shopping-bag la-2x text-white"></i>
+                    <i class="las la-shopping-cart la-2x text-white"></i>
                 </span>
-                <span class="d-block mt-1 fs-10 fw-600 opacity-60 {{ areActiveRoutes(['home.shop'],'opacity-100 fw-600')}}">
-                    {{ translate('Shop') }}
-                </span>
+                        @if(isset($cart) && count($cart) > 0)
+
+                            <span class="d-block fs-10 fw-600  opacity-60 text-dark">{{ translate('Cart') }} ({{ count($cart) }})</span>
+                        @else
+                        <span class="d-block fs-10 fw-600  opacity-60 text-dark ">{{ translate('Cart') }} (0)</span>
+                        @endif
             </a>
         </div>
         <div class="col">
@@ -279,7 +293,7 @@
                 <div class="side-menu-main c-scrollbar-light">
                      {{-- top bar menue --}}
                      <div class="p-3 fs-16 fw-700 d-flex justify-content-between align-items-center border-bottom ">
-                        <span>{{ translate('Main Menu') }}</span>
+                        <span>{{ translate( 'Menu') }}</span>
                         {{-- <a href="{{ route('categories.all') }}" class="text-reset fs-11">{{ translate('See All') }}</a> --}}
                     </div>
                     <div class="p-3">
@@ -316,7 +330,7 @@
                         @endif
                     </div>
                     <div class="p-3 fs-16 fw-700 d-flex justify-content-between align-items-center border-bottom">
-                        <span>{{ translate('Departments') }}</span>
+                        <span>{{ translate('Categories') }}</span>
                         <a href="{{ route('categories.all') }}" class="text-reset fs-11">{{ translate('See All') }}</a>
                     </div>
                     <div class="p-3">
@@ -450,12 +464,12 @@
     #myBtn {
   display: none; /* Hidden by default */
   position: fixed; /* Fixed/sticky position */
-  bottom: 30px; /* Place the button at the bottom of the page */
+  bottom: 70px; /* Place the button at the bottom of the page */
   right: 30px; /* Place the button 30px from the right */
   z-index: 99; /* Make sure it does not overlap */
   border: none; /* Remove borders */
   outline: none; /* Remove outline */
-  background-color: rgb(9, 51, 165); /* Set a background color */
+  background-color: rgb(0, 139, 0); /* Set a background color */
   color: white; /* Text color */
   cursor: pointer; /* Add a mouse pointer on hover */
   padding: 12px; /* Some padding */
@@ -470,7 +484,7 @@
 <script>
     //Get the button:
 var mybutton = document.getElementById("myBtn");
-var img = document.getElementById("sidemg");
+// var img = document.getElementById("sidemg");
 
 // When the user scrolls down 20px from the top of the document, show the button
 window.onscroll = function() {scrollFunction()};
@@ -478,11 +492,11 @@ window.onscroll = function() {scrollFunction()};
 function scrollFunction() {
   if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
     mybutton.style.display = "block";
-    img.style.display = "none";
+    // img.style.display = "none";
 
   } else {
     mybutton.style.display = "none";
-    img.style.display = "block";
+    // img.style.display = "block";
   }
 
 }
@@ -496,3 +510,31 @@ function topFunction() {
 //   document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
 }
 </script>
+
+<style>
+
+
+    /* Add a background color to the button if it is clicked on (add the .active class with JS), and when you move the mouse over it (hover) */
+    .nactive {
+      background-color:rgb(30, 141, 30)!important;
+    }
+    
+    
+    </style>
+    
+
+    <script>
+        var acc = document.getElementsByClassName("accordion");
+    var i;
+    
+    for (i = 0; i < acc.length; i++) {
+      acc[i].addEventListener("click", function() {
+    
+        /* Toggle between adding and removing the "active" class,
+        to highlight the button that controls the panel */
+    
+        this.classList.toggle("nactive");
+    
+      });
+    }
+    </script>

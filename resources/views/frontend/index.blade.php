@@ -35,9 +35,9 @@
 
     {{-- featured --}}
 
-<div class="container">
+<div class="container my-4">
     <div class="d-flex mb-3 align-items-baseline ">
-        <h2 class="h5 fw-700 mb-0">
+        <h2 class="h5 fw-700 mb-0 mr-3">
             <span class="ml-2 d-inline-block text-alter-6 text-uppercase fs-18">{{ translate('Featured Products') }}</span>
         </h2>
         <a href="#" class="ml-auto mr-0 mt-2 mt-md-0 btn btn-primary btn-sm shadow-md w-100 w-md-auto text-uppercase fw-500" style="border-radius: 0px;">{{ translate('View All') }}</a>
@@ -115,7 +115,7 @@
 
     {{-- project about --}}
    <div class="container">
-    <div class="row my-5 py-5 ">
+    <div class="row my-5">
         <div class="col-md-5 d-flex align-items-center">
            <div>
             <h2 class="text-uppercase text-alter-6 fs-18 fw-700">
@@ -131,7 +131,7 @@
 
                 @foreach (json_decode(get_setting('project_text_images'),true) as $key => $img)
                 <div class="carousel-box ">
-                    <div class="aiz-card-box has-transition hov-shadow-md mb-2 ">
+                    <div class="aiz-card-box has-transition hov-shadow-md ">
                         <div class="position-relative">
                             <a href="{{ json_decode(get_setting('project_text_links'),true)[$key]   }}" class="d-block">
                                 <img
@@ -163,7 +163,7 @@
     <div class="mb-5">
         <div class="container">
             <h3 class="text text-alter-6 text-center my-4">{{ translate('Our Pruduct Features') }}</h3>
-            <div class="aiz-carousel gutters-10 dot-small-black" data-items="5" data-xl-items="5" data-lg-items="5"  data-md-items="5" data-sm-items="2" data-xs-items="2" data-dots='false' data-autoplay="true" data-infinite='true'>
+            <div class="aiz-carousel gutters-10 dot-small-black" data-items="5" data-xl-items="5" data-lg-items="5"  data-md-items="5" data-sm-items="1" data-xs-items="1" data-dots='false' data-autoplay="true" data-infinite='true'>
                 @if (get_setting('customer_reviews_image') != null)
                     @foreach (json_decode(get_setting('customer_reviews_image'), true) as $key => $value)
                         <div class="carousel-box">
@@ -173,7 +173,7 @@
 
                                 <div class="my-4 fw-500 ">
 
-                                    <span class="ml-2 text-dark" >{{ json_decode(get_setting('customer_reviews_title'), true)[$key] }}</span>
+                                    <span class="ml-2 text-dark text-truncate-2  h-35px" >{{ json_decode(get_setting('customer_reviews_title'), true)[$key] }}</span>
                                 </div>
                             </div>
                         </div>
@@ -231,10 +231,10 @@
     </section>
 
 {{-- FAQ section  --}}
-<div class="container my-5">
-    <div class="row">
+<div class="container my-5" id="faq">
+    <div class="row" >
         <div class="col d-flex justify-content-center align-items-center">
-            <h5 class="text trex-center text-alter-6 text-uppercase my-3">{{ translate('Frequently Asked Questions') }}</h5>
+            <h5 class="text text-center text-alter-6 text-uppercase my-3">{{ translate('Frequently Asked Questions') }}</h5>
         </div>
     </div>
     <div class="row">
@@ -266,33 +266,10 @@
 
 @endsection
 
-<style>
 
-
-/* Add a background color to the button if it is clicked on (add the .active class with JS), and when you move the mouse over it (hover) */
-.active {
-  background-color:rgb(30, 141, 30)!important;
-}
-
-
-</style>
 
 @section('script')
-<script>
-    var acc = document.getElementsByClassName("accordion");
-var i;
 
-for (i = 0; i < acc.length; i++) {
-  acc[i].addEventListener("click", function() {
-
-    /* Toggle between adding and removing the "active" class,
-    to highlight the button that controls the panel */
-
-    this.classList.toggle("active");
-
-  });
-}
-</script>
     <script>
         $(document).ready(function(){
             $.post('{{ route('home.section.featured') }}', {_token:'{{ csrf_token() }}'}, function(data){
