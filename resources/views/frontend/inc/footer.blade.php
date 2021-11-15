@@ -518,23 +518,42 @@ function topFunction() {
     .nactive {
       background-color:rgb(30, 141, 30)!important;
     }
+    .tmp-ac{
+        background-color:rgb(30, 141, 30)!important;
+    }
     
     
     </style>
     
 
     <script>
-        var acc = document.getElementsByClassName("accordion");
-    var i;
-    
-    for (i = 0; i < acc.length; i++) {
-      acc[i].addEventListener("click", function() {
-    
-        /* Toggle between adding and removing the "active" class,
-        to highlight the button that controls the panel */
-    
-        this.classList.toggle("nactive");
-    
-      });
-    }
+        
+       
+       
+
+        function collapse(id ){
+            var iidd=`q-${id}`;
+            var el = document.getElementById(iidd);
+                        el.classList.add("nactive");
+            var acc = document.getElementsByClassName("accordion");
+            var i;
+                for (i = 0; i < acc.length; i++) {
+                    if(i==id){
+                        var n=`faq-${i}`;
+                        var eln = document.getElementById(n);
+                        eln.classList.add("show");
+                    }else{
+                        var idd=`faq-${i}`;
+                        var tmp=`q-${i}`;
+                        var elemen = document.getElementById(idd);
+                        elemen.classList.remove("show");
+                        var t = document.getElementById(tmp);
+                        t.classList.remove("nactive");
+                       
+                        
+                    }
+            }
+
+        }
+        collapse(0);
     </script>

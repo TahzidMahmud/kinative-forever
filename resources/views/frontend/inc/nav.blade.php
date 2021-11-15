@@ -100,7 +100,7 @@
                             <div class="search-nothing d-none p-3 text-center fs-16">
 
                             </div>
-                            <div id="search-content" class="text-left">
+                            <div id="search-content" class="text-left text-dark">
 
                             </div>
                         </div>

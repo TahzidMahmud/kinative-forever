@@ -20,7 +20,7 @@
     <section class="py-lg-5 py-4  position-relative">
         <div class="container">
             <div class="row py-lg-5 d-flex align-items-center">
-                <div class="col-lg-6">
+                <div class="col-lg-6 my-4">
                     <img src="{{ uploaded_asset(get_setting('home_about_image')) }}" class="img-fluid w-100" alt="">
                 </div>
                 <div class="col-lg-6">
@@ -50,7 +50,7 @@
         </div>
         @endforeach
     </div>
-</div>
+</div>      
 
 
 
@@ -68,19 +68,19 @@
                     <h2 class="text-uppercase text-alter-6 fs-18 fw-700 text-truncate-2  h-35px">
                         <a href="{{ json_decode(get_setting('banner_text_links'),true)[$key] }}"  class="d-inline-block text-reset">{{ json_decode(get_setting('banner_text_titles',null,App::getLocale()),true)[$key] }}</a>
                     </h2>
-                    <div class="lh-1-9 my-4 mr-1 text-justify">{{ json_decode(get_setting('banner_text_details',null,App::getLocale()),true)[$key] }}</div>
+                    <div class="lh-1-9 mt-2 mb-4 mr-1 text-justify">{{ json_decode(get_setting('banner_text_details',null,App::getLocale()),true)[$key] }}</div>
                     <a href="{{ json_decode(get_setting('banner_text_links'),true)[$key] }}"  class="btn btn-primary text-uppercase btn-md fs-12 fw-600 " style="border-radius: 0px;">{{ translate('view products') }}</a>
                 </div>
             </div>
             @endforeach
             @foreach (json_decode(get_setting('banner_text_images'), true) as $key => $value)
             <div class="row align-items-center py-4 mob">
-                <div class="col-lg-6 ">
+                <div class="col-lg-6 mb-5">
                     <a href="{{ json_decode(get_setting('banner_text_links'),true)[$key] }}" class="d-block text-reset">
                         <img src="{{ uploaded_asset($value) }}" class="img-fluid w-100">
                     </a>
                 </div>
-                <div class="col-lg-6 my-4">
+                <div class="col-lg-6 mb-0 mt-4">
                     <h2 class="text-uppercase text-alter-6 fs-18 fw-700 text-truncate-2  h-35px">
                         <a href="{{ json_decode(get_setting('banner_text_links'),true)[$key] }}"  class="d-inline-block text-reset">{{ json_decode(get_setting('banner_text_titles',null,App::getLocale()),true)[$key] }}</a>
                     </h2>
@@ -100,6 +100,7 @@
     {{-- brands --}}
     <section class="py-5 bg-white">
         <div class="container">
+            <h4 class="text-center text-alter-6 text-uppercase my-4 fw-600">{{get_setting('corporate_client_title',null,App::getLocale(),true)}}</h4>
             <div class="border rounded border-gray-200 p-2 p-lg-4">
                 <div class="aiz-carousel gutters-10" data-items="7" data-xl-items="6" data-lg-items="6" data-autoplay="true" data-md-items="6" data-sm-items="2" data-xs-items="2" data-infinite='true' >
                     @foreach(explode(',',get_setting('corporate_clients')) as $id)
@@ -210,7 +211,7 @@
                                     class="img-fluid lazyload"
                                 >
                             </a>
-                            <div class="p-4">
+                            <div class="py-4 pr-4">
                                 <h2 class="fs-18 fw-600 mb-1">
                                     <a href="{{ route('blog.details', $blog->slug) }}" class="text-reset">
                                         {{ $blog->title }}
@@ -243,14 +244,14 @@
             @if (get_setting('faq_questions') != null)
             @foreach (json_decode(get_setting('faq_questions'), true) as $key => $value)
                 <div class="row">
-                   <div class="col-12  text-white accordion" style="background-color: #eb1011;" data-toggle="collapse" href="#faq-{{ $key }}" role="button" aria-expanded="false" aria-controls="faq-{{ $key }}">
+                   <div class="col-12  text-white accordion" style="background-color: #eb1011;" data-toggle="collapse"  role="button" aria-expanded="false" aria-controls="faq-{{ $key }}" onclick="collapse({{ $key }})" id="q-{{$key}}">
                     <a class="btn text-white fs-14 fw-600 ">{{ json_decode(get_setting('faq_questions',null,App::getLocale()),true)[$key] }}</a>
                    </div>
                 </div>
 
                <div class="row">
                     <div class="col-12 p-1">
-                        <div class="collapse multi-collapse border " id="faq-{{ $key }}">
+                        <div class="collapse multi-collapse border "  id="faq-{{ $key }}">
                             <div class="card-body">
                                 {{ json_decode(get_setting('faq_answers',null,App::getLocale()),true)[$key]  }}
                             </div>
