@@ -40,7 +40,7 @@
         <h2 class="h5 fw-700 mb-0 mr-3">
             <span class="ml-2 d-inline-block text-alter-6 text-uppercase fs-18">{{ translate('Featured Products') }}</span>
         </h2>
-        <a href="#" class="ml-auto mr-0 mt-2 mt-md-0 btn btn-primary btn-sm shadow-md w-100 w-md-auto text-uppercase fw-500" style="border-radius: 0px;">{{ translate('View All') }}</a>
+        <a href="{{route('featured.products')}}" class="ml-auto mr-0 mt-2 mt-md-0 btn btn-primary btn-sm shadow-md w-100 w-md-auto text-uppercase fw-500" style="border-radius: 0px;">{{ translate('View All') }}</a>
     </div>
     <div class="aiz-carousel gutters-5  dot-small-white" data-items="6" data-xl-items="5" data-lg-items="4"  data-md-items="3" data-sm-items="2" data-xs-items="2" data-infinite='true' data-dots="true" data-autoplay="true">
 
@@ -160,7 +160,7 @@
    </div>
 
     {{-- product features --}}
-    <div class="mb-5">
+    <div class="mb-3 py-5" style="background-color:rgba(0, 0, 0, 0.089)">
         <div class="container">
             <h3 class="text text-alter-6 text-center my-4">{{ translate('Our Pruduct Features') }}</h3>
             <div class="aiz-carousel gutters-10 dot-small-black" data-items="5" data-xl-items="5" data-lg-items="5"  data-md-items="5" data-sm-items="1" data-xs-items="1" data-dots='false' data-autoplay="true" data-infinite='true'>
@@ -189,7 +189,7 @@
     <section class="py-5">
         <div class="container">
             <div class="d-flex my-5 justify-content-center align-items-center">
-                <h3 class="h5 fw-700 mb-0 text-center text-alter-6">
+                <h3 class="h3 fw-700 mb-0 text-center text-alter-6">
 
                    {{ translate('From our blog') }}
                 </h3>

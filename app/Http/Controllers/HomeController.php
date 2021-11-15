@@ -245,7 +245,12 @@ class HomeController extends Controller
             abort(404);
         }
     }
+    public function featured_products(Request $request) {
 
+        $products = filter_products(Product::where('published', 1)->where('featured', 1))->paginate(30);
+
+        return view('frontend.featured_products', compact('products'));
+    }
     public function load_featured_section(){
         return view('frontend.partials.featured_products_section');
     }

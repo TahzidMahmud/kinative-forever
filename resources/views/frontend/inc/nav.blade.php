@@ -20,19 +20,6 @@
                 </div>
             </div>
             <div class="col-12 col-lg-6 text-center d-none d-lg-block ml-auto">
-               {{-- <div class="container">
-                    @if ( get_setting('header_menu_labels') !=  null )
-                        <ul class="list-inline mb-0 pl-0 mobile-hor-swipe text-center d-flex justify-content-between align-items-center ">
-                            @foreach (json_decode( get_setting('header_menu_labels'), true) as $key => $value)
-                                    <li class="list-inline-item mr-0 text-white ">
-                                        <a href="{{ json_decode( get_setting('header_menu_links'), true)[$key] }}" class="text-uppercase fs-11 px-1 d-inline-block  hov-opacity-100 text-reset " >
-                                        <span class="menue-top"> {{ translate($value) }}</span>
-                                        </a>
-                                    </li>
-                        @endforeach
-                        </ul>
-                    @endif
-               </div> --}}
             </div>
             <div class="col-6 col-lg-3 d-flex justify-content-end">
                 <ul class="list-inline mb-0 pl-0 mobile-hor-swipe text-center d-flex justify-content-between align-items-center">
@@ -55,12 +42,12 @@
             <div class="d-flex align-items-center justify-content-between">
 
                 <div class="pl-0 pr-2 d-flex align-items-center pr-xl-3 t-logo">
-                    <a class="d-block py-25px mr-3 ml-0" href="{{ route('home') }}">
+                    <a class="d-block py-5px mr-3 ml-0" href="{{ route('home') }}">
                         @php
                             $header_logo = get_setting('header_logo');
                         @endphp
                         @if($header_logo != null)
-                            <img src="{{ uploaded_asset($header_logo) }}" alt="{{ env('APP_NAME') }}" class="mw-100 h-40px" style="width: 100px;">
+                            <img src="{{ uploaded_asset($header_logo) }}" alt="{{ env('APP_NAME') }}" class="mw-100 h-60px" style="width: 100px;">
                         @else
                             <img src="{{ static_asset('assets/img/logo.png') }}" alt="{{ env('APP_NAME') }}" class="mw-100 h-15px" height="15">
                         @endif

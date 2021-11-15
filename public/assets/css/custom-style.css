@@ -56,6 +56,7 @@ h1,h2,h3,h4,h5,h6,.h1,.h2,.h3,.h4,.h5,.h6,.a{
 .brdr{
     border-color:  var(--alter6)!important;
 }
+
 .z-1021{z-index: 1021 !important}
 .text-alter{color: var(--alter) !important;}
 .text-alter-2{color: var(--alter2) !important;}
@@ -400,4 +401,11 @@ h1,h2,h3,h4,h5,h6,.h1,.h2,.h3,.h4,.h5,.h6,.a{
 }
 
 @media (max-width: 575.98px) {
+}
+
+a:hover{
+    color: #FF0000!important;
+}
+i:hover{
+    color: #FF0000!important;
 }

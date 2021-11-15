@@ -91,6 +91,7 @@
             font-family: 'Montserrat', sans-serif;
             font-family: 'Roboto', sans-serif;
             font-weight: 400;
+            
         }
         :root{
             --primary: {{ get_setting('base_color', '#e62d04') }};
@@ -147,15 +148,17 @@
 @endphp
 
 </head>
-<body class=" homepage ">
+<body class=" homepage " >
     <!-- aiz-main-wrapper -->
     <div class="aiz-main-wrapper d-flex flex-column">
 
         <!-- Header -->
         @include('frontend.inc.nav')
+        <div  style="background-image: url('{{ static_asset('assets/img/bg.jpg') }}');">
+            @yield('content')
 
-        @yield('content')
-
+        </div>
+        
         @include('frontend.inc.footer')
 
     </div>
