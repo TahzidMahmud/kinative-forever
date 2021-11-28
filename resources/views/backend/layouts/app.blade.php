@@ -131,31 +131,6 @@
 			}
         }
     </script>
-    <script>
-        $("#time-smt").on("click",function(){
-
-            let days=$('#days').val();
-            let start=$('#start').val();
-            let end=$('#end').val();
-          
-            if(days.length>0 && start!=null && end!=null){
-                $.post('{{ route('pick_up_times.store') }}', {_token:'{{ @csrf_token() }}',days:days,start:start,end:end}, function(data){
-                   if(data.stat==1){
-                    AIZ.plugins.notify('success', '{{ translate('Time Slot Added Successfully..!!') }}');
-                   }else{
-                    AIZ.plugins.notify('danger', '{{ translate('Something Went Wrong..!!') }}');
-                   }
-
-                });
-            }else{
-
-                AIZ.plugins.notify('danger', '{{ translate('Please Fill All Fields..!!') }}');
-            }
-
-
-        })
-
-    </script>
 
 </body>
 </html>

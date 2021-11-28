@@ -7,7 +7,6 @@ use App\Review;
 use App\Product;
 use Auth;
 use DB;
-use Artisan;
 
 class ReviewController extends Controller
 {
@@ -75,8 +74,6 @@ class ReviewController extends Controller
                 $product->rating = 0;
             }
             $product->save();
-            Artisan::call('view:clear');
-            Artisan::call('cache:clear');
             flash(translate('Review has been submitted successfully'))->success();
             return back();
         }

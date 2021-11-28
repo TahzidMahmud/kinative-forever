@@ -10,58 +10,29 @@
             <div class="col">
                 <h5 class="mb-md-0 h6">{{ translate('All Orders') }}</h5>
             </div>
-            
+
             <div class="dropdown mb-2 mb-md-0">
                 <button class="btn border dropdown-toggle" type="button" data-toggle="dropdown">
                     {{translate('Bulk Action')}}
                 </button>
                 <div class="dropdown-menu dropdown-menu-right">
                     <a class="dropdown-item" href="#" onclick="bulk_delete()"> {{translate('Delete selection')}}</a>
-<!--                    <a class="dropdown-item" href="#" data-toggle="modal" data-target="#exampleModal">
-                        <i class="las la-sync-alt"></i>
-                        {{translate('Change Order Status')}}
-                    </a>-->
+                    <a class="dropdown-item" href="#" onclick="bulk_download()"> {{translate('Download Details')}}</a>
+                    <a class="dropdown-item" href="#" onclick="bulk_print()"> {{translate('Print Details')}}</a>
+                    <a class="dropdown-item" href="#" data-toggle="modal" data-target="#exampleModal">{{translate('Change Order Status')}}</a>
                 </div>
             </div>
-            
-            <!-- Change Status Modal -->
-            <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                <div class="modal-dialog" role="document">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="exampleModalLabel">
-                                {{translate('Choose an order status')}}
-                            </h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-                        <div class="modal-body">
-                            <select class="form-control aiz-selectpicker" onchange="change_status()" data-minimum-results-for-search="Infinity" id="update_delivery_status">
-                                <option value="pending">{{translate('Pending')}}</option>
-                                <option value="confirmed">{{translate('Confirmed')}}</option>
-                                <option value="picked_up">{{translate('Picked Up')}}</option>
-                                <option value="on_the_way">{{translate('On The Way')}}</option>
-                                <option value="delivered">{{translate('Delivered')}}</option>
-                                <option value="cancelled">{{translate('Cancel')}}</option>
-                            </select>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                            <button type="button" class="btn btn-primary">Save changes</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            
+
             <div class="col-lg-2 ml-auto">
-                <select class="form-control aiz-selectpicker" name="delivery_status" id="delivery_status">
+                <select class="form-control aiz-selectpicker" name="delivery_status" id="delivery_status" data-title="Filter by delivery status">
                     <option value="pending" @if ($delivery_status == 'pending') selected @endif>{{translate('Pending')}}</option>
                     <option value="confirmed" @if ($delivery_status == 'confirmed') selected @endif>{{translate('Confirmed')}}</option>
                     <option value="picked_up" @if ($delivery_status == 'picked_up') selected @endif>{{translate('Picked Up')}}</option>
                     <option value="on_the_way" @if ($delivery_status == 'on_the_way') selected @endif>{{translate('On The Way')}}</option>
                     <option value="delivered" @if ($delivery_status == 'delivered') selected @endif>{{translate('Delivered')}}</option>
                     <option value="cancelled" @if ($delivery_status == 'cancelled') selected @endif>{{translate('Cancel')}}</option>
+                    <option value="non_delivered" @if ($delivery_status == 'non_delivered') selected @endif>{{translate('Non Delivered')}}</option>
+                    <option value="delivery_cancel" @if ($delivery_status == 'delivery_cancel') selected @endif>{{translate('Delivery Canceled')}}</option>
                 </select>
             </div>
             <div class="col-lg-2">
@@ -80,7 +51,7 @@
                 </div>
             </div>
         </div>
-    
+
         <div class="card-body">
             <table class="table aiz-table mb-0">
                 <thead>
@@ -111,9 +82,7 @@
                 <tbody>
                     @foreach ($orders as $key => $order)
                     <tr>
-    <!--                    <td>
-                            {{ ($key+1) + ($orders->currentPage() - 1)*$orders->perPage() }}
-                        </td>-->
+
                         <td>
                             <div class="form-group">
                                 <div class="aiz-checkbox-inline">
@@ -125,7 +94,12 @@
                             </div>
                         </td>
                         <td>
-                            {{ $order->code }}
+                            {{ $order->code }}@if($order->viewed == 0) <span class="badge badge-inline badge-info">{{translate('New')}}</span>@endif
+                            {{-- {{ dd($order->delivery_status) }} --}}
+                            @if($order->delivery_status =='non_delivered')
+
+                            <span class="badge badge-inline badge-warning">{{translate('Non-delivered')}}</span>
+                            @endif
                         </td>
                         <td>
                             {{ count($order->orderDetails) }}
@@ -144,9 +118,11 @@
                             @php
                                 $status = $order->delivery_status;
                                 if($order->delivery_status == 'cancelled') {
-                                    $status = '<span class="badge badge-inline badge-danger">'.translate('Cancel').'</span>';
+                                    $status = '<span class="badge badge-inline badge-danger">'.translate('Cancelled').'</span>';
+                                }else{
+                                    $status = '<span class="badge badge-inline badge-info">'.ucfirst(str_replace('_', ' ', $status)).'</span>';
                                 }
-                                
+
                             @endphp
                             {!! $status !!}
                         </td>
@@ -167,9 +143,8 @@
                         </td>
                         @endif
                         <td class="text-right">
-                            <a class="btn btn-soft-primary btn-icon btn-circle btn-sm" href="{{route('orders.edit', $order->id)}}" title="{{ translate('Edit') }}">
-                                <i class="las la-pen"></i>
-                            </a>
+                            <a class="btn btn-soft-primary btn-icon btn-circle btn-sm" href="javascript:void(0)" onclick="print_invoice('{{ route('invoice.print',$order->id) }}')" title="{{ translate('Print invoice') }}">
+                            <i class="las la-print"></i>
                             <a class="btn btn-soft-primary btn-icon btn-circle btn-sm" href="{{route('all_orders.show', encrypt($order->id))}}" title="{{ translate('View') }}">
                                 <i class="las la-eye"></i>
                             </a>
@@ -197,6 +172,35 @@
 
 @section('modal')
     @include('modals.delete_modal')
+    <!-- Change Status Modal -->
+    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">
+                        {{translate('Choose an order status')}}
+                    </h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <select class="form-control aiz-selectpicker" data-minimum-results-for-search="Infinity" id="update_delivery_status" data-container="body">
+                        <option value="pending">{{translate('Pending')}}</option>
+                        <option value="confirmed">{{translate('Confirmed')}}</option>
+                        <option value="picked_up">{{translate('Picked Up')}}</option>
+                        <option value="on_the_way">{{translate('On The Way')}}</option>
+                        <option value="delivered">{{translate('Delivered')}}</option>
+                        <option value="cancelled">{{translate('Cancel')}}</option>
+                    </select>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" onclick="change_status()">Save changes</button>
+                </div>
+            </div>
+        </div>
+    </div>
 @endsection
 
 @section('script')
@@ -205,36 +209,60 @@
             if(this.checked) {
                 // Iterate each checkbox
                 $('.check-one:checkbox').each(function() {
-                    this.checked = true;                        
+                    this.checked = true;
                 });
             } else {
                 $('.check-one:checkbox').each(function() {
-                    this.checked = false;                       
+                    this.checked = false;
                 });
             }
-          
+
         });
-        
-//        function change_status() {
-//            var data = new FormData($('#order_form')[0]);
-//            $.ajax({
-//                headers: {
-//                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-//                },
-//                url: "{{route('bulk-order-status')}}",
-//                type: 'POST',
-//                data: data,
-//                cache: false,
-//                contentType: false,
-//                processData: false,
-//                success: function (response) {
-//                    if(response == 1) {
-//                        location.reload();
-//                    }
-//                }
-//            });
-//        }
-        
+
+       function change_status() {
+           // var data = new FormData($('#order_form')[0]);
+           var values = $("[name='id[]']:checked").map(function(){return $(this).val();}).get();
+           var type = $("#update_delivery_status").val();
+           $.ajax({
+               headers: {
+                   'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+               },
+               url: "{{route('bulk-order-status')}}",
+               type: 'POST',
+               data: {ids:values,status:type},
+               success: function (response) {
+                   if(response == 1) {
+                       location.reload();
+                   }
+               }
+           });
+       }
+
+        function bulk_download() {
+            var data = new FormData($('#sort_orders')[0]);
+            $.ajax({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                url: "{{route('bulk-order-download')}}",
+                type: 'POST',
+                data: data,
+                cache: false,
+                contentType: false,
+                processData: false,
+                success: function (response) {
+                }
+            });
+        }
+
+        function bulk_print() {
+            var h = $(window).height();
+            var w = $(window).width();
+            var values = $("[name='id[]']:checked").map(function(){return $(this).val();}).get();
+            if(values.length > 0){
+                window.open( '{{ URL('admin/bulk-order-print/') }}/'+values, '_blank', 'height='+h+',width='+w+',scrollbars=yes,status=no' );
+            }
+        }
         function bulk_delete() {
             var data = new FormData($('#sort_orders')[0]);
             $.ajax({
@@ -253,6 +281,11 @@
                     }
                 }
             });
+        }
+        function print_invoice(url){
+            var h = $(window).height();
+            var w = $(window).width();
+            window.open( url, '_blank', 'height='+h+',width='+w+',scrollbars=yes,status=no' );
         }
     </script>
 @endsection

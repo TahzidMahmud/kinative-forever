@@ -6,7 +6,6 @@ use Illuminate\Http\Request;
 use Session;
 use Auth;
 use Hash;
-use Validator;
 use App\Category;
 use App\FlashDeal;
 use App\Brand;
@@ -19,7 +18,6 @@ use App\Seller;
 use App\Shop;
 use App\Color;
 use App\Order;
-use App\Cart;
 use App\BusinessSetting;
 use App\Http\Controllers\SearchController;
 use ImageOptimizer;
@@ -30,7 +28,6 @@ use Mail;
 use App\Utility\TranslationUtility;
 use App\Utility\CategoryUtility;
 use Illuminate\Auth\Events\PasswordReset;
-use App\Mail\EmailManager;
 
 
 class HomeController extends Controller
@@ -45,9 +42,6 @@ class HomeController extends Controller
 
     public function registration(Request $request)
     {
-        if($request->has('next') && $request->next == 'checkout'){
-            session(['link' => route('checkout.shipping_info')]);
-        }
         if(Auth::check()){
             return redirect()->route('home');
         }
@@ -85,18 +79,6 @@ class HomeController extends Controller
                 else{
                     auth()->login($user, false);
                 }
-                if(session('temp_user_id') != null){
-                    Cart::where('temp_user_id', session('temp_user_id'))
-                            ->update(
-                                    [
-                                        'user_id' => auth()->user()->id,
-                                        'temp_user_id' => null
-                                    ]
-                    );
-
-                    Session::forget('temp_user_id');
-                }
-                return redirect()->route('checkout.shipping_info');
             }
             else {
                 flash(translate('Invalid email or password!'))->warning();
@@ -245,12 +227,7 @@ class HomeController extends Controller
             abort(404);
         }
     }
-    public function featured_products(Request $request) {
 
-        $products = filter_products(Product::where('published', 1)->where('featured', 1))->paginate(30);
-
-        return view('frontend.featured_products', compact('products'));
-    }
     public function load_featured_section(){
         return view('frontend.partials.featured_products_section');
     }
@@ -270,7 +247,7 @@ class HomeController extends Controller
     public function trackOrder(Request $request)
     {
         if($request->has('order_code')){
-            $order = Order::where('code', $request->order_code)->orWhere('shipping_address', 'like', '%'.$request->order_code.'%')->orWhere('billing_address', 'like', '%'.$request->order_code.'%')->latest()->first();
+            $order = Order::where('code', $request->order_code)->first();
             if($order != null){
                 return view('frontend.track_order', compact('order'));
             }
@@ -280,7 +257,7 @@ class HomeController extends Controller
 
     public function product(Request $request, $slug)
     {
-        $detailedProduct  = Product::where('slug', $slug)->where('approved', 1)->first();
+        $detailedProduct  = Product::where('slug', $slug)->first();
 
         if($detailedProduct != null && $detailedProduct->published){
             //updateCartSetup();
@@ -432,16 +409,7 @@ class HomeController extends Controller
             }
         }
 
-        $products = filter_products(Product::query());
-
-        $products = $products->where('published', 1)
-                        ->where(function ($q) use($request) {
-                            $q->where('name', 'like', '%'.$request->search.'%')
-                            ->orWhere('tags', 'like', '%'.$request->search.'%');
-                        })
-                    ->get();
-
-//        $products = filter_products(Product::where('published', 1)->where('name', 'like', '%'.$request->search.'%'))->orWhere('tags', 'like', '%'.$request->search.'%')->get()->take(3);
+        $products = filter_products(Product::where('published', 1)->where('name', 'like', '%'.$request->search.'%'))->orWhere('tags', 'like', '%'.$request->search.'%')->get()->take(3);
 
         $categories = Category::where('name', 'like', '%'.$request->search.'%')->get()->take(3);
 
@@ -483,7 +451,6 @@ class HomeController extends Controller
         $min_price = $request->min_price;
         $max_price = $request->max_price;
         $seller_id = $request->seller_id;
-        $selected_weight_values = array();
 
         $conditions = ['published' => 1];
 
@@ -511,6 +478,11 @@ class HomeController extends Controller
             $products = $products->where('unit_price', '>=', $min_price)->where('unit_price', '<=', $max_price);
         }
 
+        if($query != null){
+            $searchController = new SearchController;
+            $searchController->store($request);
+            $products = $products->where('name', 'like', '%'.$query.'%')->orWhere('tags', 'like', '%'.$query.'%');
+        }
 
         switch ($sort_by) {
             case 'newest':
@@ -533,38 +505,88 @@ class HomeController extends Controller
 
         $non_paginate_products = filter_products($products)->get();
 
+        //Attribute Filter
 
-        $all_weights = array();
+        $attributes = array();
         foreach ($non_paginate_products as $key => $product) {
-            if ($product->unit != null) {
-                if(!in_array($product->unit, $all_weights)){
-                    array_push($all_weights, $product->unit);
+            if($product->attributes != null && is_array(json_decode($product->attributes))){
+                foreach (json_decode($product->attributes) as $key => $value) {
+                    $flag = false;
+                    $pos = 0;
+                    foreach ($attributes as $key => $attribute) {
+                        if($attribute['id'] == $value){
+                            $flag = true;
+                            $pos = $key;
+                            break;
+                        }
+                    }
+                    if(!$flag){
+                        $item['id'] = $value;
+                        $item['values'] = array();
+                        foreach (json_decode($product->choice_options) as $key => $choice_option) {
+                            if($choice_option->attribute_id == $value){
+                                $item['values'] = $choice_option->values;
+                                break;
+                            }
+                        }
+                        array_push($attributes, $item);
+                    }
+                    else {
+                        foreach (json_decode($product->choice_options) as $key => $choice_option) {
+                            if($choice_option->attribute_id == $value){
+                                foreach ($choice_option->values as $key => $value) {
+                                    if(!in_array($value, $attributes[$pos]['values'])){
+                                        array_push($attributes[$pos]['values'], $value);
+                                    }
+                                }
+                            }
+                        }
+                    }
                 }
             }
         }
-        if($request->has('selected_weight_values')){
 
-            $selected_weight_values = $request->selected_weight_values;
-            $products->where(function($query) use ($selected_weight_values){
-                foreach ($selected_weight_values as $key => $value) {
-                    $query->orWhere('unit', 'like', '%'.$value.'%');
+        $selected_attributes = array();
+
+        foreach ($attributes as $key => $attribute) {
+            if($request->has('attribute_'.$attribute['id'])){
+                foreach ($request['attribute_'.$attribute['id']] as $key => $value) {
+                    $str = '"'.$value.'"';
+                    $products = $products->where('choice_options', 'like', '%'.$str.'%');
                 }
-            });
 
+                $item['id'] = $attribute['id'];
+                $item['values'] = $request['attribute_'.$attribute['id']];
+                array_push($selected_attributes, $item);
+            }
         }
 
 
-        if($query != null){
-            $searchController = new SearchController;
-            $searchController->store($request);
+        //Color Filter
+        $all_colors = array();
 
-            $products = $products->where('name', 'like', '%'.$query.'%')->orWhere('tags', 'like', '%'.$query.'%');
+        foreach ($non_paginate_products as $key => $product) {
+            if ($product->colors != null) {
+                foreach (json_decode($product->colors) as $key => $color) {
+                    if(!in_array($color, $all_colors)){
+                        array_push($all_colors, $color);
+                    }
+                }
+            }
+        }
+
+        $selected_color = null;
+
+        if($request->has('color')){
+            $str = '"'.$request->color.'"';
+            $products = $products->where('colors', 'like', '%'.$str.'%');
+            $selected_color = $request->color;
         }
 
 
-        $products = filter_products($products)->paginate(100)->appends(request()->query());
+        $products = filter_products($products)->paginate(12)->appends(request()->query());
 
-        return view('frontend.product_listing', compact('products', 'query', 'category_id', 'brand_id', 'sort_by', 'seller_id','min_price', 'max_price', 'all_weights','selected_weight_values'));
+        return view('frontend.product_listing', compact('products', 'query', 'category_id', 'brand_id', 'sort_by', 'seller_id','min_price', 'max_price', 'attributes', 'selected_attributes', 'all_colors', 'selected_color'));
     }
 
     public function home_settings(Request $request)
@@ -646,7 +668,7 @@ class HomeController extends Controller
                 $quantity = translate('In Stock');
             }else{
                 $quantity = translate('Out Of Stock');
-            }
+            }            
         }
 
         //discount calculation
@@ -891,34 +913,5 @@ class HomeController extends Controller
                 ->paginate(15);
 
         return view('frontend.shop_listing', compact('shops'));
-    }
-
-    public function contact_email_send(Request $request){
-        $validator = Validator::make($request->all(), [
-            'email' => 'email',
-        ]);
-
-        if ($request->name != null && $request->email != null && $request->phone != null && $request->company != null && $request->message != null) {
-            if ($validator->passes()) {
-
-                $array['view'] = 'emails.contact';
-                $array['from'] = env('MAIL_USERNAME');
-                $array['email'] = $request->email;
-                $array['subject'] = 'Contact email from '.env('APP_NAME');
-                $array['phone'] = $request->phone;
-                $array['company'] = $request->message;
-                $array['message'] = $request->company;
-
-                Mail::to(get_setting('contact_us_email'))->queue(new EmailManager($array));
-
-                return response()->json(['error'=>'success']);
-
-            }else{
-                return response()->json(['error'=>'email']);
-            }
-        }else {
-            return response()->json(['error'=>'missing']);
-        }
-
     }
 }

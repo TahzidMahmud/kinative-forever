@@ -21,6 +21,7 @@ use App\User;
 use App\BusinessSetting;
 use Auth;
 use Session;
+use PDF;
 use DB;
 use Mail;
 use App\Mail\InvoiceEmailManager;
@@ -91,20 +92,20 @@ class OrderController extends Controller
          if ($date != null) {
              $orders = $orders->where('created_at', '>=', date('Y-m-d', strtotime(explode(" to ", $date)[0])))->where('created_at', '<=', date('Y-m-d', strtotime(explode(" to ", $date)[1])));
          }
-         $orders = $orders->paginate(17);
-
+         $orders = $orders->paginate(15);
          return view('backend.sales.all_orders.index', compact('orders', 'sort_search', 'delivery_status', 'date'));
     }
 
     public function all_orders_show($id)
     {
-         $order = Order::findOrFail(decrypt($id));
-         $order_shipping_address = json_decode($order->shipping_address);
-         $delivery_boys = User::where('city', $order_shipping_address->city)
-                ->where('user_type', 'delivery_boy')
-                ->get();
-
-         return view('backend.sales.all_orders.show', compact('order', 'delivery_boys'));
+        $order = Order::findOrFail(decrypt($id));
+        $order_shipping_address = json_decode($order->shipping_address);
+        $delivery_boys = User::where('city', $order_shipping_address->city)
+            ->where('user_type', 'delivery_boy')
+            ->get();
+        $order->viewed = 1;
+        $order->save();
+        return view('backend.sales.all_orders.show', compact('order', 'delivery_boys'));
     }
 
     // Inhouse Orders
@@ -289,52 +290,28 @@ class OrderController extends Controller
      */
     public function store(Request $request)
     {
-
         $order = new Order;
-        $carts = array();
         if(Auth::check()){
             $order->user_id = Auth::user()->id;
-            $carts = Cart::where('user_id', Auth::user()->id)->get();
-
-            $shipping_info = Address::where('id', $carts[0]['address_id'])->first();
-            $shipping_info->email = Auth::user()->email;
-            if($shipping_info->latitude || $shipping_info->longitude) {
-                $shipping_info->lat_lang = $shipping_info->latitude.','.$shipping_info->longitude;
-            }
-
-            $billing_info = Address::where('id', $carts[0]['billing_address_id'])->first();
-            $shipping_info->email = Auth::user()->email;
-
-            $order->shipping_address = json_encode($shipping_info);
-            $order->billing_address = json_encode($billing_info);
         }
         else{
-            $temp_user_id = Session()->get('temp_user_id');
-            if($temp_user_id) {
-                $carts = Cart::where('temp_user_id', $temp_user_id)->get();
-                if (count($carts) > 0) {
-                    $order->shipping_address = $carts[0]->shipping_address;
-                    $order->billing_address = $carts[0]->billing_address;
-                }
-            }
             $order->guest_id = mt_rand(100000, 999999);
         }
-        if (count($carts) == 0) {
-            $order->delete();
-            flash(translate('Your cart is empty'))->warning();
-            return redirect()->route('home');
-        }
 
-        $order->delivery_date=$carts[0]->delivery_date;
+        $carts = Cart::where('user_id', Auth::user()->id)
+                ->where('owner_id', $request->owner_id)
+                ->get();
+
+        $shipping_info = Address::where('id', $carts[0]['address_id'])->first();
+        $shipping_info->name = Auth::user()->name;
+        $shipping_info->email = Auth::user()->email;
         $order->seller_id = $request->owner_id;
+        $order->shipping_address = json_encode($shipping_info);
 
         $order->payment_type = $request->payment_option;
         $order->delivery_viewed = '0';
         $order->payment_status_viewed = '0';
-        $order->note=$carts[0]["note"];
-
-
-        // $order->code = date('Ymd-His').rand(10,99);
+        $order->code = date('Ymd-His').rand(10,99);
         $order->date = strtotime('now');
 
         if($order->save()){
@@ -371,11 +348,28 @@ class OrderController extends Controller
                 if($product->digital != 1 &&  $cartItem['quantity'] > $product_stock->qty) {
                     flash(translate('The requested quantity is not available for ').$product->getTranslation('name'))->warning();
                     $order->delete();
-                    return redirect()->route('cart')->send();
+                    return redirect()->route('home')->send();
                 }
                 elseif ($product->digital != 1) {
                     $product_stock->qty -= $cartItem['quantity'];
                     $product_stock->save();
+
+                    // $will_deduct = $cartItem['quantity'];
+                    // $buying_price = 0;
+
+                    // foreach ($product_stock->inventory_stock->where('remaining_qty','>','0') as $key => $value) {
+                    //     if($value->remaining_qty >= $will_deduct){
+                    //         $value->remaining_qty -= $will_deduct;
+                    //         $value->save();
+                    //         $buying_price += $will_deduct*$value->unit_purchase_price;
+                    //         break;
+                    //     }else{
+                    //         $will_deduct = $will_deduct - $value->remaining_qty;
+                    //         $buying_price += $value->remaining_qty*$value->unit_purchase_price;
+                    //         $value->remaining_qty = 0;
+                    //         $value->save();
+                    //     }
+                    // }
                 }
 
                 $order_detail = new OrderDetail;
@@ -384,6 +378,7 @@ class OrderController extends Controller
                 $order_detail->product_id = $product->id;
                 $order_detail->variation = $product_variation;
                 $order_detail->price = $cartItem['price'] * $cartItem['quantity'];
+                // $order_detail->buying_price = $buying_price;
                 $order_detail->tax = $cartItem['tax'] * $cartItem['quantity'];
                 $order_detail->shipping_type = $cartItem['shipping_type'];
                 $order_detail->product_referral_code = $cartItem['product_referral_code'];
@@ -392,7 +387,6 @@ class OrderController extends Controller
                 $shipping += $order_detail->shipping_cost;
 
                 if ($cartItem['shipping_type'] == 'pickup_point') {
-                    $order_detail->time_slot=$cartItem['time_slot'];
                     $order_detail->pickup_point_id = $cartItem['pickup_point'];
                 }
                 //End of storing shipping cost
@@ -403,15 +397,15 @@ class OrderController extends Controller
                 $product->num_of_sale++;
                 $product->save();
 
-                if (\App\Addon::where('unique_identifier', 'affiliate_system')->first() != null &&
-                        \App\Addon::where('unique_identifier', 'affiliate_system')->first()->activated) {
-                    if($order_detail->product_referral_code) {
-                        $referred_by_user = User::where('referral_code', $order_detail->product_referral_code)->first();
+                // if (\App\Addon::where('unique_identifier', 'affiliate_system')->first() != null &&
+                //         \App\Addon::where('unique_identifier', 'affiliate_system')->first()->activated) {
+                //     if($order_detail->product_referral_code) {
+                //         $referred_by_user = User::where('referral_code', $order_detail->product_referral_code)->first();
 
-                        $affiliateController = new AffiliateController;
-                        $affiliateController->processAffiliateStats($referred_by_user->id, 0, $order_detail->quantity, 0, 0);
-                    }
-                }
+                //         $affiliateController = new AffiliateController;
+                //         $affiliateController->processAffiliateStats($referred_by_user->id, 0, $order_detail->quantity, 0, 0);
+                //     }
+                // }
             }
 
             $order->grand_total = $subtotal + $tax + $shipping;
@@ -456,9 +450,6 @@ class OrderController extends Controller
                 }
             }
 
-            //sends Notifications to user
-            send_notification($order, 'placed');
-
             //sends email to customer with the invoice pdf attached
             if(env('MAIL_USERNAME') != null){
                 try {
@@ -489,58 +480,7 @@ class OrderController extends Controller
      */
     public function edit($id)
     {
-        $order = Order::findOrFail($id);
-
-        $subtotal = 0;
-        $tax = 0;
-        $shipping = 0;
-        $pos_cart = $order->orderDetails;
-        $data = array();
-        $cart = collect();
-        foreach ($pos_cart as $key => $cartItem){
-            $data['detail_id'] = $cartItem->id;
-            $data['id'] = $cartItem->product_id;
-            if($cartItem->product->variant_product){
-                $data['stock_id'] = ProductStock::where('product_id',$cartItem->product_id)->where('variant',$cartItem->variation)->first()->id;
-            }else{
-                $data['stock_id'] = ProductStock::where('product_id',$cartItem->product_id)->first()->id;
-            }
-            $data['variant'] = $cartItem->variation;
-            $data['quantity'] = $cartItem->quantity;
-            $data['price'] = $cartItem->price/$cartItem->quantity;
-            $data['tax'] = $cartItem->tax;
-            $data['shipping'] = $cartItem->shipping_cost;
-
-            $cart->push($data);
-
-            $subtotal += $cartItem['price'] * $cartItem['quantity'];
-            $tax += $cartItem['tax'] * $cartItem['quantity'];
-            $shipping += $cartItem['shipping_cost'];
-        }
-        Session::put('order_edit.cart', $cart);
-        Session::put('order_edit.discount', $order->coupon_discount);
-        Session::put('order_edit.shipping', round($shipping));
-
-
-        $shipping_data = array();
-        if ($order->user_id != null) {
-            $shipping_data['customer_id'] = $order->user_id;
-        }else{
-            $shipping_data['customer_id'] = null;
-        }
-        $shipping_data['address_id'] = optional(json_decode($order->shipping_address))->address_id;
-        $shipping_data['name'] = optional(json_decode($order->shipping_address))->name;
-        $shipping_data['address'] = optional(json_decode($order->shipping_address))->address;
-        $shipping_data['country'] = optional(json_decode($order->shipping_address))->country;
-        $shipping_data['city'] = optional(json_decode($order->shipping_address))->city;
-        $shipping_data['area'] = optional(json_decode($order->shipping_address))->area;
-        $shipping_data['postal_code'] = optional(json_decode($order->shipping_address))->postal_code;
-        $shipping_data['phone'] = optional(json_decode($order->shipping_address))->phone;
-
-
-        Session::put('order_edit.shipping_info',$shipping_data);
-
-        return view('backend.sales.all_orders.edit', compact('order'));
+        //
     }
 
     /**
@@ -550,202 +490,9 @@ class OrderController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request)
+    public function update(Request $request, $id)
     {
-        if(Session::has('order_edit.cart') && count(Session::get('order_edit.cart')) > 0){
-            $order = Order::findOrFail($request->order_id);
-            $name = '';
-            $email = '';
-            $address = '';
-            $country = '';
-            $city = '';
-            $postal_code = '';
-            $phone = '';
-
-            if ($request->user_id == null) {
-                $order->guest_id    = mt_rand(100000, 999999);
-                $name               = $request->name;
-                $email              = $request->email;
-                $address            = $request->address;
-                $country            = $request->country;
-                $city               = $request->city;
-                $postal_code        = $request->postal_code;
-                $phone              = $request->phone;
-            }
-            else {
-                $order->user_id = $request->user_id;
-                $user           = User::findOrFail($request->user_id);
-                $name   = $user->name;
-                $email  = $user->email;
-
-                if($request->address_id != null){
-                    $address_data   = Address::findOrFail($request->address_id);
-                    $address        = $address_data->address;
-                    $country        = $address_data->country;
-                    $city           = $address_data->city;
-                    $postal_code    = $address_data->postal_code;
-                    $phone          = $address_data->phone;
-                }
-            }
-
-            $data['address_id']     = $request->address_id;
-            $data['name']           = $name;
-            $data['email']          = $email;
-            $data['address']        = $address;
-            $data['country']        = $country;
-            $data['city']           = $city;
-            $data['postal_code']    = $postal_code;
-            $data['phone']          = $phone;
-
-            $order->shipping_address = json_encode($data);
-
-            $order->payment_type = $request->payment_type;
-            $order->delivery_viewed = '0';
-            $order->payment_status_viewed = '0';
-            // $order->code = date('Ymd-His').rand(10,99);
-            $order->date = strtotime('now');
-            // $order->payment_status = 'paid';
-            $order->payment_details = $request->payment_type;
-            if($order->save()){
-                $subtotal = 0;
-                $tax = 0;
-                $shipping = 0;
-                $new_array = array();
-                foreach (Session::get('order_edit.cart') as $key => $cartItem){
-                    $product_stock = ProductStock::find($cartItem['stock_id']);
-                    $product = $product_stock->product;
-                    if($product_stock->variant == null){
-                        $order_detail = OrderDetail::where('order_id',$order->id)->where('product_id',$cartItem['id'])->first();
-                    }else{
-                        $order_detail = OrderDetail::where('order_id',$order->id)->where('product_id',$cartItem['id'])->where('variation',$product_stock->variant)->first();
-                    }
-
-
-                    $product_variation = $product_stock->variant;
-                    $subtotal += $cartItem['price']*$cartItem['quantity'];
-                    $tax += $cartItem['tax']*$cartItem['quantity'];
-
-                    if($order_detail == null){
-                        $order_detail = new OrderDetail;
-                        if($cartItem['quantity'] > $product_stock->qty){
-                            return array('success' => 0, 'message' => $product->name.' ('.$product_variation.') '.translate(" just stock outs."));
-                        }else{
-                            $product_stock->qty -= $cartItem['quantity'];
-                            $product_stock->save();
-                        }
-                    }elseif($order_detail->quantity > $cartItem['quantity']){
-                        $product_stock->qty += ($order_detail->quantity - $cartItem['quantity']);
-                        $product_stock->save();
-                    }elseif($order_detail->quantity < $cartItem['quantity']){
-                        if($cartItem['quantity'] > ($product_stock->qty + $order_detail->quantity) ){
-                            return array('success' => 0, 'message' => $product->name.' ('.$product_variation.') '.translate(" just stock outs."));
-                        }else{
-                            $product_stock->qty -= $cartItem['quantity'];
-                            $product_stock->save();
-                        }
-                    }
-
-
-                    $order_detail->order_id = $order->id;
-                    $order_detail->seller_id = $product->user_id;
-                    $order_detail->product_id = $product->id;
-                    // $order_detail->payment_status = 'paid';
-                    $order_detail->variation = $product_variation;
-                    $order_detail->price = $cartItem['price'] * $cartItem['quantity'];
-                    $order_detail->tax = $cartItem['tax'] * $cartItem['quantity'];
-                    $order_detail->shipping_type = null;
-                    $order_detail->shipping_cost = Session::get('order_edit.shipping', 0)/count(Session::get('order_edit.cart'));
-                    $order_detail->quantity = $cartItem['quantity'];
-                    $order_detail->save();
-
-                    array_push($new_array, $order_detail->id);
-
-                    $product->num_of_sale++;
-                    $product->save();
-                }
-
-                // dd($order->orderDetails,$new_array);
-                foreach ($order->orderDetails as $key => $row) {
-                    if(!in_array($row->id, $new_array, true)) {
-                        // dd($new_array,$row->id);
-                        if($order_detail->variation == null || $order_detail->variation == ''){
-                            $product_stock = ProductStock::where('product_id',$row->product_id)->first();
-                        }else{
-                            $product_stock = ProductStock::where('product_id',$row->product_id)->where('variant',$row->variation)->first();
-                        }
-                        $product_stock->qty += $order_detail->quantity;
-                        $product_stock->save();
-                        $orr = OrderDetail::find($row->id);
-                        $orr->delete();
-                        // dd($row->delete());
-                    }
-                }
-
-                // dd($order->orderDetails);
-
-
-                $order->grand_total = $subtotal + $tax + Session::get('order_edit.shipping',0);
-
-                if(Session::has('order_edit.discount')){
-                    $order->grand_total -= Session::get('order_edit.discount');
-                    $order->coupon_discount = Session::get('order_edit.discount');
-                }
-
-                $order->save();
-
-                $array['view'] = 'emails.invoice';
-                $array['subject'] = 'Your order has been placed - '.$order->code;
-                $array['from'] = env('MAIL_USERNAME');
-                $array['order'] = $order;
-
-                if($request->user_id != NULL){
-                    if (\App\Addon::where('unique_identifier', 'club_point')->first() != null && \App\Addon::where('unique_identifier', 'club_point')->first()->activated) {
-                        $clubpointController = new ClubPointController;
-                        $clubpointController->processClubPoints($order);
-                    }
-                }
-
-                if (BusinessSetting::where('type', 'category_wise_commission')->first()->value != 1) {
-                    $commission_percentage = BusinessSetting::where('type', 'vendor_commission')->first()->value;
-                    foreach ($order->orderDetails as $key => $orderDetail) {
-                        // $orderDetail->payment_status = 'paid';
-                        $orderDetail->save();
-                        if($orderDetail->product->user->user_type == 'seller'){
-                            $seller = $orderDetail->product->user->seller;
-                            $seller->admin_to_pay = $seller->admin_to_pay - ($orderDetail->price*$commission_percentage)/100;
-                            $seller->save();
-                        }
-                    }
-                }
-                else{
-                    foreach ($order->orderDetails as $key => $orderDetail) {
-                        // $orderDetail->payment_status = 'paid';
-                        $orderDetail->save();
-                        if($orderDetail->product->user->user_type == 'seller'){
-                            $commission_percentage = $orderDetail->product->category->commision_rate;
-                            $seller = $orderDetail->product->user->seller;
-                            $seller->admin_to_pay = $seller->admin_to_pay - ($orderDetail->price*$commission_percentage)/100;
-                            $seller->save();
-                        }
-                    }
-                }
-
-                $order->commission_calculated = 1;
-                $order->save();
-
-                $request->session()->put('order_id', $order->id);
-
-                Session::forget('order_edit.shipping');
-                Session::forget('order_edit.discount');
-                Session::forget('order_edit.cart');
-                Session::forget('order_edit.shipping_info');
-                return array('success' => 1, 'message' => translate('Order Completed Successfully.'));
-            }
-            else {
-                return array('success' => 0, 'message' => translate('Please input customer information.'));
-            }
-        }
-        return array('success' => 0, 'message' => translate("Please select a product."));
+        //
     }
 
     /**
@@ -804,13 +551,13 @@ class OrderController extends Controller
         $order = Order::findOrFail($request->order_id);
         $order->delivery_viewed = '0';
         $order->delivery_status = $request->status;
-        $order->save();
 
-        if($request->status == 'cancelled' && $order->payment_type == 'wallet') {
-            $user = User::where('id', $order->user_id)->first();
-            $user->balance += $order->grand_total;
-            $user->save();
-        }
+
+        // if($request->status == 'cancelled' && $order->payment_type == 'wallet') {
+        //     $user = User::where('id', $order->user_id)->first();
+        //     $user->balance += $order->grand_total;
+        //     $user->save();
+        // }
 
         if(Auth::user()->user_type == 'seller') {
             foreach($order->orderDetails->where('seller_id', Auth::user()->id) as $key => $orderDetail){
@@ -829,6 +576,17 @@ class OrderController extends Controller
             }
         }
         else {
+            if($request->status=='delivery_boy_cancel'){
+                $order->cancel_request=0;
+                $delivery_boy=$order->assign_delivery_boy;
+                $cancel=\App\DeliveryBoyCancel::create([
+                    'order_id'=>$order->id,
+                    'user_id'=>(int)$delivery_boy
+                ]);
+                $order->delivery_status='confirmed';
+                $order->assign_delivery_boy=null;
+                $order->save();
+            }
             foreach ($order->orderDetails as $key => $orderDetail) {
 
                 $orderDetail->delivery_status = $request->status;
@@ -846,34 +604,30 @@ class OrderController extends Controller
                     }
                 }
 
-                if (\App\Addon::where('unique_identifier', 'affiliate_system')->first() != null && \App\Addon::where('unique_identifier', 'affiliate_system')->first()->activated) {
-                    if (($request->status == 'delivered' || $request->status == 'cancelled') &&
-                            $orderDetail->product_referral_code) {
 
-                        $no_of_delivered = 0;
-                        $no_of_canceled = 0;
+                // if (\App\Addon::where('unique_identifier', 'affiliate_system')->first() != null && \App\Addon::where('unique_identifier', 'affiliate_system')->first()->activated) {
+                //     if (($request->status == 'delivered' || $request->status == 'cancelled') &&
+                //             $orderDetail->product_referral_code) {
 
-                        if($request->status == 'delivered') {
-                            $no_of_delivered = $orderDetail->quantity;
-                        }
-                        if($request->status == 'cancelled') {
-                            $no_of_canceled = $orderDetail->quantity;
-                        }
+                //         $no_of_delivered = 0;
+                //         $no_of_canceled = 0;
 
-                        $referred_by_user = User::where('referral_code', $orderDetail->product_referral_code)->first();
+                //         if($request->status == 'delivered') {
+                //             $no_of_delivered = $orderDetail->quantity;
+                //         }
+                //         if($request->status == 'cancelled') {
+                //             $no_of_canceled = $orderDetail->quantity;
+                //         }
 
-                        $affiliateController = new AffiliateController;
-                        $affiliateController->processAffiliateStats($referred_by_user->id, 0, 0, $no_of_delivered, $no_of_canceled);
-                    }
-                }
+                //         $referred_by_user = User::where('referral_code', $orderDetail->product_referral_code)->first();
+
+                //         $affiliateController = new AffiliateController;
+                //         $affiliateController->processAffiliateStats($referred_by_user->id, 0, 0, $no_of_delivered, $no_of_canceled);
+                //     }
+                // }
             }
-        }
 
-        //sends Notifications to user
-        send_notification($order, $request->status);
-//        if(send_notification($order, $request->status) && get_setting('google_firebase') == 1) {
-//            send_firebase_notification();
-//        }
+        }
 
         if (\App\Addon::where('unique_identifier', 'otp_system')->first() != null && \App\Addon::where('unique_identifier', 'otp_system')->first()->activated && \App\OtpConfiguration::where('type', 'otp_for_delivery_status')->first()->value){
             try {
@@ -883,32 +637,65 @@ class OrderController extends Controller
             }
         }
 
+        $this->send_notification_to_customer($order);
+
         if (\App\Addon::where('unique_identifier', 'delivery_boy')->first() != null &&
                 \App\Addon::where('unique_identifier', 'delivery_boy')->first()->activated) {
 
             if(Auth::user()->user_type == 'delivery_boy') {
                 $deliveryBoyController = new DeliveryBoyController;
                 $deliveryBoyController->store_delivery_history($order);
+
+            }
+            if($request->status=="pending" && $order->assign_delivery_boy!=null){
+                $deliveryBoyController = new DeliveryBoyController;
+                $deliveryBoyController->send_notification_to_deliveryboy($order->id);
             }
         }
 
         return 1;
     }
+    public function send_notification_to_customer($order){
+        $order = Order::findOrFail($order);
+        $title="Your Order Status Has Updated..!!";
+        $message="Your Order Status Has Updated To ".$order->status."For - Order Code:".$order->code."";
+        $id=$order->user_id;
+        $type="customer";
+        send_notification_FCM($title, $message, $id,$type);
+        return 1;
+    }
+   public function bulk_order_status(Request $request) {
+       if($request->has('ids')) {
+            foreach ($request->ids as $order_id) {
+               $order = Order::findOrFail($order_id);
+               $order->delivery_status = $request->status;
+               $order->save();
 
-//    public function bulk_order_status(Request $request) {
-////        dd($request->all());
-//        if($request->id) {
-//            foreach ($request->id as $order_id) {
-//                $order = Order::findOrFail($order_id);
-//                $order->delivery_viewed = '0';
-//                $order->save();
-//
-//                $this->change_status($order, $request);
-//            }
-//        }
-//
-//        return 1;
-//    }
+               foreach($order->orderDetails as $orderDetail){
+                    $orderDetail->delivery_status = $request->status;
+                    $orderDetail->save();
+               }
+
+            }
+       }
+       return 1;
+   }
+   public function bulk_order_download(Request $request) {
+    if($request->id){
+        $orders = Order::with(['orderDetails','orderDetails.product'])->whereIn('id',$request->id)->get();
+
+        return PDF::loadView('backend.sales.all_orders.download_details',[
+            'orders' => $orders,
+        ], [], [])->download('orders-details.pdf');
+    }
+   }
+   public function bulk_order_print(Request $request) {
+    if($request->order_ids){
+        $ids = explode(',', $request->order_ids);
+        $orders = Order::with(['orderDetails','orderDetails.product'])->whereIn('id',$ids)->get();
+        return view('backend.sales.all_orders.print_details', compact('orders'));
+    }
+   }
 
     public function update_payment_status(Request $request)
     {
@@ -945,12 +732,6 @@ class OrderController extends Controller
             $order->commission_calculated = 1;
             $order->save();
         }
-
-        //sends Notifications to user
-        send_notification($order, $request->status);
-//        if(send_notification($order, $request->status) && get_setting('google_firebase') == 1) {
-//            send_firebase_notification();
-//        }
 
         if (\App\Addon::where('unique_identifier', 'otp_system')->first() != null && \App\Addon::where('unique_identifier', 'otp_system')->first()->activated && \App\OtpConfiguration::where('type', 'otp_for_paid_status')->first()->value){
             try {
@@ -1011,147 +792,5 @@ class OrderController extends Controller
         }
 
         return 1;
-    }
-
-
-
-    public function addToCart(Request $request)
-    {
-        $stock = ProductStock::find($request->stock_id);
-        $product = $stock->product;
-
-        $data = array();
-        $data['stock_id'] = $request->stock_id;
-        $data['id'] = $product->id;
-        $data['variant'] = $stock->variant;
-        $tax = 0;
-
-        if($stock->qty < $product->min_qty){
-            return array('success' => 0, 'message' => translate("This product doesn't have enough stock for minimum purchase quantity ").$product->min_qty, 'view' => view('backend.sales.all_orders.cart')->render());
-        }
-        $price = $stock->price;
-        $quantity = $stock->qty;
-
-        //discount calculation  discount
-        if($product->discount_type == 'percent'){
-            $price -= ($price*$product->discount)/100;
-        }
-        elseif($product->discount_type == 'amount'){
-            $price -= $product->discount;
-        }
-
-        if($product->tax_type == 'percent'){
-            $tax = ($price*$product->tax)/100;
-        }
-        elseif($product->tax_type == 'amount'){
-            $tax = $product->tax;
-        }
-
-        $data['quantity'] = $product->min_qty;
-        $data['price'] = $price;
-        $data['tax'] = $tax;
-
-        if($request->session()->has('order_edit.cart')){
-            $foundInCart = false;
-            $cart = collect();
-
-            foreach ($request->session()->get('order_edit.cart') as $key => $cartItem){
-                if($cartItem['id'] == $product->id && $cartItem['stock_id'] == $stock->id){
-                    $foundInCart = true;
-                    $loop_product = \App\Product::find($cartItem['id']);
-                    $product_stock = $loop_product->stocks->where('variant', $cartItem['variant'])->first();
-                    if(isset($cartItem['detail_id'])){
-                        $order_quantity = \App\OrderDetail::find($cartItem['detail_id'])->quantity;
-                    }else{
-                        $order_quantity = 0;
-                    }
-
-                    if( ($product_stock->qty + $order_quantity) >= ($cartItem['quantity'] + 1)){
-                        $cartItem['quantity'] += 1;
-                    }else{
-                        return array('success' => 0, 'message' => translate("This product doesn't have more stock."), 'view' => view('backend.sales.all_orders.cart')->render());
-                    }
-                }
-                $cart->push($cartItem);
-            }
-
-            if (!$foundInCart) {
-                $cart->push($data);
-            }
-            $request->session()->put('order_edit.cart', $cart);
-        }
-        else{
-            $cart = collect([$data]);
-            $request->session()->put('order_edit.cart', $cart);
-        }
-        return array('success' => 1, 'message' => '', 'view' => view('backend.sales.all_orders.cart')->render());
-    }
-
-    public function removeFromCart(Request $request)
-    {
-        if(Session::has('order_edit.cart')){
-            $cart = Session::get('order_edit.cart', collect([]));
-            $cart->forget($request->key);
-            Session::put('order_edit.cart', $cart);
-        }
-
-        return view('backend.sales.all_orders.cart');
-    }
-    public function updateQuantity(Request $request)
-    {
-        $cart = $request->session()->get('order_edit.cart', collect([]));
-        $cart = $cart->map(function ($object, $key) use ($request) {
-            if($key == $request->key){
-                $product = \App\Product::find($object['id']);
-                $product_stock = $product->stocks->where('id', $object['stock_id'])->first();
-                if(isset($object['detail_id'])){
-                    $order_quantity = \App\OrderDetail::find($object['detail_id'])->quantity;
-                }else{
-                    $order_quantity = 0;
-                }
-
-                if( ($product_stock->qty + $order_quantity) >= $request->quantity){
-                    $object['quantity'] = $request->quantity;
-                }else{
-                    return array('success' => 0, 'message' => translate("This product doesn't have more stock."), 'view' => view('backend.sales.all_orders.cart')->render());
-                }
-            }
-            return $object;
-        });
-        $request->session()->put('order_edit.cart', $cart);
-
-        return array('success' => 1, 'message' => '', 'view' => view('backend.sales.all_orders.cart')->render());
-    }
-    //Shipping Address for admin
-    public function getShippingAddress(Request $request){
-        $user_id = $request->id;
-        // if($user_id == ''){
-            return view('backend.sales.all_orders.guest_shipping_address');
-        // }
-        // else{
-        //     return view('backend.sales.all_orders.shipping_address', compact('user_id'));
-        // }
-    }
-    public function get_order_summary(Request $request){
-        return view('backend.sales.all_orders.order_summary');
-    }
-    public function setDiscount(Request $request){
-
-        // dd($request->all());
-        if($request->discount >= 0){
-            Session::put('pos.discount', $request->discount);
-        }
-        if($request->discount_type == 'percent'){
-            Session::put('pos.discount_type', 'percent');
-        }else{
-            Session::put('pos.discount_type', 'amount');
-        }
-        return view('backend.sales.all_orders.cart');
-    }
-    public function setShipping(Request $request){
-        if($request->shipping >= 0){
-            Session::put('pos.shipping', $request->shipping);
-        }
-        return view('backend.sales.all_orders.cart');
     }
 }

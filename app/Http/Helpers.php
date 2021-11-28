@@ -2,8 +2,7 @@
 
 use App\Http\Controllers\ClubPointController;
 use App\Http\Controllers\AffiliateController;
-use Illuminate\Support\Facades\Notification;
-use App\Notifications\OrderNotification;
+use App\Http\Controllers\CommissionController;
 
 use App\Currency;
 use App\BusinessSetting;
@@ -26,6 +25,7 @@ use Twilio\Rest\Client;
 use App\Wallet;
 use App\Order;
 use App\User;
+use App\FirebaseAccessToken;
 
 //highlights the selected navigation on admin panel
 if (! function_exists('sendSMS')) {
@@ -182,6 +182,53 @@ if (! function_exists('sendSMS')) {
     }
 }
 
+if(! function_exists('send_notification_FCM')){
+    function send_notification_FCM($title, $message, $id=null,$type,$image_url=null,$click_action=null) {
+
+        if($type=="deals"){
+            $firebaseToken=FirebaseAccessToken::whereNotNull('access_token')->where('user_type','customer')->pluck('access_token')->all();
+        }else{
+            $firebaseToken =FirebaseAccessToken::whereNotNull('access_token')->where('user_id',$id)->pluck('access_token')->all();
+        }
+
+
+        // $SERVER_API_KEY = $type=="delivery_boy"?env('FCM_KEY'):env('FCM_KEY_CUS');
+        $SERVER_API_KEY = env('FCM_KEY');
+
+
+        $data = [
+            "registration_ids" => $firebaseToken,
+            "notification" => [
+                "title" => $title,
+                "body" => $message,
+                "image"=>$image_url,
+                "click_action"=>$click_action,
+                "content_available" => true,
+                "priority" => "high",
+            ]
+        ];
+        $dataString = json_encode($data);
+
+        $headers = [
+            'Authorization: key=' . $SERVER_API_KEY,
+            'Content-Type: application/json',
+        ];
+
+        $ch = curl_init();
+
+        curl_setopt($ch, CURLOPT_URL, 'https://fcm.googleapis.com/fcm/send');
+        curl_setopt($ch, CURLOPT_POST, true);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $dataString);
+
+        $response = curl_exec($ch);
+        // dd($response);
+        return $response;
+    }
+}
+
 //highlights the selected navigation on admin panel
 if (! function_exists('areActiveRoutes')) {
     function areActiveRoutes(Array $routes, $output = "active")
@@ -241,7 +288,7 @@ if (! function_exists('filter_products')) {
     function filter_products($products) {
         $verified_sellers = verified_sellers_id();
         if(BusinessSetting::where('type', 'vendor_system_activation')->first()->value == 1){
-            return $products->where('approved', '1')->where('published', '1')->orderBy('created_at', 'desc')->where(function($p) use ($verified_sellers){
+            return $products->where('published', '1')->orderBy('created_at', 'desc')->where(function($p) use ($verified_sellers){
                 $p->where('added_by', 'admin')->orWhere(function($q) use ($verified_sellers){
                     $q->whereIn('user_id', $verified_sellers);
                 });
@@ -256,7 +303,7 @@ if (! function_exists('filter_products')) {
 //cache products based on category
 if (! function_exists('get_cached_products')) {
     function get_cached_products($category_id = null) {
-        $products = \App\Product::where('published', 1)->where('approved', '1');
+        $products = \App\Product::where('published', 1);
         $verified_sellers = verified_sellers_id();
         if(BusinessSetting::where('type', 'vendor_system_activation')->first()->value == 1){
             $products =  $products->where(function($p) use ($verified_sellers){
@@ -273,7 +320,7 @@ if (! function_exists('get_cached_products')) {
             return Cache::remember('products-category-'.$category_id, 86400, function () use ($category_id, $products) {
                 $category_ids = CategoryUtility::children_ids($category_id);
                 $category_ids[] = $category_id;
-                return $products->whereIn('category_id', $category_ids)->latest()->take(12)->get();
+                return $products->whereIn('category_id', $category_ids)->latest()->take(10)->get();
             });
         }
         else {
@@ -320,22 +367,20 @@ if (! function_exists('convert_price')) {
 if (! function_exists('format_price')) {
     function format_price($price)
     {
-        // return '৳ '.number_format($price, get_setting('no_of_decimals'));
         if (get_setting('decimal_separator') == 1) {
             $fomated_price = number_format($price, get_setting('no_of_decimals'));
-        }
-        else {
-            $fomated_price = number_format($price, get_setting('no_of_decimals'), ',' , ' ');
+        } else {
+            $fomated_price = number_format($price, get_setting('no_of_decimals'), ',', '');
         }
 
-        if(get_setting('symbol_format') == 1){
-            return currency_symbol().$fomated_price;
-        } else if(get_setting('symbol_format') == 3){
-            return currency_symbol().' '.$fomated_price;
-        } else if(get_setting('symbol_format') == 4) {
-            return $fomated_price.' '.currency_symbol();
+        if (get_setting('symbol_format') == 1) {
+            return currency_symbol() . $fomated_price;
+        } else if (get_setting('symbol_format') == 3) {
+            return currency_symbol() . ' ' . $fomated_price;
+        } else if (get_setting('symbol_format') == 4) {
+            return $fomated_price . '' . currency_symbol();
         }
-        return $fomated_price.currency_symbol();
+        return $fomated_price . currency_symbol();
 
     }
 }
@@ -452,8 +497,8 @@ if (! function_exists('home_discounted_price')) {
 }
 
 //Shows Base Price
-if (! function_exists('home_base_price_by_stock_id')) {
-    function home_base_price_by_stock_id($id)
+if (! function_exists('home_base_price_by_id')) {
+    function home_base_price_by_id($id)
     {
         $product_stock = ProductStock::findOrFail($id);
         $price = $product_stock->price;
@@ -491,8 +536,8 @@ if (! function_exists('home_base_price')) {
 }
 
 //Shows Base Price with discount
-if (! function_exists('home_discounted_base_price_by_stock_id')) {
-    function home_discounted_base_price_by_stock_id($id)
+if (! function_exists('home_discounted_base_price_by_id')) {
+    function home_discounted_base_price_by_id($id)
     {
         $product_stock = ProductStock::findOrFail($id);
         $product = $product_stock->product;
@@ -599,52 +644,6 @@ if(! function_exists('renderStarRating')){
         $html = str_repeat($fullStar,$fullStarCount);
         $html .= str_repeat($halfStar,$halfStarCount);
         $html .= str_repeat($emptyStar,$emptyStarCount);
-        echo $html;
-    }
-}
-
-if(! function_exists('renderOrderSteps')){
-    function renderOrderSteps($status) {
-        $statuses = ['pending','confirmed','picked_up','on_the_way','delivered'];
-        $status_index = array_search($status,$statuses);
-        $html = '<ul class="list-inline text-center aiz-steps">';
-        foreach ($statuses as $key => $value) {
-
-            if($key < $status_index){
-                $className = 'list-inline-item position-relative done';
-                $iconClassName = 'icon border-success';
-                $icon = 'las la-check bg-success text-white';
-            }elseif ($key == $status_index) {
-                $className = 'list-inline-item position-relative active';
-                $iconClassName = 'icon bg-white border-gray-400';
-                $icon = 'las la-dot text-success';
-            }else{
-                $className = 'list-inline-item position-relative';
-                $iconClassName = 'icon bg-white text-dark  border-gray-400';
-                $icon = 'las la-dot';
-            }
-
-
-            if($status == 'cancelled'){
-                $className  = 'list-inline-item position-relative cancelled';
-                $iconClassName = 'icon bg-white border-danger';
-                $value  = 'cancelled';
-                $icon = 'las la-times lh-1 text-danger';
-            }elseif($status == 'delivered' && $key == 4){
-                $className = 'list-inline-item position-relative done';
-                $iconClassName = 'icon';
-                $icon = 'las la-check bg-success text-white';
-            }
-
-            $html .= '<li class="z-1 px-2 w-90px opacity-100 '.$className.'">
-                <div class="'.$iconClassName.'">
-                    <i class="'.$icon.'"></i>
-                </div>
-                <div class="title fs-11 text-truncate">'.translate(ucfirst(str_replace('_', ' ', $value))).'</div>
-            </li>';
-        }
-
-        $html .= '</ul>';
         echo $html;
     }
 }
@@ -853,7 +852,7 @@ if (! function_exists('convertPrice')) {
 
 
 function translate($key, $lang = null){
-    // return $key;
+    return $key;
     if($lang == null){
         $lang = App::getLocale();
     }
@@ -886,7 +885,7 @@ function remove_invalid_charcaters($str)
     return str_ireplace(array('"'), '\"', $str);
 }
 
-function getShippingCost($carts, $index){
+function getShippingCost($carts, $index,$express='false'){
     $admin_products = array();
     $seller_products = array();
     $calculate_shipping = 0;
@@ -921,14 +920,15 @@ function getShippingCost($carts, $index){
         }
     }
     elseif (get_setting('shipping_type') == 'area_wise_shipping') {
-        if(Auth::check()){
-            $shipping_info = Address::where('id', $carts[0]['address_id'])->first();
-            $city = City::where('name', $shipping_info->city)->first();
-        }else{
-            $city = City::where('name', json_decode($carts[0]['shipping_address'])->city)->first();
-        }
+        $shipping_info = Address::where('id', $carts[0]['address_id'])->first();
+        $city = City::where('name', $shipping_info->city)->first();
         if($city != null){
-            $calculate_shipping = $city->cost;
+            if($express==true){
+                $calculate_shipping = $city->express_cost;
+            }else{
+                $calculate_shipping = $city->cost;
+            }
+
         }
     }
 
@@ -1082,35 +1082,13 @@ if (! function_exists('isUnique')) {
 }
 
 if (!function_exists('get_setting')) {
-    function get_setting($key, $default = null,$lang = false)
+    function get_setting($key, $default = null)
     {
         $settings = Cache::remember('business_settings', 86400, function(){
             return BusinessSetting::all();
         });
 
-        if($lang == false){
-            $setting = $settings->where('type', $key)->first();
-        }else{
-            $setting = $settings->where('type', $key)->where('lang',$lang)->first();
-            $setting = !$setting ? $settings->where('type', $key)->first() : $setting;
-        }
-        return $setting == null ? $default : $setting->value;
-    }
-}
-
-if (!function_exists('get_page_setting')) {
-    function get_page_setting($key,$page_id = null, $default = null, $lang = false)
-    {
-        $settings = Cache::remember('business_settings', 86400, function(){
-            return BusinessSetting::all();
-        });
-
-        if($lang == false){
-            $setting = $settings->where('type', $key)->where('page_id',$page_id)->first();
-        }else{
-            $setting = $settings->where('type', $key)->where('page_id',$page_id)->where('lang',$lang)->first();
-            $setting = !$setting ? $settings->where('type', $key)->where('page_id',$page_id)->first() : $setting;
-        }
+        $setting = $settings->where('type', $key)->first();
         return $setting == null ? $default : $setting->value;
     }
 }
@@ -1305,6 +1283,28 @@ if (!function_exists('purchase_payment_done')) {
 
     }
 }
+//Commission Calculation
+if (!function_exists('calculateCommissionAffilationClubPoint')) {
+    function calculateCommissionAffilationClubPoint($order)
+    {
+        (new CommissionController)->calculateCommission($order);
+
+        if (\App\Addon::where('unique_identifier', 'delivery_boy')->first() != null &&
+                \App\Addon::where('unique_identifier', 'delivery_boy')->first()->activated)  {
+            (new AffiliateController)->processAffiliatePoints($order);
+        }
+
+        if (\App\Addon::where('unique_identifier', 'delivery_boy')->first() != null &&
+        \App\Addon::where('unique_identifier', 'delivery_boy')->first()->activated) {
+            if ($order->user != null) {
+                (new ClubPointController)->processClubPoints($order);
+            }
+        }
+
+        $order->commission_calculated = 1;
+        $order->save();
+    }
+}
 
 //Commission Calculation
 if (!function_exists('commission_calculation')) {
@@ -1401,77 +1401,6 @@ if (!function_exists('commission_calculation')) {
                 $clubpointController->processClubPoints($order);
             }
         }
-    }
-}
-
-//Send Notification
-if (!function_exists('send_notification')) {
-    function send_notification($order, $order_status) {
-        if($order->seller_id == \App\User::where('user_type', 'admin')->first()->id) {
-            if(Auth::check()){
-                $users = User::findMany([Auth::user()->id, $order->seller_id]);
-            }else{
-                $users = User::findMany([$order->seller_id]);
-            }
-        } else {
-            if(Auth::check()){
-                $users = User::findMany([Auth::user()->id, $order->seller_id, \App\User::where('user_type', 'admin')->first()->id]);
-            }else{
-                $users = User::findMany([$order->seller_id, \App\User::where('user_type', 'admin')->first()->id]);
-            }
-
-        }
-
-        $order_notification = array();
-        $order_notification['order_id']     = $order->id;
-        $order_notification['order_code']   = $order->code;
-        $order_notification['user_id']      = $order->user_id;
-        $order_notification['seller_id']    = $order->seller_id;
-        $order_notification['status']       = $order_status;
-
-        Notification::send($users, new OrderNotification($order_notification));
-    }
-}
-
-if (!function_exists('send_firebase_notification')) {
-    function send_firebase_notification($req) {
-        $url = 'https://fcm.googleapis.com/fcm/send';
-        $dataArr = array(
-            'click_action' => 'FLUTTER_NOTIFICATION_CLICK',
-            'id' => $req->id,
-            'status' => "done"
-        );
-        $notification = array(
-            'title' => $req->title,
-            'text' => $req->body,
-            'image' => $req->img,
-            'sound' => 'default',
-            'badge' => '1',
-        );
-        $arrayToSend = array(
-            'to' => "/topics/all",
-            'notification' => $notification,
-            'data' => $dataArr,
-            'priority' => 'high'
-        );
-
-        $fields = json_encode($arrayToSend);
-        $headers = array(
-            'Authorization: key=' . env('FCM_SERVER_KEY'),
-            'Content-Type: application/json'
-        );
-
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, $url);
-        curl_setopt($ch, CURLOPT_POST, true);
-        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, $fields);
-
-        $result = curl_exec($ch);
-        //var_dump($result);
-        curl_close($ch);
-        return $result;
     }
 }
 

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\V2;
 use App\Http\Resources\V2\CategoryCollection;
 use App\Models\BusinessSetting;
 use App\Models\Category;
+use Illuminate\Http\Request;
 
 class CategoryController extends Controller
 {
@@ -22,10 +23,28 @@ class CategoryController extends Controller
         return new CategoryCollection(Category::where('featured', 1)->get());
     }
 
+
+    public function chosen_for_you(){
+        $cats=json_decode(get_setting('home_categories'));
+        $temp=[];
+        foreach($cats as $cat){
+           $tm= Category::where('id', $cat)->first();
+           array_push($temp,$tm);
+
+        }
+        return new CategoryCollection($temp);
+    }
+    public function new_items(){
+
+        return new CategoryCollection(Category::where('parent_id',0)->take(6)->get());
+
+    }
     public function home()
     {
         $homepageCategories = BusinessSetting::where('type', 'home_categories')->first();
+
         $homepageCategories = json_decode($homepageCategories->value);
+
         return new CategoryCollection(Category::whereIn('id', $homepageCategories)->get());
     }
 

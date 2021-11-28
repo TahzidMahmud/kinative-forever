@@ -56,48 +56,6 @@
         						<small class="text-muted">{{ translate('Hex Color Code') }}</small>
                             </div>
     	                </div>
-                        <div class="form-group row">
-                            <label class="col-md-3 col-from-label">{{ translate('Blog banners') }}</label>
-                            <div class="col-md-8">
-                                <div class="input-group " data-toggle="aizuploader" data-type="image" data-multiple='true'>
-                                    <div class="input-group-prepend">
-                                        <div class="input-group-text bg-soft-secondary">{{ translate('Browse') }}</div>
-                                    </div>
-                                    <div class="form-control file-amount">{{ translate('Choose File') }}</div>
-                                    <input type="hidden" name="types[]" value="blog_banners">
-                                    <input type="hidden" name="blog_banners" value="{{ get_setting('blog_banners') }}" class="selected-files">
-                                </div>
-                                <div class="file-preview box"></div>
-                            </div>
-                        </div>
-                        <div class="form-group row">
-                            <label class="col-md-3 col-from-label">{{ translate('Single Product Page banner') }}</label>
-                            <div class="col-md-8">
-                                <div class="input-group " data-toggle="aizuploader" data-type="image" data-multiple='true'>
-                                    <div class="input-group-prepend">
-                                        <div class="input-group-text bg-soft-secondary">{{ translate('Browse') }}</div>
-                                    </div>
-                                    <div class="form-control file-amount">{{ translate('Choose File') }}</div>
-                                    <input type="hidden" name="types[]" value="product_banner">
-                                    <input type="hidden" name="product_banner" value="{{ get_setting('product_banner') }}" class="selected-files">
-                                </div>
-                                <div class="file-preview box"></div>
-                            </div>
-                        </div>
-                        <div class="form-group row">
-                            <label class="col-md-3 col-from-label">{{ translate('Offer Page banner') }}</label>
-                            <div class="col-md-8">
-                                <div class="input-group " data-toggle="aizuploader" data-type="image" data-multiple='true'>
-                                    <div class="input-group-prepend">
-                                        <div class="input-group-text bg-soft-secondary">{{ translate('Browse') }}</div>
-                                    </div>
-                                    <div class="form-control file-amount">{{ translate('Choose File') }}</div>
-                                    <input type="hidden" name="types[]" value="offers_banner">
-                                    <input type="hidden" name="offers_banner" value="{{ get_setting('offers_banner') }}" class="selected-files">
-                                </div>
-                                <div class="file-preview box"></div>
-                            </div>
-                        </div>
     					<div class="text-right">
     						<button type="submit" class="btn btn-primary">{{ translate('Update') }}</button>
     					</div>
@@ -115,21 +73,21 @@
     						<label class="col-md-3 col-from-label">{{ translate('Meta Title') }}</label>
                             <div class="col-md-8">
         						<input type="hidden" name="types[]" value="meta_title">
-        						<input type="text" class="form-control" placeholder="{{translate('Title')}}" name="meta_title" value="{{ get_setting('meta_title') }}">
+        						<input type="text" class="form-control" placeholder="Title" name="meta_title" value="{{ get_setting('meta_title') }}">
                             </div>
     					</div>
     					<div class="form-group row">
     						<label class="col-md-3 col-from-label">{{ translate('Meta description') }}</label>
                             <div class="col-md-8">
         						<input type="hidden" name="types[]" value="meta_description">
-        						<textarea class="resize-off form-control" placeholder="{{translate('Description')}}" name="meta_description">{{  get_setting('meta_description') }}</textarea>
+        						<textarea class="resize-off form-control" placeholder="Description" name="meta_description">{{  get_setting('meta_description') }}</textarea>
                             </div>
     					</div>
     					<div class="form-group row">
     						<label class="col-md-3 col-from-label">{{ translate('Keywords') }}</label>
                             <div class="col-md-8">
         						<input type="hidden" name="types[]" value="meta_keywords">
-        						<textarea class="resize-off form-control" placeholder="{{translate('Keyword, Keyword')}}" name="meta_keywords">{{ get_setting('meta_keywords') }}</textarea>
+        						<textarea class="resize-off form-control" placeholder="Keyword, Keyword" name="meta_keywords">{{ get_setting('meta_keywords') }}</textarea>
         						<small class="text-muted">{{ translate('Separate with coma') }}</small>
                             </div>
     					</div>

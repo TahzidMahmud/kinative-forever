@@ -84,10 +84,8 @@ class WalletController extends Controller
         } else if ($request->payment_option == 'bkash') {
             $bkash = new BkashController;
             return $bkash->pay();
-        } else if ($request->payment_option == 'aamarpay') {
-            $aamarpay = new AamarpayController;
-            return $aamarpay->index();
-        } else if ($request->payment_option == 'mpesa') {
+        }
+        else if ($request->payment_option == 'mpesa') {
             $mpesa = new MpesaController();
             return $mpesa->pay();
         } else if ($request->payment_option == 'flutterwave') {

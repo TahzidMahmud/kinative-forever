@@ -205,37 +205,6 @@
                                 </div>
                             </div>
                             
-                            @if (get_setting('google_map') == 1)
-                                <div class="row">
-                                    <input id="searchInput" class="controls" type="text" placeholder="{{translate('Enter a location')}}">
-                                    <div id="map"></div>
-                                    <ul id="geoData">
-                                        <li style="display: none;">Full Address: <span id="location"></span></li>
-                                        <li style="display: none;">Postal Code: <span id="postal_code"></span></li>
-                                        <li style="display: none;">Country: <span id="country"></span></li>
-                                        <li style="display: none;">Latitude: <span id="lat"></span></li>
-                                        <li style="display: none;">Longitude: <span id="lon"></span></li>
-                                    </ul>
-                                </div>
-
-                                <div class="row">
-                                    <div class="col-md-2" id="">
-                                        <label for="exampleInputuname">Longitude</label>
-                                    </div>
-                                    <div class="col-md-10" id="">
-                                        <input type="text" class="form-control mb-3" id="longitude" name="longitude" readonly="">
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-md-2" id="">
-                                        <label for="exampleInputuname">Latitude</label>
-                                    </div>
-                                    <div class="col-md-10" id="">
-                                        <input type="text" class="form-control mb-3" id="latitude" name="latitude" readonly="">
-                                    </div>
-                                </div>
-                            @endif
-                            
                             <div class="row">
                                 <label class="col-md-2 col-form-label">{{ translate('Postal code') }}</label>
                                 <div class="col-md-10">
@@ -263,7 +232,7 @@
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">{{ translate('Address Edit') }}</h5>
+                    <h5 class="modal-title" id="exampleModalLabel">{{ translate('New Address') }}</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -312,25 +281,11 @@
             url: url,
             type: 'GET',
             success: function (response) {
-                $('#edit_modal_body').html(response.html);
+                $('#edit_modal_body').html(response);
                 $('#edit-address-modal').modal('show');
                 AIZ.plugins.bootstrapSelect('refresh');
-                
                 var country = $("#edit_country").val();
                 get_city(country);
-
-                @if (get_setting('google_map') == 1)
-                    var lat     = -33.8688;
-                    var long    = 151.2195;
-
-                    if(response.data.address_data.latitude && response.data.address_data.longitude) {
-                        lat     = response.data.address_data.latitude;
-                        long    = response.data.address_data.longitude;
-                    }
-
-                    initialize(lat, long, 'edit_');
-                @endif
-                
             }
         });
     }
@@ -360,13 +315,5 @@
             }
         });
     }
-    
 </script>
-
-    @if (get_setting('google_map') == 1)
-    
-        @include('frontend.partials.google_map')
-        
-    @endif
-
 @endsection

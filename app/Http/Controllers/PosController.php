@@ -345,6 +345,23 @@ class PosController extends Controller
                     else {
                         $product_stock->qty -= $cartItem['quantity'];
                         $product_stock->save();
+
+                        // $will_deduct = $cartItem['quantity'];
+                        // $buying_price = 0;
+
+                        // foreach ($product_stock->inventory_stock->where('remaining_qty','>','0') as $key => $value) {
+                        //     if($value->remaining_qty >= $will_deduct){
+                        //         $value->remaining_qty -= $will_deduct;
+                        //         $value->save();
+                        //         $buying_price += $will_deduct*$value->unit_purchase_price;
+                        //         break;
+                        //     }else{
+                        //         $will_deduct = $will_deduct - $value->remaining_qty;
+                        //         $buying_price += $value->remaining_qty*$value->unit_purchase_price;
+                        //         $value->remaining_qty = 0;
+                        //         $value->save();
+                        //     }
+                        // }
                     }
                     
                     $order_detail = new OrderDetail;
@@ -354,6 +371,7 @@ class PosController extends Controller
                     $order_detail->payment_status = 'paid';
                     $order_detail->variation = $product_variation;
                     $order_detail->price = $cartItem['price'] * $cartItem['quantity'];
+                    // $order_detail->buying_price = $buying_price;
                     $order_detail->tax = $cartItem['tax'] * $cartItem['quantity'];
                     $order_detail->quantity = $cartItem['quantity'];
                     $order_detail->shipping_type = null;

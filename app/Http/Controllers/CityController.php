@@ -42,6 +42,7 @@ class CityController extends Controller
 
         $city->name = $request->name;
         $city->cost = $request->cost;
+        $city->express_cost=$request->express_cost;
         $city->country_id = $request->country_id;
 
         $city->save();
@@ -82,11 +83,12 @@ class CityController extends Controller
 
         $city->country_id = $request->country_id;
         $city->cost = $request->cost;
-
+        $city->express_cost=$request->express_cost;
         $city->save();
 
         $city_translation = CityTranslation::firstOrNew(['lang' => $request->lang, 'city_id' => $city->id]);
         $city_translation->name = $request->name;
+
         $city_translation->save();
 
         flash(translate('City has been updated successfully'))->success();
@@ -112,19 +114,19 @@ class CityController extends Controller
         flash(translate('City has been deleted successfully'))->success();
         return redirect()->route('cities.index');
     }
-    
+
     public function get_city(Request $request) {
-        $country_info = Country::where('status',1)->where('name', $request->country_name)->first();
-        
-        $cities = City::where('country_id', $country_info->id)->get();
+        // $country_info = Country::where('status',1)->where('name', $request->country_name)->first();
+
+        $cities = City::where('country_id', $request->country_id)->get();
         $html = '';
-        
+
         foreach ($cities as $row) {
 //            $val = $row->id . ' | ' . $row->name;
             $html .= '<option value="' . $row->name . '">' . $row->getTranslation('name') . '</option>';
         }
-        
-        
+
+
         echo json_encode($html);
     }
 }

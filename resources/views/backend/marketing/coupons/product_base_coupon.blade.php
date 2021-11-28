@@ -12,7 +12,7 @@
         <div class="form-group row">
             <label class="col-lg-3 col-from-label" for="name">{{translate('Product')}}</label>
             <div class="col-lg-9">
-                <select name="product_ids[]" class="form-control product_id aiz-selectpicker" data-live-search="true" data-selected-text-format="count" required multiple>
+                <select name="product_ids[]" class="form-control product_id aiz-selectpicker" data-live-search="true" data-selected-text-format="count" required multiple data-actions-box="true">
                     @foreach(filter_products(\App\Product::query())->get() as $product)
                         <option value="{{$product->id}}">{{ $product->getTranslation('name') }}</option>
                     @endforeach

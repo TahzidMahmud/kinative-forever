@@ -43,13 +43,9 @@ class AddressController extends Controller
         else{
             $address->user_id = Auth::user()->id;
         }
-        $address->name = $request->name;
         $address->address = $request->address;
         $address->country = $request->country;
         $address->city = $request->city;
-        $address->area = $request->area;
-        $address->longitude = $request->longitude;
-        $address->latitude = $request->latitude;
         $address->postal_code = $request->postal_code;
         $address->phone = $request->phone;
         $address->save();
@@ -65,7 +61,7 @@ class AddressController extends Controller
      */
     public function show($id)
     {
-        //
+        
     }
 
     /**
@@ -77,10 +73,7 @@ class AddressController extends Controller
     public function edit($id)
     {
         $data['address_data'] = Address::findOrFail($id);
-        
-        $returnHTML = view('frontend.user.address.edit_address_modal', $data)->render();
-        return response()->json(array('data' => $data, 'html'=>$returnHTML));
-//        return ;
+        return view('frontend.user.address.edit_address_modal', $data);
     }
 
     /**
@@ -93,14 +86,10 @@ class AddressController extends Controller
     public function update(Request $request, $id)
     {
         $address = Address::findOrFail($id);
-        
-        $address->name = $request->name;
+
         $address->address = $request->address;
         $address->country = $request->country;
-        $address->city = $request->city_edit;
-        $address->area = $request->area_edit;
-        $address->longitude = $request->longitude;
-        $address->latitude = $request->latitude;
+        $address->city = $request->city;
         $address->postal_code = $request->postal_code;
         $address->phone = $request->phone;
         $address->save();

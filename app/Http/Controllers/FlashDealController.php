@@ -8,6 +8,7 @@ use App\FlashDealTranslation;
 use App\FlashDealProduct;
 use App\Product;
 use Illuminate\Support\Str;
+use App\FirebaseAccessToken;
 
 class FlashDealController extends Controller
 {
@@ -77,6 +78,8 @@ class FlashDealController extends Controller
             $flash_deal_translation->save();
 
             flash(translate('Flash Deal has been inserted successfully'))->success();
+            $this->notify_all_users($flash_deal);
+
             return redirect()->route('flash_deals.index');
         }
         else{
@@ -84,6 +87,29 @@ class FlashDealController extends Controller
             return back();
         }
     }
+
+    public function notify_all_users($flash_deal){
+        $title=$flash_deal->title;
+        $message="Deal Starts From ".date('d-m-Y', $flash_deal->start_date) ."To :".date('d-m-Y', $flash_deal->end_date)."";
+        $type="deals";
+        $image_url=api_asset($flash_deal->banner);
+        $click_action=env("APP_URL")."/flash-deal/".$flash_deal->slug;
+        // $users=FirebaseAccessToken::all()->where('user_type','customer');
+        // foreach($users as $user){
+        //     send_notification_FCM($title, $message,$user->user_id,$type,$image_url,$click_action);
+        // }
+        send_notification_FCM($title, $message,null,$type,$image_url,$click_action);
+        return 1;
+    }
+
+
+
+    public function test(){
+        $flash_deal= FlashDealTranslation::where('featured',1)->first();
+        $this->notify_all_users($flash_deal);
+        return json($flash_deal);
+    }
+
 
     /**
      * Display the specified resource.

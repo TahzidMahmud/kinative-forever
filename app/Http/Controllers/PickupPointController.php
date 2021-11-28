@@ -47,8 +47,6 @@ class PickupPointController extends Controller
         $pickup_point->name = $request->name;
         $pickup_point->address = $request->address;
         $pickup_point->phone = $request->phone;
-        $pickup_point-> time_slots = json_encode($request-> time_slots);
-
         $pickup_point->pick_up_status = $request->pick_up_status;
         $pickup_point->staff_id = $request->staff_id;
         if ($pickup_point->save()) {
@@ -108,8 +106,6 @@ class PickupPointController extends Controller
         }
 
         $pickup_point->phone = $request->phone;
-        $pickup_point-> time_slots = json_encode($request-> time_slots);
-
         $pickup_point->pick_up_status = $request->pick_up_status;
         $pickup_point->staff_id = $request->staff_id;
         if ($pickup_point->save()) {

@@ -39,9 +39,19 @@ class ProductController extends Controller
         $col_name = null;
         $query = null;
         $sort_search = null;
+        $category_id = null;
+        $brand_id = null;
 
         $products = Product::where('added_by', 'admin');
-
+        
+        if ($request->category_id != null) {
+            $products = $products->where('category_id', $request->category_id);
+            $category_id = $request->category_id;
+        }
+        if ($request->brand_id != null) {
+            $products = $products->where('brand_id', $request->brand_id);
+            $brand_id = $request->brand_id;
+        }
         if ($request->type != null){
             $var = explode(",", $request->type);
             $col_name = $var[0];
@@ -57,7 +67,7 @@ class ProductController extends Controller
 
         $products = $products->where('digital', 0)->orderBy('created_at', 'desc')->paginate(15);
 
-        return view('backend.product.products.index', compact('products','type', 'col_name', 'query', 'sort_search'));
+        return view('backend.product.products.index', compact('products','type', 'col_name', 'query', 'sort_search','category_id','brand_id'));
     }
 
     /**
@@ -70,8 +80,18 @@ class ProductController extends Controller
         $col_name = null;
         $query = null;
         $seller_id = null;
+        $category_id = null;
+        $brand_id = null;
         $sort_search = null;
         $products = Product::where('added_by', 'seller');
+        if ($request->category_id != null) {
+            $products = $products->where('category_id', $request->category_id);
+            $category_id = $request->category_id;
+        }
+        if ($request->brand_id != null) {
+            $products = $products->where('brand_id', $request->brand_id);
+            $brand_id = $request->brand_id;
+        }
         if ($request->has('user_id') && $request->user_id != null) {
             $products = $products->where('user_id', $request->user_id);
             $seller_id = $request->user_id;
@@ -92,7 +112,7 @@ class ProductController extends Controller
         $products = $products->where('digital', 0)->orderBy('created_at', 'desc')->paginate(15);
         $type = 'Seller';
 
-        return view('backend.product.products.index', compact('products','type', 'col_name', 'query', 'seller_id', 'sort_search'));
+        return view('backend.product.products.index', compact('products','type', 'col_name', 'query', 'seller_id', 'sort_search','category_id','brand_id'));
     }
 
     public function all_products(Request $request)
@@ -100,11 +120,21 @@ class ProductController extends Controller
         $col_name = null;
         $query = null;
         $seller_id = null;
+        $category_id = null;
+        $brand_id = null;
         $sort_search = null;
         $products = Product::orderBy('created_at', 'desc');
         if ($request->has('user_id') && $request->user_id != null) {
             $products = $products->where('user_id', $request->user_id);
             $seller_id = $request->user_id;
+        }
+        if ($request->category_id != null) {
+            $products = $products->where('category_id', $request->category_id);
+            $category_id = $request->category_id;
+        }
+        if ($request->brand_id != null) {
+            $products = $products->where('brand_id', $request->brand_id);
+            $brand_id = $request->brand_id;
         }
         if ($request->search != null){
             $products = $products
@@ -122,7 +152,7 @@ class ProductController extends Controller
         $products = $products->paginate(15);
         $type = 'All';
 
-        return view('backend.product.products.index', compact('products','type', 'col_name', 'query', 'seller_id', 'sort_search'));
+        return view('backend.product.products.index', compact('products','type', 'col_name', 'query', 'seller_id', 'sort_search','category_id','brand_id'));
     }
 
 
@@ -184,9 +214,6 @@ class ProductController extends Controller
         $product->added_by = $request->added_by;
         if(Auth::user()->user_type == 'seller'){
             $product->user_id = Auth::user()->id;
-            if(get_setting('product_approve_by_admin') == 1) {
-                $product->approved = 0;
-            }
         }
         else{
             $product->user_id = \App\User::where('user_type', 'admin')->first()->id;
@@ -792,7 +819,12 @@ class ProductController extends Controller
             Artisan::call('view:clear');
             Artisan::call('cache:clear');
 
-            return back();
+            if(Auth::user()->user_type == 'admin'){
+                return redirect()->route('products.admin');
+            }
+            else{
+                return redirect()->route('seller.products');
+            }
         }
         else{
             flash(translate('Something went wrong'))->error();
@@ -844,12 +876,6 @@ class ProductController extends Controller
                 return redirect()->route('products.all');
             }
             else{
-                if (\App\Addon::where('unique_identifier', 'seller_subscription')->first() != null &&
-                        \App\Addon::where('unique_identifier', 'seller_subscription')->first()->activated) {
-                    $seller = Auth::user()->seller;
-                    $seller->remaining_uploads -= 1;
-                    $seller->save();
-                }
                 return redirect()->route('seller.products');
             }
         }
@@ -893,22 +919,6 @@ class ProductController extends Controller
         return 1;
     }
 
-    public function updateProductApproval(Request $request)
-    {
-        $product = Product::findOrFail($request->id);
-        $product->approved = $request->approved;
-
-        if($product->added_by == 'seller' && \App\Addon::where('unique_identifier', 'seller_subscription')->first() != null && \App\Addon::where('unique_identifier', 'seller_subscription')->first()->activated){
-            $seller = $product->user->seller;
-            if($seller->invalid_at != null && Carbon::now()->diffInDays(Carbon::parse($seller->invalid_at), false) <= 0){
-                return 0;
-            }
-        }
-
-        $product->save();
-        return 1;
-    }
-
     public function updateFeatured(Request $request)
     {
         $product = Product::findOrFail($request->id);
@@ -919,6 +929,26 @@ class ProductController extends Controller
             return 1;
         }
         return 0;
+    }
+    public function quick_update(Request $request)
+    {
+       $product = Product::findOrFail($request->id);
+        return view('backend.product.products.quick',compact('product'));
+    }
+    public function quick_update_done(Request $request)
+    {
+        foreach($request->stock as $id => $stock){
+            $p_stock              = ProductStock::find($id);
+            $p_stock->price       = $stock['price'];
+            $p_stock->qty       = $stock['stock'];
+            $p_stock->save();
+        }
+        $product              = Product::find($request->product_id);
+        $product->unit_price  = min(array_column($request->stock, 'price'));
+        $product->save();
+
+        flash(translate('Product updated successfully'))->success();
+        return back();
     }
 
     public function updateSellerFeatured(Request $request)

@@ -19,21 +19,18 @@
 							<li class="">{{ translate('Extract downloaded zip. You will find updates.zip file in those extraced files.') }}</li>
 							<li class="">{{ translate('Upload that zip file here and click update now.') }}</li>
 							<li class="">{{ translate('If you are using any addon make sure to update those addons after updating.') }}</li>
-							<li class="">{{ translate('Please turn off maintenance mode before updating.') }}</li>
 						</ul>
 					</div>
 					<form action="{{ route('update') }}" method="post" enctype="multipart/form-data">
 						@csrf
 						<div class="row gutters-5">
 							<div class="col-md">
-        						<div class="input-group " data-toggle="aizuploader" data-type="archive">
-        							<div class="input-group-prepend">
-        								<div class="input-group-text bg-soft-secondary">{{ translate('Browse') }}</div>
-        							</div>
-        							<div class="form-control file-amount">{{ translate('Choose File') }}</div>
-        							<input type="hidden" name="update_zip" value="" class="selected-files">
-        						</div>
-        						<div class="file-preview box"></div>
+								<div class="custom-file">
+									<label class="custom-file-label">
+										<input type="file" class="custom-file-input" name="update_zip">
+										<span class="custom-file-name">{{ translate('Choose file') }}</span>
+									</label>
+								</div>
 							</div>
 							<div class="col-md-auto">
 								<button type="submit" class="btn btn-primary btn-block">{{ translate('Update Now') }}</button>

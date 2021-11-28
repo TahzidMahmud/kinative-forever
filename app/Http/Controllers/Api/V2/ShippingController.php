@@ -15,6 +15,10 @@ class ShippingController extends Controller
         $admin_products = array();
         $seller_products = array();
         $calculate_shipping = 0;
+        $express=false;
+        if($request->express_shipping){
+            $express=true;
+        }
 
         $shop_items_raw_data = Cart::where('user_id', $request->user_id)->where('owner_id', $request->owner_id)->get();
         foreach ($shop_items_raw_data as $key => $shop_items_raw_data_item) {
@@ -44,7 +48,12 @@ class ShippingController extends Controller
             } elseif (get_setting('shipping_type') == 'area_wise_shipping') {
                 $city = City::where('name', $request->city_name)->first();
                 if ($city != null) {
-                    $calculate_shipping = $city->cost;
+                    if($express==true){
+                        $calculate_shipping = $city->express_cost;
+                    }else{
+                        $calculate_shipping = $city->cost;
+                    }
+                    // $calculate_shipping = $city->cost;
                 }
             } elseif (get_setting('shipping_type') == 'product_wise_shipping') {
                 $product_shipping_cost = $product->shipping_cost;

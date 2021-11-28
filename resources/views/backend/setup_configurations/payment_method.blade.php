@@ -264,94 +264,31 @@
 
         <div class="col-md-6">
             <div class="card">
-                <div class="card-header ">
-                    <h5 class="mb-0 h6">{{translate('Aamarpay Credential')}}</h5>
-                </div>
-                <div class="card-body">
-                    <form class="form-horizontal" action="{{ route('payment_method.update') }}" method="POST">
-                        @csrf
-                        <input type="hidden" name="payment_method" value="aamarpay">
-                        <div class="form-group row">
-                            <input type="hidden" name="types[]" value="AAMARPAY_STORE_ID">
-                            <div class="col-md-4">
-                                <label class="col-from-label">{{translate('Aamarpay Store Id')}}</label>
-                            </div>
-                            <div class="col-md-8">
-                                <input type="text" class="form-control" name="AAMARPAY_STORE_ID" value="{{  env('AAMARPAY_STORE_ID') }}" placeholder="{{translate('Aamarpay Store Id')}}" required>
-                            </div>
-                        </div>
-                        <div class="form-group row">
-                            <input type="hidden" name="types[]" value="AAMARPAY_SIGNATURE_KEY">
-                            <div class="col-md-4">
-                                <label class="col-from-label">{{translate('Aamarpay signature key')}}</label>
-                            </div>
-                            <div class="col-md-8">
-                                <input type="text" class="form-control" name="AAMARPAY_SIGNATURE_KEY" value="{{  env('AAMARPAY_SIGNATURE_KEY') }}" placeholder="{{translate('Aamarpay signature key')}}" required>
-                            </div>
-                        </div>
-                        <div class="form-group row">
-                            <div class="col-md-4">
-                                <label class="col-from-label">{{translate('Aamarpay Sandbox Mode')}}</label>
-                            </div>
-                            <div class="col-md-8">
-                                <label class="aiz-switch aiz-switch-success mb-0">
-                                    <input value="1" name="aamarpay_sandbox" type="checkbox" @if (get_setting('aamarpay_sandbox') == 1)
-                                        checked
-                                    @endif>
-                                    <span class="slider round"></span>
-                                </label>
-                            </div>
-                        </div>
-                        <div class="form-group mb-0 text-right">
-                            <button type="submit" class="btn btn-sm btn-primary">{{translate('Save')}}</button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-lg-6">
-            <div class="card">
                 <div class="card-header">
-                    <h5 class="mb-0 h6">{{translate('Iyzico Credential')}}</h5>
+                    <h5 class="mb-0 h6 ">{{translate('RazorPay Credential')}}</h5>
                 </div>
                 <div class="card-body">
                     <form class="form-horizontal" action="{{ route('payment_method.update') }}" method="POST">
                         @csrf
-                        <input type="hidden" name="payment_method" value="iyzico">
+                        <input type="hidden" name="payment_method" value="razorpay">
                         <div class="form-group row">
-                            <input type="hidden" name="types[]" value="IYZICO_API_KEY">
-                            <div class="col-lg-4">
-                                <label class="col-from-label">{{translate('IYZICO_API_KEY')}}</label>
-                            </div>
-                            <div class="col-lg-8">
-                                <input type="text" class="form-control" name="IYZICO_API_KEY" value="{{  env('IYZICO_API_KEY') }}" placeholder="{{ translate('IYZICO API KEY') }}" required>
-                            </div>
-                        </div>
-                        <div class="form-group row">
-                            <input type="hidden" name="types[]" value="IYZICO_SECRET_KEY">
-                            <div class="col-lg-4">
-                                <label class="col-from-label">{{translate('IYZICO_SECRET_KEY')}}</label>
-                            </div>
-                            <div class="col-lg-8">
-                                <input type="text" class="form-control" name="IYZICO_SECRET_KEY" value="{{  env('IYZICO_SECRET_KEY') }}" placeholder="{{ translate('IYZICO SECRET KEY') }}" required>
-                            </div>
-                        </div>
-
-                        <div class="form-group row">
+                            <input type="hidden" name="types[]" value="RAZOR_KEY">
                             <div class="col-md-4">
-                                <label class="col-from-label">{{translate('IYZICO Sandbox Mode')}}</label>
+                                <label class="col-from-label">{{translate('RAZOR KEY')}}</label>
                             </div>
                             <div class="col-md-8">
-                                <label class="aiz-switch aiz-switch-success mb-0">
-                                    <input value="1" name="iyzico_sandbox" type="checkbox" @if (get_setting('iyzico_sandbox') == 1)
-                                        checked
-                                    @endif>
-                                    <span class="slider round"></span>
-                                </label>
+                                <input type="text" class="form-control" name="RAZOR_KEY" value="{{  env('RAZOR_KEY') }}" placeholder="{{ translate('RAZOR KEY') }}" required>
                             </div>
                         </div>
-
+                        <div class="form-group row">
+                            <input type="hidden" name="types[]" value="RAZOR_SECRET">
+                            <div class="col-md-4">
+                                <label class="col-from-label">{{translate('RAZOR SECRET')}}</label>
+                            </div>
+                            <div class="col-md-8">
+                                <input type="text" class="form-control" name="RAZOR_SECRET" value="{{  env('RAZOR_SECRET') }}" placeholder="{{ translate('RAZOR SECRET') }}" required>
+                            </div>
+                        </div>
                         <div class="form-group mb-0 text-right">
                             <button type="submit" class="btn btn-sm btn-primary">{{translate('Save')}}</button>
                         </div>
@@ -566,6 +503,95 @@
             </div>
         </div>
 
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0 h6 ">{{translate('VoguePay Credential')}}</h5>
+                </div>
+                <div class="card-body">
+                    <form class="form-horizontal" action="{{ route('payment_method.update') }}" method="POST">
+                        @csrf
+                        <input type="hidden" name="payment_method" value="voguepay">
+                        <div class="form-group row">
+                            <input type="hidden" name="types[]" value="VOGUE_MERCHANT_ID">
+                            <div class="col-md-4">
+                                <label class="col-from-label">{{translate('MERCHANT ID')}}</label>
+                            </div>
+                            <div class="col-md-8">
+                                <input type="text" class="form-control" name="VOGUE_MERCHANT_ID" value="{{  env('VOGUE_MERCHANT_ID') }}" placeholder="{{ translate('MERCHANT ID') }}" required>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-md-4">
+                                <label class="col-from-label">{{translate('Sandbox Mode')}}</label>
+                            </div>
+                            <div class="col-md-8">
+                                <label class="aiz-switch aiz-switch-success mb-0">
+                                    <input value="1" name="voguepay_sandbox" type="checkbox" @if (get_setting('voguepay_sandbox') == 1)
+                                        checked
+                                    @endif>
+                                    <span class="slider round"></span>
+                                </label>
+                            </div>
+                        </div>
+                        <div class="form-group mb-0 text-right">
+                            <button type="submit" class="btn btn-sm btn-primary">{{translate('Save')}}</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-6">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0 h6">{{translate('Iyzico Credential')}}</h5>
+                </div>
+                <div class="card-body">
+                    <form class="form-horizontal" action="{{ route('payment_method.update') }}" method="POST">
+                        @csrf
+                        <input type="hidden" name="payment_method" value="iyzico">
+                        <div class="form-group row">
+                            <input type="hidden" name="types[]" value="IYZICO_API_KEY">
+                            <div class="col-lg-4">
+                                <label class="col-from-label">{{translate('IYZICO_API_KEY')}}</label>
+                            </div>
+                            <div class="col-lg-8">
+                                <input type="text" class="form-control" name="IYZICO_API_KEY" value="{{  env('IYZICO_API_KEY') }}" placeholder="{{ translate('IYZICO API KEY') }}" required>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <input type="hidden" name="types[]" value="IYZICO_SECRET_KEY">
+                            <div class="col-lg-4">
+                                <label class="col-from-label">{{translate('IYZICO_SECRET_KEY')}}</label>
+                            </div>
+                            <div class="col-lg-8">
+                                <input type="text" class="form-control" name="IYZICO_SECRET_KEY" value="{{  env('IYZICO_SECRET_KEY') }}" placeholder="{{ translate('IYZICO SECRET KEY') }}" required>
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <div class="col-md-4">
+                                <label class="col-from-label">{{translate('IYZICO Sandbox Mode')}}</label>
+                            </div>
+                            <div class="col-md-8">
+                                <label class="aiz-switch aiz-switch-success mb-0">
+                                    <input value="1" name="iyzico_sandbox" type="checkbox" @if (get_setting('iyzico_sandbox') == 1)
+                                        checked
+                                    @endif>
+                                    <span class="slider round"></span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="form-group mb-0 text-right">
+                            <button type="submit" class="btn btn-sm btn-primary">{{translate('Save')}}</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
         <div class="col-lg-6">
             <div class="card">
                 <div class="card-header">
@@ -608,16 +634,16 @@
                                         </span>
                                     </div>
                                 </div>
-
+                                
                             </div>
                         </div>
-
+                        
                         <div class="form-group row">
                             <div class="col-md-4">
                                 <label class="col-from-label">{{translate('Sandbox Mode')}}</label>
                             </div>
                             <div class="col-md-8">
-
+                                
                                 <label class="aiz-switch aiz-switch-success mb-0">
                                     <input value="1" name="proxypay_sandbox" type="checkbox" @if (get_setting('proxypay_sandbox') == 1) checked @endif>
                                     <span class="slider round"></span>
@@ -632,81 +658,6 @@
                 </div>
             </div>
         </div>
-
-        <div class="col-md-6">
-            <div class="card">
-                <div class="card-header">
-                    <h5 class="mb-0 h6 ">{{translate('VoguePay Credential')}}</h5>
-                </div>
-                <div class="card-body">
-                    <form class="form-horizontal" action="{{ route('payment_method.update') }}" method="POST">
-                        @csrf
-                        <input type="hidden" name="payment_method" value="voguepay">
-                        <div class="form-group row">
-                            <input type="hidden" name="types[]" value="VOGUE_MERCHANT_ID">
-                            <div class="col-md-4">
-                                <label class="col-from-label">{{translate('MERCHANT ID')}}</label>
-                            </div>
-                            <div class="col-md-8">
-                                <input type="text" class="form-control" name="VOGUE_MERCHANT_ID" value="{{  env('VOGUE_MERCHANT_ID') }}" placeholder="{{ translate('MERCHANT ID') }}" required>
-                            </div>
-                        </div>
-                        <div class="form-group row">
-                            <div class="col-md-4">
-                                <label class="col-from-label">{{translate('Sandbox Mode')}}</label>
-                            </div>
-                            <div class="col-md-8">
-                                <label class="aiz-switch aiz-switch-success mb-0">
-                                    <input value="1" name="voguepay_sandbox" type="checkbox" @if (get_setting('voguepay_sandbox') == 1)
-                                        checked
-                                    @endif>
-                                    <span class="slider round"></span>
-                                </label>
-                            </div>
-                        </div>
-                        <div class="form-group mb-0 text-right">
-                            <button type="submit" class="btn btn-sm btn-primary">{{translate('Save')}}</button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-md-6">
-            <div class="card">
-                <div class="card-header">
-                    <h5 class="mb-0 h6 ">{{translate('RazorPay Credential')}}</h5>
-                </div>
-                <div class="card-body">
-                    <form class="form-horizontal" action="{{ route('payment_method.update') }}" method="POST">
-                        @csrf
-                        <input type="hidden" name="payment_method" value="razorpay">
-                        <div class="form-group row">
-                            <input type="hidden" name="types[]" value="RAZOR_KEY">
-                            <div class="col-md-4">
-                                <label class="col-from-label">{{translate('RAZOR KEY')}}</label>
-                            </div>
-                            <div class="col-md-8">
-                                <input type="text" class="form-control" name="RAZOR_KEY" value="{{  env('RAZOR_KEY') }}" placeholder="{{ translate('RAZOR KEY') }}" required>
-                            </div>
-                        </div>
-                        <div class="form-group row">
-                            <input type="hidden" name="types[]" value="RAZOR_SECRET">
-                            <div class="col-md-4">
-                                <label class="col-from-label">{{translate('RAZOR SECRET')}}</label>
-                            </div>
-                            <div class="col-md-8">
-                                <input type="text" class="form-control" name="RAZOR_SECRET" value="{{  env('RAZOR_SECRET') }}" placeholder="{{ translate('RAZOR SECRET') }}" required>
-                            </div>
-                        </div>
-                        <div class="form-group mb-0 text-right">
-                            <button type="submit" class="btn btn-sm btn-primary">{{translate('Save')}}</button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-
     </div>
 
     @endsection

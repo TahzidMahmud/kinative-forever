@@ -486,7 +486,7 @@
                     </div>
                 </div>
 
-
+                
                 @else
                 <p>
                     {{ translate('Shipping configuration is maintained by Admin.') }}
@@ -594,9 +594,9 @@
                     </label>
                     <div class="input-group">
                         <input type="number" class="form-control" name="est_shipping_days"
-                            value="{{ $product->est_shipping_days }}" min="1" step="1" placeholder="{{translate('Shipping Days')}}">
+                            value="{{ $product->est_shipping_days }}" min="1" step="1" placeholder="Shipping Days">
                         <div class="input-group-prepend">
-                            <span class="input-group-text" id="inputGroupPrepend">{{translate('Days')}}</span>
+                            <span class="input-group-text" id="inputGroupPrepend">Days</span>
                         </div>
                     </div>
                 </div>
@@ -670,7 +670,7 @@
         var shipping_val = $("[name=shipping_type]:checked").val();
 
         $(".flat_rate_shipping_div").hide();
-
+        
         if(shipping_val == 'flat_rate'){
             $(".flat_rate_shipping_div").show();
         }
@@ -705,7 +705,7 @@
            }
        });
 
-
+        
     }
 
     $('input[name="colors_active"]').on('change', function() {

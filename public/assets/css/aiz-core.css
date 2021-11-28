@@ -504,7 +504,9 @@ fixed-bottom 1030*/
 .bg-grad-4 { background-color: #ffb72c; background-image: linear-gradient(315deg, #ffb72c 0%, #f57f59 74%); }
 
 
-[class*="border"],hr { border-color: #e2e5ec !important; }
+[class*="border"],hr { border-color: #e2e5ec !important;
+
+}
 
 .border-gray-100 { border-color: #f7fafc !important; }
 .border-gray-200 { border-color: #edf2f7 !important; }
@@ -3553,7 +3555,6 @@ input[type="number"] {
 }
 
 /*mobile toggler*/
-
 .aiz-mobile-toggler {
     position: relative;
     overflow: hidden;
@@ -3575,6 +3576,7 @@ input[type="number"] {
     height: 24px;
     -webkit-transition: all 0.4s ease;
     transition: all 0.4s ease;
+
 }
 
 .aiz-mobile-toggler span {
@@ -3587,7 +3589,7 @@ input[type="number"] {
     border-radius: 2px;
     -webkit-transition: all 0.4s ease;
     transition: all 0.4s ease;
-    background: #ffffff;
+    background: #000000;
 }
 
 .aiz-mobile-toggler span:before,
@@ -3602,7 +3604,7 @@ input[type="number"] {
     border-radius: 2px;
     -webkit-transition: all 0.4s ease;
     transition: all 0.4s ease;
-    background: #ffffff;
+    background: #000000;
 }
 .aiz-mobile-toggler.light span,
 .aiz-mobile-toggler.light span:before,
@@ -3614,7 +3616,7 @@ input[type="number"] {
     transition: all 0.4s ease;
     left: auto;
     left: 0;
-    width: 100%;
+    width: 50%;
     top: -8px;
 }
 
@@ -3623,7 +3625,7 @@ input[type="number"] {
     transition: all 0.4s ease;
     left: auto;
     left: 0;
-    width: 100%;
+    width: 75%;
     bottom: -9px;
 }
 
@@ -3677,10 +3679,6 @@ input[type="number"] {
     }
     .side-menu-closed .aiz-content-wrapper{
         padding-left: 0;
-    }
-    [dir="rtl"] .side-menu-closed .aiz-content-wrapper{
-        padding-left: 0;
-        padding-right: 0;
     }
 }
 
@@ -4251,15 +4249,12 @@ input[type="number"] {
 }
 .form-control::-webkit-input-placeholder {
     color: #898b92;
-    font-size: 13px!important;
 }
 .form-control:-ms-input-placeholder {
     color: #898b92;
-    font-size: 13px!important;
 }
 .form-control::placeholder {
     color: #898b92;
-    font-size: 13px!important;
 }
 .form-control:disabled,
 .form-control[readonly] {
@@ -5941,9 +5936,9 @@ div.footable-loader > span.fooicon:after {
     border-radius: 50%;
 }
 .badge-sm {
-    height: 14px;
-    width: 14px;
-    font-size: 0.55rem;
+    height: 13px;
+    width: 13px;
+    font-size: 0.48rem;
 }
 .badge-md {
     height: 24px;
@@ -6092,13 +6087,12 @@ div.footable-loader > span.fooicon:after {
 .aiz-carousel .slick-arrow {
     position: absolute;
     top: 50%;
-    color: white;
     z-index: 2;
     transform: translateY(-50%);
     -webkit-transform: translateY(-50%);
     width: 40px;
     height: 40px;
-    background: rgba(255, 255, 255, 0.164);
+    background: #fff;
     border-radius: 50em;
     border: 0;
     box-shadow: 0 0 1px 1px rgba(20, 23, 28, 0.1),
@@ -6136,7 +6130,7 @@ div.footable-loader > span.fooicon:after {
     padding: 0px;
     color: transparent;
     border: 0;
-    background: #ddd;
+    background: rgb(0, 0, 0);
     border-radius: 50%;
     margin: 0 3px;
 }
@@ -6159,7 +6153,6 @@ div.footable-loader > span.fooicon:after {
 .slick-vertical .slick-arrow {
     top: auto;
     left: 50%;
-    background-color: #c9c9c918;
     transform: translateX(-50%) rotate(90deg);
     -webkit-transform: translateX(-50%) rotate(90deg);
 }
@@ -6519,12 +6512,12 @@ div.footable-loader > span.fooicon:after {
 /*social icon colored*/
 ul.social a {
     display: inline-block;
-    width: 33px;
-    height: 33px;
+    width: 36px;
+    height: 36px;
     border-radius: 50em;
-    line-height: 36px;
+    line-height: 39px;
     text-align: center;
-    font-size: 16px;
+    font-size: 18px;
 }
 ul.social a:hover {
     -webkit-transform: translateY(-3px);
@@ -6612,13 +6605,11 @@ ul.social.colored [class*="linkedin"] {
     border-radius: 3px;
     padding: 10px 20px 10px 15px;
 }
-.aiz-user-sidenav .aiz-side-nav-list .level-2 .aiz-side-nav-link{
-    padding: 10px 25px 10px 54px;
-}
 .aiz-user-sidenav .aiz-side-nav-list .aiz-side-nav-icon{
     width: 28px;
     font-size: 16px;
 }
+
 .aiz-user-sidenav .aiz-side-nav-link.level-2-active,
 .aiz-user-sidenav .aiz-side-nav-link.level-3-active {
     background-color: transparent;
@@ -6669,7 +6660,7 @@ ul.social.colored [class*="linkedin"] {
 .sidebar-cart .cart-toggler {
     position: fixed;
     right: 0;
-    top: 30%;
+    top: 50%;
     transform: translateY(-50%);
     border: 0;
     background: var(--primary);

@@ -8,38 +8,18 @@
         </div>
 
     	<div class="card-body">
-            <div class="row gutters-5 mb-5">
+            <div class="row gutters-5">
                 <div class="col text-center text-md-left">
                 </div>
                 @php
                     $delivery_status = $order->delivery_status;
                     $payment_status = $order->payment_status;
                 @endphp
-                
-                <!--Assign Delivery Boy-->
-                @if (\App\Addon::where('unique_identifier', 'delivery_boy')->first() != null &&
-                    \App\Addon::where('unique_identifier', 'delivery_boy')->first()->activated)
-                    <div class="col-md-3 ml-auto">
-                        <label for="assign_deliver_boy">{{translate('Assign Deliver Boy')}}</label>
-                        @if($delivery_status == 'pending' || $delivery_status == 'picked_up')
-                        <select class="form-control aiz-selectpicker" data-live-search="true" data-minimum-results-for-search="Infinity" id="assign_deliver_boy">
-                            <option value="">{{translate('Select Delivery Boy')}}</option>
-                            @foreach($delivery_boys as $delivery_boy)
-                            <option value="{{ $delivery_boy->id }}" @if($order->assign_delivery_boy == $delivery_boy->id) selected @endif>
-                                {{ $delivery_boy->name }}
-                            </option>
-                            @endforeach
-                        </select>
-                        @else
-                            <input type="text" class="form-control" value="{{ optional($order->delivery_boy)->name }}" disabled>
-                        @endif
-                    </div>
-                @endif
                 <div class="col-md-3 ml-auto">
                     <label for=update_payment_status"">{{translate('Payment Status')}}</label>
                     <select class="form-control aiz-selectpicker"  data-minimum-results-for-search="Infinity" id="update_payment_status">
-                        <option value="unpaid" @if ($payment_status == 'unpaid') selected @endif>{{translate('Unpaid')}}</option>
                         <option value="paid" @if ($payment_status == 'paid') selected @endif>{{translate('Paid')}}</option>
+                        <option value="unpaid" @if ($payment_status == 'unpaid') selected @endif>{{translate('Unpaid')}}</option>
                     </select>
                 </div>
                 <div class="col-md-3 ml-auto">
@@ -50,19 +30,20 @@
                             <option value="confirmed" @if ($delivery_status == 'confirmed') selected @endif>{{translate('Confirmed')}}</option>
                             <option value="picked_up" @if ($delivery_status == 'picked_up') selected @endif>{{translate('Picked Up')}}</option>
                             <option value="on_the_way" @if ($delivery_status == 'on_the_way') selected @endif>{{translate('On The Way')}}</option>
+                            <!--<option value="on_delivery" @if ($delivery_status == 'on_delivery') selected @endif>{{translate('On delivery')}}</option>-->
                             <option value="delivered" @if ($delivery_status == 'delivered') selected @endif>{{translate('Delivered')}}</option>
                             <option value="cancelled" @if ($delivery_status == 'cancelled') selected @endif>{{translate('Cancel')}}</option>
                         </select>
                     @else
-                        <input type="text" class="form-control" value="{{ $delivery_status }}" disabled>
+                        <input type="text" class="form-control" value="{{ $delivery_status }}">
                     @endif
                 </div>
             </div>
             <div class="row gutters-5">
                 <div class="col text-center text-md-left">
-                    <h5>Shipping Address</h5>
-                    <address>
+                  <address>
                       <strong class="text-main">{{ json_decode($order->shipping_address)->name }}</strong><br>
+                       {{ json_decode($order->shipping_address)->email }}<br>
                        {{ json_decode($order->shipping_address)->phone }}<br>
                        {{ json_decode($order->shipping_address)->address }}, {{ json_decode($order->shipping_address)->city }}, {{ json_decode($order->shipping_address)->postal_code }}<br>
                        {{ json_decode($order->shipping_address)->country }}
@@ -75,16 +56,7 @@
                           <a href="{{ uploaded_asset(json_decode($order->manual_payment_data)->photo) }}" target="_blank"><img src="{{ uploaded_asset(json_decode($order->manual_payment_data)->photo) }}" alt="" height="100"></a>
                       @endif
                 </div>
-                <div class="col-lg-4">
-                    <h5>Billing Address</h5>
-                    <address>
-                        <strong class="text-main">{{ json_decode($order->billing_address)->name }}</strong><br>
-                        {{ json_decode($order->billing_address)->phone }}<br>
-                        {{ json_decode($order->billing_address)->address }}, {{ json_decode($order->billing_address)->city }}, {{ json_decode($order->billing_address)->postal_code }}<br>
-                        {{ json_decode($order->billing_address)->country }}
-                    </address>
-                </div>
-                <div class="col-md-4">
+                <div class="col-md-4 ml-auto">
                   <table>
                       <tbody>
                         <tr>
@@ -93,11 +65,14 @@
                         </tr>
                         <tr>
                             <td class="text-main text-bold">{{translate('Order Status')}}</td>
+                                @php
+                                  $status = $order->orderDetails->first()->delivery_status;
+                                @endphp
                             <td class="text-right">
-                                @if($delivery_status == 'delivered')
-                                    <span class="badge badge-inline badge-success">{{ translate(ucfirst(str_replace('_', ' ', $delivery_status))) }}</span>
+                                @if($status == 'delivered')
+                                    <span class="badge badge-inline badge-success">{{ translate(ucfirst(str_replace('_', ' ', $status))) }}</span>
                                 @else
-                                    <span class="badge badge-inline badge-info">{{ translate(ucfirst(str_replace('_', ' ', $delivery_status))) }}</span>
+                                    <span class="badge badge-inline badge-info">{{ translate(ucfirst(str_replace('_', ' ', $status))) }}</span>
                                 @endif
                             </td>
                         </tr>

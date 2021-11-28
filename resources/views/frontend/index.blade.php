@@ -1,297 +1,252 @@
 @extends('frontend.layouts.app')
 
 @section('content')
-    {{-- Categories , Sliders . Today's deal --}}
-    <div class="home-banner-area text-white pt-0px">
-        <div class="container-fluid" style="padding-left:0px!important;padding-right:0px!important; ">
-            <div class="aiz-carousel dots-inside-bottom mobile-img-auto-height dot-small-black" data-dots="true" data-autoplay="false" data-arrows="true" data-infinite='true' >
-                @php $slider_images = json_decode(get_setting('home_slider_images'), true);  @endphp
-                @foreach ($slider_images as $key => $value)
-                    <div class="carousel-box">
-                        <a href="{{ json_decode(get_setting('home_slider_links'), true)[$key] }}" class="text-reset d-block">
-                            <img src="{{ uploaded_asset($value) }}" class="img-fluid w-100">
-                        </a>
+    {{-- Sliders  --}}
+    @if (get_setting('home_slider_images') != null)
+    <div class="home-banner-area text-white">
+        <div class="aiz-carousel dots-inside-bottom mobile-img-auto-height dot-small-white" data-dots="true" data-autoplay='true'>
+            @php $slider_images = json_decode(get_setting('home_slider_images'), true);  @endphp
+            @foreach ($slider_images as $key => $value)
+                <div class="carousel-box">
+                    <a href="{{ json_decode(get_setting('home_slider_links'), true)[$key] }}" class="d-block">
+                        <img src="{{ uploaded_asset($value) }}" class="mw-100 w-100">
+                    </a>
+                </div>
+            @endforeach
+        </div>
+    </div>
+    @endif
+    @php
+        $featured_categories = \App\Category::where('featured', 1)->get();
+    @endphp
+
+    @if (count($featured_categories) > 0)
+    <div class="py-5">
+        <div class="container">
+            <div class="px-md-3 px-xl-5">
+                <div class="aiz-carousel gutters-10 full-outside-arrow ihw-arrow" data-items="7" data-xl-items="6" data-lg-items="5"  data-md-items="4" data-sm-items="3" data-xs-items="2" data-arrows='true'>
+                    @foreach ($featured_categories as $key => $category)
+                        <div class="carousel-box py-2">
+                            <a href="{{ route('products.category', $category->slug) }}" class="d-block p-2 text-reset text-center hov-shadow-md rounded">
+                                <span class="h-50px d-block mb-3">
+                                    <img
+                                        src="{{ static_asset('assets/img/placeholder.jpg') }}"
+                                        data-src="{{ uploaded_asset($category->banner) }}"
+                                        alt="{{ $category->getTranslation('name') }}"
+                                        class="lazyload img-fluid mh-100 mx-auto"
+                                        onerror="this.onerror=null;this.src='{{ static_asset('assets/img/placeholder-rect.jpg') }}';"
+                                    >
+                                </span>
+                                <div class="text-truncate fs-11 text-uppercase fw-700 opacity-70">{{ $category->getTranslation('name') }}</div>
+                            </a>
+                        </div>
+                    @endforeach
+                </div>
+            </div>
+        </div>
+    </div>
+    @endif
+
+
+    {{-- Flash Deal --}}
+    @php
+        $flash_deal = \App\FlashDeal::where('status', 1)->where('featured', 1)->first();
+    @endphp
+    @if($flash_deal != null && strtotime(date('Y-m-d H:i:s')) >= $flash_deal->start_date && strtotime(date('Y-m-d H:i:s')) <= $flash_deal->end_date)
+    <section class="mb-4">
+        <div class="container">
+            <div class="d-flex flex-wrap mb-3 align-items-center justify-content-between">
+                <div class="d-flex">
+                    <img src="{{ static_asset('assets/img/flash.png')}}" class="h-70px mr-4">
+                    <span class="">
+                        <h3 class="h5 fw-500 text-uppercase">{{ translate('Flash Sale') }}</h3>
+                        <div class="aiz-count-down align-items-center" data-date="{{ date('Y/m/d H:i:s', $flash_deal->end_date) }}"></div>
+                    </span>
+                </div>
+                <a href="{{ route('flash-deal-details', $flash_deal->slug) }}" class="d-inline-block">
+                    <span class="text-alter text-uppercase fs-13">{{ translate('View All') }}</span>
+                    <i class="las la-arrow-right size-25px bg-primary d-inline-flex ml-2 shadow-ihw justify-content-center align-items-center rounded-circle text-white"></i>
+                </a>
+            </div>
+
+            <div class="aiz-carousel gutters-5 dot-small-black" data-items="6" data-xl-items="5" data-lg-items="4"  data-md-items="3" data-sm-items="2" data-xs-items="2" data-dots='true' data-autoplay='true'>
+                @foreach ($flash_deal->flash_deal_products as $key => $flash_deal_product)
+                    @php
+                        $product = \App\Product::find($flash_deal_product->product_id);
+                    @endphp
+                    @if ($product != null && $product->published != 0)
+                        <div class="carousel-box">
+                            @include('frontend.partials.product_box_1',['product' => $product])
+                        </div>
+                    @endif
+                @endforeach
+            </div>
+        </div>
+    </section>
+    @endif
+
+
+    {{-- Banner section 1 --}}
+    @if (get_setting('home_banner1_images') != null)
+    <div class="mb-4">
+        <div class="container-fluid px-10px">
+            <div class="row gutters-5">
+                @php $banner_1_imags = json_decode(get_setting('home_banner1_images')); @endphp
+                @foreach ($banner_1_imags as $key => $value)
+                    <div class="col-xl col-md-6">
+                        <div class="mb-3 mb-lg-0">
+                            <a href="{{ json_decode(get_setting('home_banner1_links'), true)[$key] }}" class="d-block text-reset position-relative">
+                                <img src="{{ static_asset('assets/img/placeholder-rect.jpg') }}" data-src="{{ uploaded_asset($banner_1_imags[$key]) }}" alt="{{ env('APP_NAME') }} promo" class="img-fluid lazyload w-100">
+                                <div class="absolute-bottom-left align-items-center d-flex justify-content-between mb-3 px-5 text-white w-100">
+                                    <span class="broadcast display-4">{{ json_decode(get_setting('home_banner1_labels'), true)[$key] }}</span>
+                                    <i class="las la-arrow-right size-25px bg-primary d-inline-flex ml-2 justify-content-center align-items-center rounded-circle text-white"></i>
+                                </div>
+                            </a>
+                        </div>
                     </div>
                 @endforeach
             </div>
         </div>
     </div>
+    @endif
 
-    <section class="py-lg-5 py-4  position-relative">
+    @if(get_setting('home_about_details') != null)
+    <div class="py-4 mb-5 d-none">
         <div class="container">
-            <div class="row py-lg-5 d-flex align-items-center">
-                <div class="col-lg-6 my-4">
-                    <img src="{{ uploaded_asset(get_setting('home_about_image')) }}" class="img-fluid w-100" alt="">
+            <div class="row align-items-center">
+                <div class="col-xl-6">
+                    <img src="{{ uploaded_asset(get_setting('home_about_image')) }}" class="img-fluid w-100">
                 </div>
-                <div class="col-lg-6">
-                    <h2 class="text-uppercase text-alter-6 fs-18 fw-700 my-2">{{ get_setting('home_about_title', null, App::getLocale()) }}</h2>
-                    <div class="lh-1-9 my-4 mr-1 text-justify ">{{ get_setting('home_about', null, App::getLocale()) }}</div>
-                    <a href="{{ json_decode(get_setting('home_about_link'), true) }}" class="btn btn-md btn-primary text-white text-uppercase" style="border-radius: 0px!important;"> learn more </a>
+                <div class="col-xl-6">
+                    <div class="pl-xl-4">
+                        <h2 class="broadcast brush-bg display-2 pt-3 mb-0">
+                            <span class="opacity-80">{{ translate('About Us') }}</span>
+                        </h2>
+                        <div class="lh-1-8 mb-4">{!! get_setting('home_about_details') !!}</div>
+                        <a href="{{ get_setting('home_about_link') }}" class="d-inline-block">
+                            <span class="text-alter text-uppercase fs-13">{{ translate('Learn More') }}</span>
+                            <i class="las la-arrow-right size-25px bg-primary d-inline-flex ml-2 justify-content-center align-items-center rounded-circle text-white"></i>
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>
-    </section>
-
-
-    {{-- featured --}}
-
-<div class="container my-4">
-    <div class="d-flex mb-3 align-items-baseline ">
-        <h2 class="h5 fw-700 mb-0 mr-3">
-            <span class="ml-2 d-inline-block text-alter-6 text-uppercase fs-18">{{ translate('Featured Products') }}</span>
-        </h2>
-        <a href="{{route('featured.products')}}" class="ml-auto mr-0 mt-2 mt-md-0 btn btn-primary btn-sm shadow-md w-100 w-md-auto text-uppercase fw-500" style="border-radius: 0px;">{{ translate('View All') }}</a>
     </div>
-    <div class="aiz-carousel gutters-5  dot-small-white" data-items="6" data-xl-items="5" data-lg-items="4"  data-md-items="3" data-sm-items="2" data-xs-items="2" data-infinite='true' data-dots="true" data-autoplay="true">
-
-        @foreach (filter_products(\App\Product::where('published', 1)->where('featured', '1'))->limit(12)->get() as $key => $product)
-        <div class="carousel-box ">
-            @include('frontend.partials.product_box_1',['product' => $product])
-        </div>
-        @endforeach
-    </div>
-</div>      
+    @endif
 
 
-
-{{-- main left right content --}}
-<div class="container py-5">
-    @if (get_setting('banner_text_images') != null)
-            @foreach (json_decode(get_setting('banner_text_images'), true) as $key => $value)
-            <div class="row align-items-center py-4  desk">
-                <div class="col-lg-6 @if(($key % 2) != 0) order-1 @endif">
-                    <a href="{{ json_decode(get_setting('banner_text_links'),true)[$key] }}" class="d-block text-reset">
-                        <img src="{{ uploaded_asset($value) }}" class="img-fluid w-100">
-                    </a>
-                </div>
-                <div class="col-lg-6 my-4">
-                    <h2 class="text-uppercase text-alter-6 fs-18 fw-700 text-truncate-2  h-35px">
-                        <a href="{{ json_decode(get_setting('banner_text_links'),true)[$key] }}"  class="d-inline-block text-reset">{{ json_decode(get_setting('banner_text_titles',null,App::getLocale()),true)[$key] }}</a>
-                    </h2>
-                    <div class="lh-1-9 mt-2 mb-4 mr-1 text-justify">{{ json_decode(get_setting('banner_text_details',null,App::getLocale()),true)[$key] }}</div>
-                    <a href="{{ json_decode(get_setting('banner_text_links'),true)[$key] }}"  class="btn btn-primary text-uppercase btn-md fs-12 fw-600 " style="border-radius: 0px;">{{ translate('view products') }}</a>
-                </div>
-            </div>
-            @endforeach
-            @foreach (json_decode(get_setting('banner_text_images'), true) as $key => $value)
-            <div class="row align-items-center py-4 mob">
-                <div class="col-lg-6 mb-5">
-                    <a href="{{ json_decode(get_setting('banner_text_links'),true)[$key] }}" class="d-block text-reset">
-                        <img src="{{ uploaded_asset($value) }}" class="img-fluid w-100">
-                    </a>
-                </div>
-                <div class="col-lg-6 mb-0 mt-4">
-                    <h2 class="text-uppercase text-alter-6 fs-18 fw-700 text-truncate-2  h-35px">
-                        <a href="{{ json_decode(get_setting('banner_text_links'),true)[$key] }}"  class="d-inline-block text-reset">{{ json_decode(get_setting('banner_text_titles',null,App::getLocale()),true)[$key] }}</a>
-                    </h2>
-                    <div class="lh-1-9 my-4 mr-1 text-justify">{{ json_decode(get_setting('banner_text_details',null,App::getLocale()),true)[$key] }}</div>
-                    <a href="{{ json_decode(get_setting('banner_text_links'),true)[$key] }}"  class="btn btn-primary text-uppercase btn-md fs-12 fw-600 " style="border-radius: 0px;">{{ translate('view products') }}</a>
-                </div>
-            </div>
-            @endforeach
-        @endif
-</div>
-
-    {{-- @if(get_setting('filter_categories') != null)
+    {{-- Category wise Products --}}
     <div id="section_home_categories">
 
     </div>
-    @endif --}}
-    {{-- brands --}}
-    <section class="py-5 bg-white">
+
+
+
+    @if (get_setting('home_specials_images') != null)
+    <div class="py-5 d-none d-lg-block">
         <div class="container">
-            <h4 class="text-center text-alter-6 text-uppercase my-4 fw-600">{{get_setting('corporate_client_title',null,App::getLocale(),true)}}</h4>
-            <div class="border rounded border-gray-200 p-2 p-lg-4">
-                <div class="aiz-carousel gutters-10" data-items="7" data-xl-items="6" data-lg-items="6" data-autoplay="true" data-md-items="6" data-sm-items="2" data-xs-items="2" data-infinite='true' >
-                    @foreach(explode(',',get_setting('corporate_clients')) as $id)
-                        <div class="carousel-box">
-                            <img src="{{ uploaded_asset($id) }}">
-                        </div>
+            <div class="text-center mb-5">
+                <h2 class="broadcast brush-bg bg-center display-2 pt-3 mb-0">
+                    <span class="opacity-80">{{ get_setting('home_specials_title') }}</span>
+                </h2>
+                <div>{!! get_setting('home_specials_subtitle') !!}</div>
+            </div>
+            <div class="">
+                <ul class="d-flex flex-column flex-lg-row pl-0 mb-0 special-carousel align-items-center justify-content-center">
+                    @foreach (json_decode(get_setting('home_specials_images'), true) as $key => $value)
+                        <li class="list-inline-item mb-3">
+                            <a href="{{ json_decode(get_setting('home_specials_links'), true)[$key] }}" class="text-reset d-block text-center">
+                                <img src="{{ uploaded_asset($value) }}" class="img-fluid w-100">
+                                <div class="mt-2 text-uppercase fs-12">{{ json_decode(get_setting('home_specials_labels'), true)[$key] }}</div>
+                            </a>
+                        </li>
                     @endforeach
-                </div>
+                </ul>
             </div>
         </div>
-    </section>
+    </div>
+    @endif
 
+    {{-- Category wise Products --}}
+    <div id="section_home_categories_2">
 
-    {{-- project about --}}
-   <div class="container">
-    <div class="row my-5">
-        <div class="col-md-5 d-flex align-items-center">
-           <div>
-            <h2 class="text-uppercase text-alter-6 fs-18 fw-700">
-                <a href="{{ get_setting('project_about_link') }}"  class="d-inline-block text-reset">{{ get_setting('project_about_title',null,App::getLocale()) }}</a>
-            </h2>
-            <div class="lh-1-9 my-4 mr-1 text-justify">{{ get_setting('project_about',null,App::getLocale()) }}</div>
-            <a href="{{ json_decode(get_setting('project_about_link'),true) }}"  class="btn btn-primary text-uppercase btn-md fs-12 fw-600 mb-2" style="border-radius: 0px;">{{ translate('view products') }}</a>
-           </div>
-        </div>
-        <div class="col-md-7">
+    </div>
 
-            <div class="aiz-carousel gutters-5  dot-small-white" data-items="3" data-xl-items="3" data-lg-items="3"  data-md-items="3" data-sm-items="2" data-xs-items="2" data-infinite='true' data-dots="true" data-autoplay="true">
-
-                @foreach (json_decode(get_setting('project_text_images'),true) as $key => $img)
-                <div class="carousel-box ">
-                    <div class="aiz-card-box has-transition hov-shadow-md ">
-                        <div class="position-relative">
-                            <a href="{{ json_decode(get_setting('project_text_links'),true)[$key]   }}" class="d-block">
-                                <img
-                                    class="img-fit lazyload mx-auto"
-                                    src="{{ static_asset('assets/img/placeholder.jpg') }}"
-                                    data-src="{{ uploaded_asset($img) }}"
-                                    alt="{{  $product->getTranslation('name')  }}"
-                                    onerror="this.onerror=null;this.src='{{ static_asset('assets/img/placeholder.jpg') }}';"
-                                >
+    {{-- Banner Section 2 --}}
+    @if (get_setting('home_banner2_images') != null)
+    <div class="mb-4">
+        <div class="container">
+            <div class="row gutters-5">
+                @php $banner_2_imags = json_decode(get_setting('home_banner2_images')); @endphp
+                @foreach ($banner_2_imags as $key => $value)
+                    <div class="col-xl col-md-6">
+                        <div class="mb-3 mb-lg-0">
+                            <a href="{{ json_decode(get_setting('home_banner2_links'), true)[$key] }}" class="d-block text-reset position-relative">
+                                <img src="{{ static_asset('assets/img/placeholder-rect.jpg') }}" data-src="{{ uploaded_asset($banner_2_imags[$key]) }}" alt="{{ env('APP_NAME') }} promo" class="img-fluid lazyload w-100">
+                                <div class="absolute-bottom-left align-items-center d-flex justify-content-center flex-column mb-3 px-5 text-white w-100">
+                                    <span class="broadcast display-4">{{ json_decode(get_setting('home_banner2_titles'), true)[$key] }}</span>
+                                    <span class="mb-3">{{ json_decode(get_setting('home_banner2_sub_titles'), true)[$key] }}</span>
+                                    <i class="las la-arrow-right size-25px bg-primary d-inline-flex ml-2 justify-content-center align-items-center rounded-circle text-white"></i>
+                                </div>
                             </a>
                         </div>
-                        <div class="px-md-3 px-2 pt-3 text-center pb-0">
-
-                            <div class="fs-13 mb-2 fw-500">
-
-                                <span class="fw-500 text-dark">{{ json_decode(get_setting('project_text_titles',null,App::getLocale()),true)[$key]  }}</span>
-                            </div>
-
-                        </div>
                     </div>
-                </div>
                 @endforeach
             </div>
         </div>
     </div>
-   </div>
+    @endif
 
-    {{-- product features --}}
-    <div class="mb-3 py-5" style="background-color:rgba(0, 0, 0, 0.089)">
+
+
+    <div class="py-5 border-top">
         <div class="container">
-            <h3 class="text text-alter-6 text-center my-4">{{ translate('Our Pruduct Features') }}</h3>
-            <div class="aiz-carousel gutters-10 dot-small-black" data-items="5" data-xl-items="5" data-lg-items="5"  data-md-items="5" data-sm-items="1" data-xs-items="1" data-dots='false' data-autoplay="true" data-infinite='true'>
-                @if (get_setting('customer_reviews_image') != null)
-                    @foreach (json_decode(get_setting('customer_reviews_image'), true) as $key => $value)
-                        <div class="carousel-box">
-                            <div class="p-4 text-center">
-                                <img src="{{ uploaded_asset($value) }}" class="size-90px rounded-circle img-fit mb-3 mx-auto">
-
-
-                                <div class="my-4 fw-500 ">
-
-                                    <span class="ml-2 text-dark text-truncate-2  h-35px" >{{ json_decode(get_setting('customer_reviews_title'), true)[$key] }}</span>
+            <div class="text-center mb-5">
+                <h3 class="h5 text-uppercase fw-600">{{ translate('BRANDS') }}</h3>
+            </div>
+            <div>
+                <div class="aiz-carousel gutters-10 dot-small-black" data-items="3" data-xl-items="3" data-lg-items="2"  data-md-items="2" data-sm-items="1" data-xs-items="1" data-dots='true' data-infinite='true'>
+                    @if (get_setting('customer_reviews_image') != null)
+                        @foreach (json_decode(get_setting('customer_reviews_image'), true) as $key => $value)
+                            <div class="carousel-box">
+                                <div class="mb-4">
+                                    <img src="{{ uploaded_asset($value) }}" class="h-60px mb-3">
+                                    <!--<div class="rating rating-sm mb-2">-->
+                                    <!--    <i class="las la-star text-primary"></i>-->
+                                    <!--    <i class="las la-star text-primary"></i>-->
+                                    <!--    <i class="las la-star text-primary"></i>-->
+                                    <!--    <i class="las la-star text-primary"></i>-->
+                                    <!--    <i class="las la-star text-primary"></i>-->
+                                    <!--</div>-->
+                                    <div class="mb-3">
+                                        <span class="fw-600">{{ json_decode(get_setting('customer_reviews_name'), true)[$key] }}</span>
+                                        <span class="ml-2 text-alter">{{ json_decode(get_setting('customer_reviews_title'), true)[$key] }}</span>
+                                    </div>
+                                    <div class="lh-1-8 font-italic">{{ json_decode(get_setting('customer_reviews_details'), true)[$key] }}</div>
                                 </div>
                             </div>
-                        </div>
-                    @endforeach
-                @endif
+                        @endforeach
+                    @endif
+                </div>
             </div>
         </div>
     </div>
 
-
-
-    {{-- blog --}}
-    <section class="py-5">
-        <div class="container">
-            <div class="d-flex my-5 justify-content-center align-items-center">
-                <h3 class="h3 fw-700 mb-0 text-center text-alter-6">
-
-                   {{ translate('From our blog') }}
-                </h3>
-
-            </div>
-            @php
-            $latest_blogs= \App\Blog::where('status', 1)->latest()->limit(3)->get();
-            @endphp
-            @if (!empty($latest_blogs))
-                <div class="row ">
-                    @foreach($latest_blogs as $blog)
-                        <div class="col-md-4 col-12 mb-3 overflow-hidden shadow-sm">
-                            <a href="{{ route('blog.details', $blog->slug) }}" class="">
-                                <img
-                                    src="{{ static_asset('assets/img/placeholder-rect.jpg') }}"
-                                    data-src="{{ uploaded_asset($blog->banner) }}"
-                                    alt="{{ $blog->title }}"
-                                    class="img-fluid lazyload"
-                                >
-                            </a>
-                            <div class="py-4 pr-4">
-                                <h2 class="fs-18 fw-600 mb-1">
-                                    <a href="{{ route('blog.details', $blog->slug) }}" class="text-reset">
-                                        {{ $blog->title }}
-                                    </a>
-                                </h2>
-                                <p class="opacity-100 my-2">
-                                    {{ $blog->short_description }}
-                                </p>
-                                <a href="{{ route('blog.details', $blog->slug) }}" class="btn btn-primary btn-sm text-uppercase fs-12 fw-600" style="border-radius: 0px;">
-                                    {{ translate('Read more') }}
-                                </a>
-                            </div>
-                        </div>
-                    @endforeach
-                </div>
-            @endif
-        </div>
-    </section>
-
-{{-- FAQ section  --}}
-<div class="container my-5" id="faq">
-    <div class="row" >
-        <div class="col d-flex justify-content-center align-items-center">
-            <h5 class="text text-center text-alter-6 text-uppercase my-3">{{ translate('Frequently Asked Questions') }}</h5>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-md-2 d-none d-lg-block"></div>
-        <div class="col-md-8">
-            @if (get_setting('faq_questions') != null)
-            @foreach (json_decode(get_setting('faq_questions'), true) as $key => $value)
-                <div class="row">
-                   <div class="col-12  text-white accordion" style="background-color: #eb1011;" data-toggle="collapse"  role="button" aria-expanded="false" aria-controls="faq-{{ $key }}" onclick="collapse({{ $key }})" id="q-{{$key}}">
-                    <a class="btn text-white fs-14 fw-600 ">{{ json_decode(get_setting('faq_questions',null,App::getLocale()),true)[$key] }}</a>
-                   </div>
-                </div>
-
-               <div class="row">
-                    <div class="col-12 p-1">
-                        <div class="collapse multi-collapse border "  id="faq-{{ $key }}">
-                            <div class="card-body">
-                                {{ json_decode(get_setting('faq_answers',null,App::getLocale()),true)[$key]  }}
-                            </div>
-                        </div>
-                    </div>
-               </div>
-            @endforeach
-            @endif
-
-        </div>
-    </div>
-</div>
 
 @endsection
 
-
-
 @section('script')
-
     <script>
         $(document).ready(function(){
-            $.post('{{ route('home.section.featured') }}', {_token:'{{ csrf_token() }}'}, function(data){
-                $('#section_featured').html(data);
-                AIZ.plugins.slickCarousel();
-            });
-            $.post('{{ route('home.section.best_selling') }}', {_token:'{{ csrf_token() }}'}, function(data){
-                $('#section_best_selling').html(data);
-                AIZ.plugins.slickCarousel();
-            });
             $.post('{{ route('home.section.home_categories') }}', {_token:'{{ csrf_token() }}'}, function(data){
                 $('#section_home_categories').html(data);
                 AIZ.plugins.slickCarousel();
             });
 
-            @if (get_setting('vendor_system_activation') == 1)
             $.post('{{ route('home.section.best_sellers') }}', {_token:'{{ csrf_token() }}'}, function(data){
-                $('#section_best_sellers').html(data);
+                $('#section_home_categories_2').html(data);
                 AIZ.plugins.slickCarousel();
             });
-            @endif
         });
     </script>
 @endsection

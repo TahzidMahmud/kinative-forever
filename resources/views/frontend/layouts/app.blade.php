@@ -48,9 +48,14 @@
     <link rel="icon" href="{{ uploaded_asset(get_setting('site_icon')) }}">
 
     <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css?family=Montserrat:300,300i,400,400i,600,600i,700,700i,800,800i&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+
     <link href="https://fonts.googleapis.com/css2?family=Lato&family=Raleway:wght@400&family=Roboto&display=swap" rel="stylesheet">
 
+
+    {{-- <link  href="{{ static_asset('assets/fonts/vendors.css') }}"> --}}
     <!-- CSS Files -->
     <link rel="stylesheet" href="{{ static_asset('assets/css/vendors.css') }}">
     @if(\App\Language::where('code', Session::get('locale', Config::get('app.locale')))->first()->rtl == 1)
@@ -88,27 +93,17 @@
 
     <style>
         body{
-            font-family: 'Montserrat', sans-serif;
+            font-family:'Raleway',sans-serif;
+            font-family: 'georgia', sans-serif;
+            font-family: 'Lato', sans-serif;
             font-family: 'Roboto', sans-serif;
-            font-weight: 400;
-            
+            font-weight: 500;
         }
         :root{
             --primary: {{ get_setting('base_color', '#e62d04') }};
             --hov-primary: {{ get_setting('base_hov_color', '#c52907') }};
             --soft-primary: {{ hex2rgba(get_setting('base_color','#e62d04'),.15) }};
         }
-
-        #map{
-            width: 100%;
-            height: 250px;
-        }
-        #edit_map{
-            width: 100%;
-            height: 250px;
-        }
-
-        .pac-container { z-index: 100000; }
     </style>
 
 @if (get_setting('google_analytics') == 1)
@@ -148,17 +143,43 @@
 @endphp
 
 </head>
-<body class=" homepage " >
+<body class="@if(Route::currentRouteName() == 'home') homepage @endif">
+    <script src="https://www.gstatic.com/firebasejs/7.23.0/firebase.js"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script>
+    <script>
+    
+        var firebaseConfig = {
+            apiKey: "AIzaSyBR_frjj7ItK7A33BHe3jjUW6GFX8ghWlI",
+              authDomain: "yuhi-deliveryboy-dd905.firebaseapp.com",
+              projectId: "yuhi-deliveryboy-dd905",
+              storageBucket: "yuhi-deliveryboy-dd905.appspot.com",
+              messagingSenderId: "957586946304",
+              appId: "1:957586946304:web:a01522f23f347470535be5",
+              measurementId: "G-DTWYMK6CYN"
+        };
+    
+        firebase.initializeApp(firebaseConfig);
+        const messaging = firebase.messaging();
+    
+        
+        messaging.onMessage(function(payload) {
+            const noteTitle = payload.notification.title;
+            const noteOptions = {
+                body: payload.notification.body,
+                icon: payload.notification.icon,
+            };
+            new Notification(noteTitle, noteOptions);
+        });
+    
+    </script>
     <!-- aiz-main-wrapper -->
-    <div class="aiz-main-wrapper d-flex flex-column">
+    <div class="aiz-main-wrapper d-flex flex-column " style="overflow: hidden;">
 
         <!-- Header -->
         @include('frontend.inc.nav')
-        <div  style="background-image: url('{{ static_asset('assets/img/bg.jpg') }}');">
-            @yield('content')
 
-        </div>
-        
+        @yield('content')
+
         @include('frontend.inc.footer')
 
     </div>
@@ -224,104 +245,12 @@
             </div>
         </div>
     </div>
-    <div class="modal fade" id="GuestCheckout">
-        <div class="modal-dialog modal-dialog-zoom">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h6 class="modal-title fw-600">{{ translate('Login')}}</h6>
-                    <button type="button" class="close" data-dismiss="modal">
-                        <span aria-hidden="true"></span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <div class="p-3">
-                        <form class="form-default" role="form" action="{{ route('cart.login.submit') }}" method="POST">
-                            @csrf
-                            <div class="form-group">
-                                @if (\App\Addon::where('unique_identifier', 'otp_system')->first() != null && \App\Addon::where('unique_identifier', 'otp_system')->first()->activated)
-                                    <input type="text" class="form-control h-auto form-control-lg {{ $errors->has('email') ? ' is-invalid' : '' }}" value="{{ old('email') }}" placeholder="{{ translate('Email Or Phone')}}" name="email" id="email">
-                                @else
-                                    <input type="email" class="form-control h-auto form-control-lg {{ $errors->has('email') ? ' is-invalid' : '' }}" value="{{ old('email') }}" placeholder="{{  translate('Email') }}" name="email">
-                                @endif
-                                @if (\App\Addon::where('unique_identifier', 'otp_system')->first() != null && \App\Addon::where('unique_identifier', 'otp_system')->first()->activated)
-                                    <span class="opacity-60">{{  translate('Use country code before number') }}</span>
-                                @endif
-                            </div>
-
-                            <div class="form-group">
-                                <input type="password" name="password" class="form-control h-auto form-control-lg" placeholder="{{ translate('Password')}}">
-                            </div>
-
-                            <div class="row mb-2">
-                                <div class="col-6">
-                                    <label class="aiz-checkbox">
-                                        <input type="checkbox" name="remember" {{ old('remember') ? 'checked' : '' }}>
-                                        <span class=opacity-60>{{  translate('Remember Me') }}</span>
-                                        <span class="aiz-square-check"></span>
-                                    </label>
-                                </div>
-                                <div class="col-6 text-right">
-                                    <a href="{{ route('password.request') }}" class="text-reset opacity-60 fs-14">{{ translate('Forgot password?')}}</a>
-                                </div>
-                            </div>
-
-                            <div class="">
-                                <button type="submit" class="btn btn-primary btn-block fw-600">{{  translate('Login') }}</button>
-                            </div>
-                        </form>
-
-                    </div>
-                    @if (\App\BusinessSetting::where('type', 'guest_checkout_active')->first()->value == 1)
-                        <div class="separator my-2" >
-                            <span class="bg-white px-3 opacity-60">{{ translate('Or')}}</span>
-                        </div>
-                        <div class="text-center">
-                            <a href="{{ route('checkout.shipping_info') }}" class="btn btn-soft-primary">{{ translate('Guest Checkout')}}</a>
-                        </div>
-                    @endif
-                    <div class="text-center mb-3 mt-5">
-                        <p class="text-muted mb-0">{{ translate('Dont have an account?')}}</p>
-                        <a href="{{ route('user.registration', ['next' => 'checkout']) }}">{{ translate('Register Now')}}</a>
-                    </div>
-                    @if(\App\BusinessSetting::where('type', 'google_login')->first()->value == 1 || \App\BusinessSetting::where('type', 'facebook_login')->first()->value == 1 || \App\BusinessSetting::where('type', 'twitter_login')->first()->value == 1)
-                        <div class="separator mb-3">
-                            <span class="bg-white px-3 opacity-60">{{ translate('Or Login With')}}</span>
-                        </div>
-                        <ul class="list-inline social colored text-center mb-5">
-                            @if (\App\BusinessSetting::where('type', 'facebook_login')->first()->value == 1)
-                                <li class="list-inline-item">
-                                    <a href="{{ route('social.login', ['provider' => 'facebook']) }}" class="facebook">
-                                        <i class="lab la-facebook-f"></i>
-                                    </a>
-                                </li>
-                            @endif
-                            @if(\App\BusinessSetting::where('type', 'google_login')->first()->value == 1)
-                                <li class="list-inline-item">
-                                    <a href="{{ route('social.login', ['provider' => 'google']) }}" class="google">
-                                        <i class="lab la-google"></i>
-                                    </a>
-                                </li>
-                            @endif
-                            @if (\App\BusinessSetting::where('type', 'twitter_login')->first()->value == 1)
-                                <li class="list-inline-item">
-                                    <a href="{{ route('social.login', ['provider' => 'twitter']) }}" class="twitter">
-                                        <i class="lab la-twitter"></i>
-                                    </a>
-                                </li>
-                            @endif
-                        </ul>
-                    @endif
-                </div>
-            </div>
-        </div>
-    </div>
 
     @yield('modal')
 
     <!-- SCRIPTS -->
     <script src="{{ static_asset('assets/js/vendors.js') }}"></script>
     <script src="{{ static_asset('assets/js/aiz-core.js') }}"></script>
-    <script src="{{ static_asset('assets/js/multiline-truncation-ellipsis-toggle/src/jquery.multiTextToggleCollapse.js') }}"></script>
 
 
 
@@ -355,32 +284,24 @@
             AIZ.plugins.notify('{{ $message['level'] }}', '{{ $message['message'] }}');
         @endforeach
     </script>
-<script>
-    // code for text turncate multi line
-    $(document).ready(function(){
-        var maxLength = 303;
-        $(".show-read-more").each(function(){
-            var myStr = $(this).text();
-            if($.trim(myStr).length > maxLength){
-                var newStr = myStr.substring(0, maxLength);
-                var removedStr = myStr.substring(maxLength, $.trim(myStr).length);
-                $(this).empty().html(newStr);
-                $(this).append('<a href="javascript:void(0);" class="read-more ml-1"><strong>Read More</strong></a>');
-                $(this).append('<span class="more-text d-none">' + removedStr + '</span>');
+
+    <script>
+        var back_to_top_btn = $('#back_to_top_btn');
+
+        $(window).scroll(function() {
+            if ($(window).scrollTop() > 300) {
+                back_to_top_btn.addClass('show');
+            } else {
+                back_to_top_btn.removeClass('show');
             }
         });
-        $(".read-more").click(function(){
-            $(this).siblings(".more-text").contents().unwrap();
-            $(this).siblings(".more-text").removeClass('d-none');
-            $(this).remove();
+
+        back_to_top_btn.on('click', function(e) {
+            e.preventDefault();
+            $('html, body').animate({scrollTop:0}, '300');
         });
-    });
-</script>
-    <script>
 
         $(document).ready(function() {
-
-
             $('.side-menu [data-id]').each(function(i, el) {
                 var id = $(el).data('id');
                 $(el).on('click',function(){
@@ -402,19 +323,6 @@
                 });
             });
             if ($('#lang-change').length > 0) {
-                $('#lang-change a').each(function() {
-                    $(this).on('click', function(e){
-                        e.preventDefault();
-                        var $this = $(this);
-                        var locale = $this.data('flag');
-                        $.post('{{ route('language.change') }}',{_token: AIZ.data.csrf, locale:locale}, function(data){
-                            location.reload();
-                        });
-
-                    });
-                });
-            }
-             if ($('#lang-change').length > 0) {
                 $('#lang-change .dropdown-menu a').each(function() {
                     $(this).on('click', function(e){
                         e.preventDefault();
@@ -479,30 +387,23 @@
             }
         }
 
-        function updateNavCart(view,count,total){
+        function updateNavCart(view,count){
             $('.cart-count').html(count);
-            $('.total-price').html(total);
             $('#sidebar-cart').html(view);
+            AIZ.extra.plusMinus();
         }
-        function updateQuantity(element){
-            var id = $(element).data('id');
-            var type = $(element).data('type');
-            var quantity = $(element).data('quantity');
-            if(type == 'plus'){
-                quantity++;
-            }else if(type == 'minus'){
-                quantity--;
-            }
-            $(element).siblings(".qty").html(quantity);
 
+        function updateQuantity(key, element){
             $.post('{{ route('cart.updateQuantity') }}', {
                 _token   :  AIZ.data.csrf,
-                id       :  id,
-                quantity :  quantity
+                id       :  key,
+                quantity :  element.value
             }, function(data){
-                updateNavCart(data.nav_cart_view,data.cart_count,data.total);
+                updateNavCart(data.nav_cart_view,data.cart_count);
+                $('#cart-summary').html(data.cart_view);
             });
         }
+
         function removeFromCart(key){
             $.post('{{ route('cart.removeFromCart') }}', {
                 _token  : AIZ.data.csrf,
@@ -510,7 +411,7 @@
             }, function(data){
                 updateNavCart(data.nav_cart_view,data.cart_count);
                 $('#cart-summary').html(data.cart_view);
-                AIZ.plugins.notify('success', "{{ translate('Item has been removed from cart') }}");
+                AIZ.plugins.notify('success', 'Item has been removed from cart');
                 $('#cart_items_sidenav').html(parseInt($('#cart_items_sidenav').html())-1);
             });
         }
@@ -610,42 +511,27 @@
             return false;
         }
 
-        function addToCart(e = null){
-            var id = $(e).data('id');
+        function addToCart(){
+            if(checkAddToCartValidity()) {
+                $('#addToCart').modal();
+                $('.c-preloader').show();
+                $.ajax({
+                    type:"POST",
+                    url: '{{ route('cart.addToCart') }}',
+                    data: $('#option-choice-form').serializeArray(),
+                    success: function(data){
 
-            if(typeof id != 'undefined'){
-                $(e).append('<span class="spinner-border spinner-border-sm ml-1"></span>').attr('disabled',true);
-                $.post('{{ route('cart.addToCart') }}', { _token : AIZ.data.csrf, id : id, quantity: '1'}, function(data){
-                    if(data.status == 1){
-                        AIZ.plugins.notify('primary', 'Product added to cart.');
-                        updateNavCart(data.nav_cart_view,data.cart_count,data.total);
-                    }else{
-                        AIZ.plugins.notify('danger', 'Oopss! This product is out of stock.');
+                       $('#addToCart-modal-body').html(null);
+                       $('.c-preloader').hide();
+                       $('#modal-size').removeClass('modal-lg');
+                       $('#addToCart-modal-body').html(data.modal_view);
+                       AIZ.extra.plusMinus();
+                       updateNavCart(data.nav_cart_view,data.cart_count);
                     }
-                    $(e).attr('disabled',false).find('.spinner-border').remove();
-               });
-            }else{
-                if(checkAddToCartValidity()) {
-                    $('#addToCart').modal();
-                    $('.c-preloader').show();
-                    $.ajax({
-                        type:"POST",
-                        url: '{{ route('cart.addToCart') }}',
-                        data: $('#option-choice-form').serializeArray(),
-                        success: function(data){
-
-                           $('#addToCart-modal-body').html(null);
-                           $('.c-preloader').hide();
-                           $('#modal-size').removeClass('modal-lg');
-                           $('#addToCart-modal-body').html(data.modal_view);
-                           AIZ.extra.plusMinus();
-                           updateNavCart(data.nav_cart_view,data.cart_count,data.total);
-                        }
-                    });
-                }
-                else{
-                    AIZ.plugins.notify('warning', "{{ translate('Please choose all the options') }}");
-                }
+                });
+            }
+            else{
+                AIZ.plugins.notify('warning', 'Please choose all the options');
             }
         }
 
@@ -662,9 +548,9 @@
                        if(data.status == 1){
 
                             $('#addToCart-modal-body').html(data.modal_view);
-                            updateNavCart(data.nav_cart_view,data.cart_count,data.total);
+                            updateNavCart(data.nav_cart_view,data.cart_count);
 
-                            window.location.replace("{{ route('cart') }}");
+                            window.location.replace("{{ route('checkout.shipping_info') }}");
                        }
                        else{
                             $('#addToCart-modal-body').html(null);
@@ -676,7 +562,7 @@
                });
             }
             else{
-                AIZ.plugins.notify('warning', "{{ translate('Please choose all the options') }}");
+                AIZ.plugins.notify('warning', 'Please choose all the options');
             }
         }
 

@@ -25,7 +25,7 @@
     <!-- Open Graph data -->
     <meta property="og:title" content="{{ $page->meta_title }}" />
     <meta property="og:type" content="product" />
-    <meta property="og:url" content="{{ URL($page->slug) }}" />
+    <meta property="og:url" content="{{ route('product', $page->slug) }}" />
     <meta property="og:image" content="{{ uploaded_asset($page->meta_img) }}" />
     <meta property="og:description" content="{{ $page->meta_description }}" />
     <meta property="og:site_name" content="{{ env('APP_NAME') }}" />
@@ -45,7 +45,7 @@
                         <a class="text-reset" href="{{ route('home') }}">{{ translate('Home')}}</a>
                     </li>
                     <li class="text-dark fw-600 breadcrumb-item">
-                        <a class="text-reset" href="{{ route('custom-pages.show_custom_page', $page->slug ) }}">"{{ $page->getTranslation('title') }}"</a>
+                        <a class="text-reset" href="{{ route('custom-pages.show_custom_page', $page->slug ) }}">"{{ $page->title }}"</a>
                     </li>
                 </ul>
             </div>

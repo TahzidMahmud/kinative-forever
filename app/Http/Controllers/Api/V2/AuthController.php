@@ -8,6 +8,7 @@ use App\Models\Customer;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 use App\User;
+use App\FirebaseAccessToken;
 use App\Notifications\AppEmailVerificationNotification;
 use Hash;
 
@@ -131,6 +132,16 @@ class AuthController extends Controller
                     return response()->json(['message' => 'Please verify your account', 'user' => null], 401);
                 }
                 $tokenResult = $user->createToken('Personal Access Token');
+                if($request->device_token!=null){
+                    $token=FirebaseAccessToken::where('access_token',$request->device_token)->first();
+                    if($token==null){
+                        FirebaseAccessToken::create([
+                            "user_id"=>$user->id,
+                            "user_type"=>$user->user_type,
+                            "access_token"=>$request->device_token
+                        ]);
+                    }
+                }
                 return $this->loginSuccess($tokenResult, $user);
 
 

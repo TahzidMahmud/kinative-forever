@@ -22,7 +22,7 @@
                         </div>
 
                         <div class="form-group">
-                            <input id="code" type="text" class="form-control{{ $errors->has('code') ? ' is-invalid' : '' }}" name="code" value="{{ $email ?? old('code') }}" placeholder="{{translate('Code')}}" required autofocus>
+                            <input id="code" type="text" class="form-control{{ $errors->has('code') ? ' is-invalid' : '' }}" name="code" value="{{ $email ?? old('code') }}" placeholder="Code" required autofocus>
 
                             @if ($errors->has('code'))
                                 <span class="invalid-feedback" role="alert">

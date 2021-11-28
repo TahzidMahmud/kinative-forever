@@ -28,6 +28,3 @@ ecommerce.zip
 install.zip
 /nbproject/private/
 /nbproject
-/storage/framework/cache
-/storage/framework/views
-/storage/framework/sessions

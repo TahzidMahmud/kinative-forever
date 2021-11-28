@@ -36,9 +36,13 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'admin']], function(
     Route::get('/products/seller/{id}/edit', 'ProductController@seller_product_edit')->name('products.seller.edit');
     Route::post('/products/todays_deal', 'ProductController@updateTodaysDeal')->name('products.todays_deal');
     Route::post('/products/featured', 'ProductController@updateFeatured')->name('products.featured');
-    Route::post('/products/approved', 'ProductController@updateProductApproval')->name('products.approved');
-    Route::post('/products/get_products_by_subcategory', 'ProductController@get_products_by_subcategory')->name('products.get_products_by_subcategory');
+    Route::get('/products/quick-update/{id}', 'ProductController@quick_update')->name('products.quick_update');
+    Route::post('/products/quick-update', 'ProductController@quick_update_done')->name('products.quick_update_done');
     Route::post('/bulk-product-delete', 'ProductController@bulk_product_delete')->name('bulk-product-delete');
+    
+
+    Route::resource('inventory-purchase', 'InventoryPurchaseController');
+    Route::resource('inventory-supplier', 'InventorySupplierController');
 
 
 
@@ -76,8 +80,6 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'admin']], function(
     Route::get('/smtp-settings', 'BusinessSettingsController@smtp_settings')->name('smtp_settings.index');
     Route::get('/google-analytics', 'BusinessSettingsController@google_analytics')->name('google_analytics.index');
     Route::get('/google-recaptcha', 'BusinessSettingsController@google_recaptcha')->name('google_recaptcha.index');
-    Route::get('/google-map', 'BusinessSettingsController@google_map')->name('google-map.index');
-    Route::get('/google-firebase', 'BusinessSettingsController@google_firebase')->name('google-firebase.index');
 
     //Facebook Settings
     Route::get('/facebook-chat', 'BusinessSettingsController@facebook_chat')->name('facebook_chat.index');
@@ -90,8 +92,6 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'admin']], function(
     Route::post('/payment_method_update', 'BusinessSettingsController@payment_method_update')->name('payment_method.update');
     Route::post('/google_analytics', 'BusinessSettingsController@google_analytics_update')->name('google_analytics.update');
     Route::post('/google_recaptcha', 'BusinessSettingsController@google_recaptcha_update')->name('google_recaptcha.update');
-    Route::post('/google-map', 'BusinessSettingsController@google_map_update')->name('google-map.update');
-    Route::post('/google-firebase', 'BusinessSettingsController@google_firebase_update')->name('google-firebase.update');
     //Currency
     Route::get('/currency', 'CurrencyController@currency')->name('currency.index');
     Route::post('/currency/update', 'CurrencyController@updateCurrency')->name('currency.update');
@@ -121,15 +121,13 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'admin']], function(
 
     // website setting
     Route::group(['prefix' => 'website'], function() {
-        Route::get('/footer', 'WebsiteController@footer')->name('website.footer');
-        Route::get('/header', 'WebsiteController@header')->name('website.header');
-        Route::get('/appearance', 'WebsiteController@appearance')->name('website.appearance');
-        Route::get('/pages', 'WebsiteController@pages')->name('website.pages');
-        Route::get('/shop', 'WebsiteController@shop')->name('website.shop');
+        Route::view('/header', 'backend.website_settings.header')->name('website.header');
+        Route::view('/footer', 'backend.website_settings.footer')->name('website.footer');
+        Route::view('/pages', 'backend.website_settings.pages.index')->name('website.pages');
+        Route::view('/appearance', 'backend.website_settings.appearance')->name('website.appearance');
         Route::resource('custom-pages', 'PageController');
         Route::get('/custom-pages/edit/{id}', 'PageController@edit')->name('custom-pages.edit');
         Route::get('/custom-pages/destroy/{id}', 'PageController@destroy')->name('custom-pages.destroy');
-        Route::get('/custom-pages/featured/create', 'PageController@featured_create')->name('custom-pages.featured.create');
     });
 
     Route::resource('roles', 'RoleController');
@@ -168,6 +166,8 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'admin']], function(
     Route::get('/seller_orders/{id}/show', 'OrderController@seller_orders_show')->name('seller_orders.show');
 
     Route::post('/bulk-order-status', 'OrderController@bulk_order_status')->name('bulk-order-status');
+    Route::post('/bulk-order-download', 'OrderController@bulk_order_download')->name('bulk-order-download');
+    Route::get('/bulk-order-print/{order_ids}', 'OrderController@bulk_order_print')->name('bulk-order-print');
 
 
     // Pickup point orders
@@ -180,6 +180,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'admin']], function(
     Route::post('/pay_to_seller', 'CommissionController@pay_to_seller')->name('commissions.pay_to_seller');
 
     //Reports
+    Route::get('/sale_report', 'ReportController@sale_report')->name('sale_report.index');
     Route::get('/stock_report', 'ReportController@stock_report')->name('stock_report.index');
     Route::get('/in_house_sale_report', 'ReportController@in_house_sale_report')->name('in_house_sale_report.index');
     Route::get('/seller_sale_report', 'ReportController@seller_sale_report')->name('seller_sale_report.index');
@@ -213,11 +214,6 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'admin']], function(
     Route::resource('pick_up_points', 'PickupPointController');
     Route::get('/pick_up_points/edit/{id}', 'PickupPointController@edit')->name('pick_up_points.edit');
     Route::get('/pick_up_points/destroy/{id}', 'PickupPointController@destroy')->name('pick_up_points.destroy');
-    //Pickup_Point Time_Slots
-    Route::resource('pick_up_times', 'PickupTimeController');
-    Route::get('/pick_up_times/edit/{id}', 'PickupTimeController@edit')->name('pick_up_times.edit');
-    Route::get('/pick_up_times/destroy/{id}', 'PickupTimeController@destroy')->name('pick_up_times.destroy');
-
 
     //conversation of seller customer
     Route::get('conversations', 'ConversationController@admin_index')->name('conversations.admin_index');
@@ -273,10 +269,6 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'admin']], function(
     Route::resource('cities', 'CityController');
     Route::get('/cities/edit/{id}', 'CityController@edit')->name('cities.edit');
     Route::get('/cities/destroy/{id}', 'CityController@destroy')->name('cities.destroy');
-
-    Route::resource('areas', 'AreaController');
-    Route::get('/areas/edit/{id}', 'AreaController@edit')->name('areas.edit');
-    Route::get('/areas/destroy/{id}', 'AreaController@destroy')->name('areas.destroy');
 
     Route::view('/system/update', 'backend.system.update')->name('system_update');
     Route::view('/system/server-status', 'backend.system.server_status')->name('system_server');

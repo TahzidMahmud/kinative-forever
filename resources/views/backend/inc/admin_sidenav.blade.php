@@ -136,10 +136,16 @@
                     </a>
                     <!--Submenu-->
                     <ul class="aiz-side-nav-list level-2">
+                        @php
+                            $unseen_orders = \App\Order::where('viewed', 0)->count();
+                        @endphp
                         @if(Auth::user()->user_type == 'admin' || in_array('3', json_decode(Auth::user()->staff->role->permissions)))
                             <li class="aiz-side-nav-item">
                                 <a href="{{ route('all_orders.index') }}" class="aiz-side-nav-link {{ areActiveRoutes(['all_orders.index', 'all_orders.show'])}}">
                                     <span class="aiz-side-nav-text">{{translate('All Orders')}}</span>
+                                    @if($unseen_orders > 0)
+                                    <span class="badge badge-inline badge-primary">{{$unseen_orders}}</span>
+                                    @endif
                                 </a>
                             </li>
                         @endif
@@ -165,7 +171,6 @@
                                 </a>
                             </li>
                         @endif
-
                     </ul>
                 </li>
 
@@ -200,6 +205,16 @@
                             <li class="aiz-side-nav-item">
                                 <a href="{{route('delivery-boy-configuration')}}" class="aiz-side-nav-link">
                                     <span class="aiz-side-nav-text">{{translate('Configuration')}}</span>
+                                </a>
+                            </li>
+                            <li class="aiz-side-nav-item">
+                                <a href="{{route('delivery-boys-payment-histories')}}" class="aiz-side-nav-link {{ areActiveRoutes(['delivery-boys-payment-histories'])}}">
+                                    <span class="aiz-side-nav-text">{{translate('All Delivery Boy Payment History')}}</span>
+                                </a>
+                            </li>
+                            <li class="aiz-side-nav-item">
+                                <a href="{{route('delivery-boys-collection-histories')}}" class="aiz-side-nav-link {{ areActiveRoutes(['delivery-boys-collection-histories'])}}">
+                                    <span class="aiz-side-nav-text">{{translate('All Delivery Boy Colection History')}}</span>
                                 </a>
                             </li>
                         </ul>
@@ -345,6 +360,11 @@
                             <span class="aiz-side-nav-arrow"></span>
                         </a>
                         <ul class="aiz-side-nav-list level-2">
+                            <li class="aiz-side-nav-item">
+                                <a href="{{ route('sale_report.index') }}" class="aiz-side-nav-link {{ areActiveRoutes(['sale_report.index'])}}">
+                                    <span class="aiz-side-nav-text">{{ translate('Sale Stats') }}</span>
+                                </a>
+                            </li>
                             <li class="aiz-side-nav-item">
                                 <a href="{{ route('in_house_sale_report.index') }}" class="aiz-side-nav-link {{ areActiveRoutes(['in_house_sale_report.index'])}}">
                                     <span class="aiz-side-nav-text">{{ translate('In House Product Sale') }}</span>
@@ -647,7 +667,7 @@
                 @if (\App\Addon::where('unique_identifier', 'otp_system')->first() != null && \App\Addon::where('unique_identifier', 'otp_system')->first()->activated)
                   @if(Auth::user()->user_type == 'admin' || in_array('19', json_decode(Auth::user()->staff->role->permissions)))
                       <li class="aiz-side-nav-item">
-                        <a href="#" class="aiz-side-nav-link">
+                        <a href="#" class="aiz-side-nav-link"
                             <i class="las la-phone aiz-side-nav-icon"></i>
                             <span class="aiz-side-nav-text">{{translate('OTP System')}}</span>
                             @if (env("DEMO_MODE") == "On")
@@ -661,11 +681,11 @@
                                     <span class="aiz-side-nav-text">{{translate('OTP Configurations')}}</span>
                                 </a>
                             </li>
-                            {{-- <li class="aiz-side-nav-item">
+                            <li class="aiz-side-nav-item">
                                 <a href="{{route('sms-templates.index')}}" class="aiz-side-nav-link">
                                     <span class="aiz-side-nav-text">{{translate('SMS Templates')}}</span>
                                 </a>
-                            </li> --}}
+                            </li>
                             <li class="aiz-side-nav-item">
                                 <a href="{{route('otp_credentials.index')}}" class="aiz-side-nav-link">
                                     <span class="aiz-side-nav-text">{{translate('Set OTP Credentials')}}</span>
@@ -706,25 +726,20 @@
                 <!-- Website Setup -->
                 @if(Auth::user()->user_type == 'admin' || in_array('13', json_decode(Auth::user()->staff->role->permissions)))
                   <li class="aiz-side-nav-item">
-                    <a href="#" class="aiz-side-nav-link {{ areActiveRoutes(['website.footer', 'website.header','custom-pages.featured.create'])}}" >
+                    <a href="#" class="aiz-side-nav-link">
                         <i class="las la-desktop aiz-side-nav-icon"></i>
                         <span class="aiz-side-nav-text">{{translate('Website Setup')}}</span>
                         <span class="aiz-side-nav-arrow"></span>
                     </a>
                     <ul class="aiz-side-nav-list level-2">
                         <li class="aiz-side-nav-item">
-                            <a href="{{ route('website.header',['lang'=>  App::getLocale()]) }}" class="aiz-side-nav-link">
+                            <a href="{{ route('website.header') }}" class="aiz-side-nav-link">
                                 <span class="aiz-side-nav-text">{{translate('Header')}}</span>
                             </a>
                         </li>
                         <li class="aiz-side-nav-item">
-                            <a href="{{ route('website.footer',['lang'=>  App::getLocale()]) }}" class="aiz-side-nav-link {{ areActiveRoutes(['website.footer'])}}">
+                            <a href="{{ route('website.footer') }}" class="aiz-side-nav-link">
                                 <span class="aiz-side-nav-text">{{translate('Footer')}}</span>
-                            </a>
-                        </li>
-                        <li class="aiz-side-nav-item">
-                            <a href="{{ route('website.shop',['lang'=>  App::getLocale()]) }}" class="aiz-side-nav-link {{ areActiveRoutes(['website.shop'])}}">
-                                <span class="aiz-side-nav-text">{{translate('Shop')}}</span>
                             </a>
                         </li>
                         <li class="aiz-side-nav-item">
@@ -783,11 +798,6 @@
                             </a>
                         </li>
                         <li class="aiz-side-nav-item">
-                            <a href="{{route('pick_up_times.index')}}" class="aiz-side-nav-link {{ areActiveRoutes(['pick_up_times.index','pick_up_times.create','pick_up_times.edit'])}}">
-                                <span class="aiz-side-nav-text">{{translate('Pickup point Time Slot')}}</span>
-                            </a>
-                        </li>
-                        <li class="aiz-side-nav-item">
                             <a href="{{ route('smtp_settings.index') }}" class="aiz-side-nav-link">
                                 <span class="aiz-side-nav-text">{{translate('SMTP Settings')}}</span>
                             </a>
@@ -799,12 +809,17 @@
                         </li>
                         <li class="aiz-side-nav-item">
                             <a href="{{ route('file_system.index') }}" class="aiz-side-nav-link">
-                                <span class="aiz-side-nav-text">{{translate('File System & Cache Configuration')}}</span>
+                                <span class="aiz-side-nav-text">{{translate('File System Configuration')}}</span>
                             </a>
                         </li>
                         <li class="aiz-side-nav-item">
                             <a href="{{ route('social_login.index') }}" class="aiz-side-nav-link">
                                 <span class="aiz-side-nav-text">{{translate('Social media Logins')}}</span>
+                            </a>
+                        </li>
+                        <li class="aiz-side-nav-item">
+                            <a href="{{ route('google_analytics.index') }}" class="aiz-side-nav-link">
+                                <span class="aiz-side-nav-text">{{translate('Analytics Tools')}}</span>
                             </a>
                         </li>
 
@@ -828,36 +843,10 @@
                         </li>
 
                         <li class="aiz-side-nav-item">
-                            <a href="javascript:void(0);" class="aiz-side-nav-link">
-                                <span class="aiz-side-nav-text">{{translate('Google')}}</span>
-                                <span class="aiz-side-nav-arrow"></span>
+                            <a href="{{ route('google_recaptcha.index') }}" class="aiz-side-nav-link">
+                                <span class="aiz-side-nav-text">{{translate('Google reCAPTCHA')}}</span>
                             </a>
-                            <ul class="aiz-side-nav-list level-3">
-                                <li class="aiz-side-nav-item">
-                                    <a href="{{ route('google_analytics.index') }}" class="aiz-side-nav-link">
-                                        <span class="aiz-side-nav-text">{{translate('Analytics Tools')}}</span>
-                                    </a>
-                                </li>
-                                <li class="aiz-side-nav-item">
-                                    <a href="{{ route('google_recaptcha.index') }}" class="aiz-side-nav-link">
-                                        <span class="aiz-side-nav-text">{{translate('Google reCAPTCHA')}}</span>
-                                    </a>
-                                </li>
-                                <li class="aiz-side-nav-item">
-                                    <a href="{{ route('google-map.index') }}" class="aiz-side-nav-link">
-                                        <span class="aiz-side-nav-text">{{translate('Google Map')}}</span>
-                                    </a>
-                                </li>
-<!--                                <li class="aiz-side-nav-item">
-                                    <a href="{{ route('google-firebase.index') }}" class="aiz-side-nav-link">
-                                        <span class="aiz-side-nav-text">{{translate('Google Firebase')}}</span>
-                                    </a>
-                                </li>-->
-                            </ul>
                         </li>
-
-
-
 
                         <li class="aiz-side-nav-item">
                             <a href="javascript:void(0);" class="aiz-side-nav-link">
@@ -878,11 +867,6 @@
                                 <li class="aiz-side-nav-item">
                                     <a href="{{route('cities.index')}}" class="aiz-side-nav-link {{ areActiveRoutes(['cities.index','cities.edit','cities.update'])}}">
                                         <span class="aiz-side-nav-text">{{translate('Shipping Cities')}}</span>
-                                    </a>
-                                </li>
-                                <li class="aiz-side-nav-item">
-                                    <a href="{{route('areas.index')}}" class="aiz-side-nav-link {{ areActiveRoutes(['areas.index','areas.edit','areas.update'])}}">
-                                        <span class="aiz-side-nav-text">{{translate('Shipping Area')}}</span>
                                     </a>
                                 </li>
                             </ul>
@@ -915,6 +899,38 @@
                         </ul>
                     </li>
                 @endif
+                @if(Auth::user()->user_type == 'admin' || in_array('24', json_decode(Auth::user()->staff->role->permissions)))
+                <li class="aiz-side-nav-item">
+                    <a href="#" class="aiz-side-nav-link">
+                        <i class="las la-user-tie aiz-side-nav-icon"></i>
+                        <span class="aiz-side-nav-text">{{translate('System')}}</span>
+                        <span class="aiz-side-nav-arrow"></span>
+                    </a>
+                    <ul class="aiz-side-nav-list level-2">
+                        <li class="aiz-side-nav-item">
+                            <a href="{{ route('system_update') }}" class="aiz-side-nav-link">
+                                <span class="aiz-side-nav-text">{{translate('Update')}}</span>
+                            </a>
+                        </li>
+                        <li class="aiz-side-nav-item">
+                            <a href="{{route('system_server')}}" class="aiz-side-nav-link">
+                                <span class="aiz-side-nav-text">{{translate('Server status')}}</span>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+                @endif
+
+                {{--
+                <!-- Addon Manager -->
+                @if(Auth::user()->user_type == 'admin' || in_array('21', json_decode(Auth::user()->staff->role->permissions)))
+                    <li class="aiz-side-nav-item">
+                        <a href="{{route('addons.index')}}" class="aiz-side-nav-link {{ areActiveRoutes(['addons.index', 'addons.create'])}}">
+                            <i class="las la-wrench aiz-side-nav-icon"></i>
+                            <span class="aiz-side-nav-text">{{translate('Addon Manager')}}</span>
+                        </a>
+                    </li>
+                @endif --}}
             </ul><!-- .aiz-side-nav -->
         </div><!-- .aiz-side-nav-wrap -->
     </div><!-- .aiz-sidebar -->

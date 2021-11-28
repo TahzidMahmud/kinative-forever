@@ -29,6 +29,7 @@ class UserController extends Controller
     public function getUserInfoByAccessToken(Request $request)
     {
         //$token = $request->bearerToken();
+
         $token = $request->access_token;
 
         $false_response = [

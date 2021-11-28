@@ -1,39 +1,53 @@
-@php $filter_categories = get_setting('filter_categories'); @endphp
-<section class="py-5 bg-white">
-    <div class="container">
-        <div class="nav justify-content-center filters-button-group text-uppercase text-center mb-3 mb-md-4 mobile-hor-swipe">
-            <a class="text-reset bg-transparent border-0 button fw-600 px-3 py-2 text-uppercase fs-13 opacity-70 active" data-toggle="tab" href="#all-category">All Featured</a>
-            @foreach (json_decode($filter_categories) as $key => $value)
-                @php $category = \App\Category::find($value); @endphp
-                @if($category != null)
-                    <a class="bg-transparent border-0 button fw-600 px-3 py-2 text-uppercase text-reset fs-13 opacity-70" data-toggle="tab" href="#category-{{ $category->id }}">{{ $category->name }}</a>
-                @endif
-            @endforeach
-        </div>
-        <div class="tab-content" >
-            <div class="tab-pane fade show active" id="all-category" >
-                <div class="row row-cols-xxl-6 row-cols-lg-6 row-cols-md-4 row-cols-sm-3 row-cols-2 gutters-5">
-                    @foreach (\App\Product::where('published', '1')->where('featured', '1')->latest()->limit(12)->get() as $key => $product)
-                    <div class="col mb-2">
-                        @include('frontend.partials.product_box_1',['product'=>$product])
-                    </div>
-                    @endforeach
-                </div>
-            </div>
-            @foreach (json_decode($filter_categories) as $key => $value)
-                @php $category = \App\Category::find($value); @endphp
-                @if ($category != null)
-                    <div class="tab-pane fade" id="category-{{ $category->id }}" >
-                        <div class="row row-cols-xl-6 row-cols-lg-6 row-cols-md-4 row-cols-sm-3 row-cols-2 gutters-5">
-                            @foreach (get_cached_products($category->id) as $key => $product)
-                            <div class="col mb-2">
-                                @include('frontend.partials.product_box_1',['product'=>$product])
-                            </div>
+@php $home_categories = json_decode(get_setting('home_categories')); @endphp
+<section class="mb-4">
+    <div class="container" >
+               <div class="row">
+                   <div class="col" style="min-width: 15%;max-width:20%;"></div>
+                   <div class="col"style="max-width:80%;">
+                        <div class="nav flex-grow filters-button-group text-uppercase  mobile-hor-swipe d-block d-md-flex justify-content-around " style="background-color: rgba(255, 255, 255, 0)!important;">
+                            @foreach ($home_categories as $key => $value)
+                                @php $category = \App\Category::find($value); @endphp
+                                @if($category != null)
+                                    @if($key==0)
+                                        <a class=" border-0 button fw-700 px-2 py-4 text-uppercase text-reset fs-12 opacity-40 active" style="display: inline-block;" data-toggle="tab" href="#category-{{ $category->id }}"><span class="py-4 my-4" style="background-color: rgba(255, 255, 255, 0.007)!important;">{{ $category->getTranslation('name') }}</span></a>
+                                    @else
+                                        <a class=" border-0 button fw-700 px-2 py-4 text-uppercase text-reset fs-12 opacity-40" style="display: inline-block;" data-toggle="tab" href="#category-{{ $category->id }}"><span class="py-4 my-4" style="background-color: rgba(255, 255, 255, 0)!important;">{{ $category->getTranslation('name') }}</span></a>
+                                    @endif
+                                @endif
                             @endforeach
                         </div>
-                    </div>
+                   </div>
+                   <div class="col" style="min-width: 10%;max-width:10%;"></div>
+               </div>
+        <div class="tab-content p-2"  style="background-color: rgba(255, 255, 255, 0);">
+            @foreach ($home_categories as $key => $value)
+                @php $category = \App\Category::find($value); @endphp
+                @if ($category != null)
+                    @if($key==0)
+                        <div class="tab-pane show active" id="category-{{ $category->id }}" >
+                            <div class="row row-cols-xl-5 row-cols-lg-5 row-cols-md-5 row-cols-sm-2 row-cols-2 gutters-5">
+                                @foreach (get_cached_products($category->id) as $key => $product)
+                                <div class="col mb-2">
+                                    @include('frontend.partials.product_box_1',['product'=>$product])
+                                </div>
+                                @endforeach
+                            </div>
+                        </div>
+                    @else
+                        <div class="tab-pane fade" id="category-{{ $category->id }}" >
+                            <div class="row row-cols-xl-5 row-cols-lg-5 row-cols-md-4 row-cols-sm-3 row-cols-2 gutters-5">
+                                @foreach (get_cached_products($category->id) as $key => $product)
+                                <div class="col mb-2">
+                                    @include('frontend.partials.product_box_1',['product'=>$product])
+                                </div>
+                                @endforeach
+                            </div>
+                        </div>
+                    @endif
                 @endif
             @endforeach
         </div>
     </div>
 </section>
+
+

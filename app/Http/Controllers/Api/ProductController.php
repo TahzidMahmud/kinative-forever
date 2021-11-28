@@ -27,7 +27,6 @@ class ProductController extends Controller
     {
         return new ProductDetailCollection(Product::where('id', $id)->get());
     }
-   
 
     public function admin()
     {
@@ -76,6 +75,7 @@ class ProductController extends Controller
     public function flashDeal()
     {
         $flash_deals = FlashDeal::where('status', 1)->where('featured', 1)->where('start_date', '<=', strtotime(date('d-m-Y')))->where('end_date', '>=', strtotime(date('d-m-Y')))->get();
+        dd($flash_deals);
         return new FlashDealCollection($flash_deals);
     }
 

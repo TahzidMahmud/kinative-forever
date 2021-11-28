@@ -40,10 +40,8 @@ $.fn.toggleAttr = function (attr, attr1, attr2) {
             $(elem).find(".selected-files").val(selected);
         },
         removeAttachment: function () {
-            $(document).on("click",'.remove-attachment', function () {
-                var value = $(this)
-                    .closest(".file-preview-item")
-                    .data("id");
+            $(document).on("click", ".remove-attachment", function () {
+                var value = $(this).closest(".file-preview-item").data("id");
                 var selected = $(this)
                     .closest(".file-preview")
                     .prev('[data-toggle="aizuploader"]')
@@ -70,59 +68,65 @@ $.fn.toggleAttr = function (attr, attr1, attr2) {
                     AIZ.uploader.data.clickedForDelete = id;
                     $("#aizUploaderDelete").modal("show");
 
-                    $(".aiz-uploader-confirmed-delete").on("click", function (
-                        e
-                    ) {
-                        e.preventDefault();
-                        if (e.detail === 1) {
-                            var clickedForDeleteObject =
-                                AIZ.uploader.data.allFiles[
-                                    AIZ.uploader.data.allFiles.findIndex(
-                                        (x) =>
-                                            x.id ===
-                                            AIZ.uploader.data.clickedForDelete
-                                    )
-                                ];
-                            $.ajax({
-                                url:
-                                    AIZ.data.appUrl +
-                                    "/aiz-uploader/destroy/" +
-                                    AIZ.uploader.data.clickedForDelete,
-                                type: "DELETE",
-                                dataType: "JSON",
-                                data: {
-                                    id: AIZ.uploader.data.clickedForDelete,
-                                    _method: "DELETE",
-                                    _token: AIZ.data.csrf,
-                                },
-                                success: function () {
-                                    AIZ.uploader.data.selectedFiles = AIZ.uploader.data.selectedFiles.filter(
-                                        function (item) {
-                                            return (
-                                                item !==
+                    $(".aiz-uploader-confirmed-delete").on(
+                        "click",
+                        function (e) {
+                            e.preventDefault();
+                            if (e.detail === 1) {
+                                var clickedForDeleteObject =
+                                    AIZ.uploader.data.allFiles[
+                                        AIZ.uploader.data.allFiles.findIndex(
+                                            (x) =>
+                                                x.id ===
                                                 AIZ.uploader.data
                                                     .clickedForDelete
-                                            );
-                                        }
-                                    );
-                                    AIZ.uploader.data.selectedFilesObject = AIZ.uploader.data.selectedFilesObject.filter(
-                                        function (item) {
-                                            return (
-                                                item !== clickedForDeleteObject
-                                            );
-                                        }
-                                    );
-                                    AIZ.uploader.updateUploaderSelected();
-                                    AIZ.uploader.getAllUploads(
+                                        )
+                                    ];
+                                $.ajax({
+                                    url:
                                         AIZ.data.appUrl +
-                                            "/aiz-uploader/get_uploaded_files"
-                                    );
-                                    AIZ.uploader.data.clickedForDelete = null;
-                                    $("#aizUploaderDelete").modal("hide");
-                                },
-                            });
+                                        "/aiz-uploader/destroy/" +
+                                        AIZ.uploader.data.clickedForDelete,
+                                    type: "DELETE",
+                                    dataType: "JSON",
+                                    data: {
+                                        id: AIZ.uploader.data.clickedForDelete,
+                                        _method: "DELETE",
+                                        _token: AIZ.data.csrf,
+                                    },
+                                    success: function () {
+                                        AIZ.uploader.data.selectedFiles =
+                                            AIZ.uploader.data.selectedFiles.filter(
+                                                function (item) {
+                                                    return (
+                                                        item !==
+                                                        AIZ.uploader.data
+                                                            .clickedForDelete
+                                                    );
+                                                }
+                                            );
+                                        AIZ.uploader.data.selectedFilesObject =
+                                            AIZ.uploader.data.selectedFilesObject.filter(
+                                                function (item) {
+                                                    return (
+                                                        item !==
+                                                        clickedForDeleteObject
+                                                    );
+                                                }
+                                            );
+                                        AIZ.uploader.updateUploaderSelected();
+                                        AIZ.uploader.getAllUploads(
+                                            AIZ.data.appUrl +
+                                                "/aiz-uploader/get_uploaded_files"
+                                        );
+                                        AIZ.uploader.data.clickedForDelete =
+                                            null;
+                                        $("#aizUploaderDelete").modal("hide");
+                                    },
+                                });
+                            }
                         }
-                    });
+                    );
                 });
             });
         },
@@ -157,16 +161,18 @@ $.fn.toggleAttr = function (attr, attr1, attr2) {
                         AIZ.uploader.data.selectedFiles.push(value);
                         AIZ.uploader.data.selectedFilesObject.push(valueObject);
                     } else {
-                        AIZ.uploader.data.selectedFiles = AIZ.uploader.data.selectedFiles.filter(
-                            function (item) {
+                        AIZ.uploader.data.selectedFiles =
+                            AIZ.uploader.data.selectedFiles.filter(function (
+                                item
+                            ) {
                                 return item !== value;
-                            }
-                        );
-                        AIZ.uploader.data.selectedFilesObject = AIZ.uploader.data.selectedFilesObject.filter(
-                            function (item) {
-                                return item !== valueObject;
-                            }
-                        );
+                            });
+                        AIZ.uploader.data.selectedFilesObject =
+                            AIZ.uploader.data.selectedFilesObject.filter(
+                                function (item) {
+                                    return item !== valueObject;
+                                }
+                            );
                     }
                     AIZ.uploader.addSelectedValue();
                     AIZ.uploader.updateUploaderSelected();
@@ -215,13 +221,12 @@ $.fn.toggleAttr = function (attr, attr1, attr2) {
             }
             if (sort_key != null && sort_key.length > 0) {
                 params["sort"] = sort_key;
-            }
-            else{
-                params["sort"] = 'newest';
+            } else {
+                params["sort"] = "newest";
             }
             $.get(url, params, function (data, status) {
                 //console.log(data);
-                if(typeof data == 'string'){
+                if (typeof data == "string") {
                     data = JSON.parse(data);
                 }
                 AIZ.uploader.data.allFiles = data.data;
@@ -474,23 +479,20 @@ $.fn.toggleAttr = function (attr, attr1, attr2) {
             elem.next(".file-preview").html(null);
 
             if (AIZ.uploader.data.selectedFiles.length > 0) {
-
                 $.post(
                     AIZ.data.appUrl + "/aiz-uploader/get_file_by_ids",
-                    { _token: AIZ.data.csrf, ids: AIZ.uploader.data.selectedFiles.toString() },
+                    {
+                        _token: AIZ.data.csrf,
+                        ids: AIZ.uploader.data.selectedFiles.toString(),
+                    },
                     function (data) {
-
                         elem.next(".file-preview").html(null);
 
                         if (data.length > 0) {
                             elem.find(".file-amount").html(
                                 AIZ.uploader.updateFileHtml(data)
                             );
-                            for (
-                                var i = 0;
-                                i < data.length;
-                                i++
-                            ) {
+                            for (var i = 0; i < data.length; i++) {
                                 var thumb = "";
                                 if (data[i].type === "image") {
                                     thumb =
@@ -522,9 +524,7 @@ $.fn.toggleAttr = function (attr, attr1, attr2) {
                                     "</span>" +
                                     "</h6>" +
                                     "<p>" +
-                                    AIZ.extra.bytesToSize(
-                                        data[i].file_size
-                                    ) +
+                                    AIZ.extra.bytesToSize(data[i].file_size) +
                                     "</p>" +
                                     "</div>" +
                                     '<div class="remove">' +
@@ -537,9 +537,12 @@ $.fn.toggleAttr = function (attr, attr1, attr2) {
                                 elem.next(".file-preview").append(html);
                             }
                         } else {
-                            elem.find(".file-amount").html(AIZ.local.choose_file);
+                            elem.find(".file-amount").html(
+                                AIZ.local.choose_file
+                            );
                         }
-                });
+                    }
+                );
             } else {
                 elem.find(".file-amount").html(AIZ.local.choose_file);
             }
@@ -728,50 +731,51 @@ $.fn.toggleAttr = function (attr, attr1, attr2) {
             // }, 50);
         },
         initForInput: function () {
-            $(document).on("click",'[data-toggle="aizuploader"]', function (e) {
-                if (e.detail === 1) {
-                    var elem = $(this);
-                    var multiple = elem.data("multiple");
-                    var type = elem.data("type");
-                    var oldSelectedFiles = elem.find(".selected-files").val();
+            $(document).on(
+                "click",
+                '[data-toggle="aizuploader"]',
+                function (e) {
+                    if (e.detail === 1) {
+                        var elem = $(this);
+                        var multiple = elem.data("multiple");
+                        var type = elem.data("type");
+                        var oldSelectedFiles = elem
+                            .find(".selected-files")
+                            .val();
 
-                    multiple = !multiple ? "" : multiple;
-                    type = !type ? "" : type;
-                    oldSelectedFiles = !oldSelectedFiles
-                        ? ""
-                        : oldSelectedFiles;
+                        multiple = !multiple ? "" : multiple;
+                        type = !type ? "" : type;
+                        oldSelectedFiles = !oldSelectedFiles
+                            ? ""
+                            : oldSelectedFiles;
 
-                    AIZ.uploader.trigger(
-                        this,
-                        "input",
-                        type,
-                        oldSelectedFiles,
-                        multiple
-                    );
+                        AIZ.uploader.trigger(
+                            this,
+                            "input",
+                            type,
+                            oldSelectedFiles,
+                            multiple
+                        );
+                    }
                 }
-            });
+            );
         },
-        previewGenerate: function(){
+        previewGenerate: function () {
             $('[data-toggle="aizuploader"]').each(function () {
                 var $this = $(this);
                 var files = $this.find(".selected-files").val();
-                if(files != ""){
+                if (files != "") {
                     $.post(
                         AIZ.data.appUrl + "/aiz-uploader/get_file_by_ids",
                         { _token: AIZ.data.csrf, ids: files },
                         function (data) {
-
                             $this.next(".file-preview").html(null);
 
                             if (data.length > 0) {
-                                $this.find(".file-amount").html(
-                                    AIZ.uploader.updateFileHtml(data)
-                                );
-                                for (
-                                    var i = 0;
-                                    i < data.length;
-                                    i++
-                                ) {
+                                $this
+                                    .find(".file-amount")
+                                    .html(AIZ.uploader.updateFileHtml(data));
+                                for (var i = 0; i < data.length; i++) {
                                     var thumb = "";
                                     if (data[i].type === "image") {
                                         thumb =
@@ -780,7 +784,8 @@ $.fn.toggleAttr = function (attr, attr1, attr2) {
                                             data[i].file_name +
                                             '" class="img-fit">';
                                     } else {
-                                        thumb = '<i class="la la-file-text"></i>';
+                                        thumb =
+                                            '<i class="la la-file-text"></i>';
                                     }
                                     var html =
                                         '<div class="d-flex justify-content-between align-items-center mt-2 file-preview-item" data-id="' +
@@ -818,12 +823,15 @@ $.fn.toggleAttr = function (attr, attr1, attr2) {
                                     $this.next(".file-preview").append(html);
                                 }
                             } else {
-                                $this.find(".file-amount").html(AIZ.local.choose_file);
+                                $this
+                                    .find(".file-amount")
+                                    .html(AIZ.local.choose_file);
                             }
-                    });
+                        }
+                    );
                 }
             });
-        }
+        },
     };
     AIZ.plugins = {
         metismenu: function () {
@@ -832,15 +840,15 @@ $.fn.toggleAttr = function (attr, attr1, attr2) {
         bootstrapSelect: function (refresh = "") {
             $(".aiz-selectpicker").each(function (el) {
                 var $this = $(this);
-                if(!$this.parent().hasClass('bootstrap-select')){
-                    var selected = $this.data('selected');
-                    if( typeof selected !== 'undefined' ){
+                if (!$this.parent().hasClass("bootstrap-select")) {
+                    var selected = $this.data("selected");
+                    if (typeof selected !== "undefined") {
                         $this.val(selected);
                     }
                     $this.selectpicker({
                         size: 5,
-                        noneSelectedText: AIZ.local.nothing_selected,                     
-                        virtualScroll: false
+                        noneSelectedText: AIZ.local.nothing_selected,
+                        virtualScroll: false,
                     });
                 }
                 if (refresh === "refresh") {
@@ -852,37 +860,39 @@ $.fn.toggleAttr = function (attr, attr1, attr2) {
             });
         },
         tagify: function () {
-            $(".aiz-tag-input").not(".tagify").each(function () {
-                var $this = $(this);
+            $(".aiz-tag-input")
+                .not(".tagify")
+                .each(function () {
+                    var $this = $(this);
 
-                var maxTags = $this.data("max-tags");
-                var whitelist = $this.data("whitelist");
-                var onchange = $this.data("on-change");
+                    var maxTags = $this.data("max-tags");
+                    var whitelist = $this.data("whitelist");
+                    var onchange = $this.data("on-change");
 
-                maxTags = !maxTags ? Infinity : maxTags;
-                whitelist = !whitelist ? [] : whitelist;
+                    maxTags = !maxTags ? Infinity : maxTags;
+                    whitelist = !whitelist ? [] : whitelist;
 
-                $this.tagify({
-                    maxTags: maxTags,
-                    whitelist: whitelist,
-                    dropdown: {
-                        enabled: 1,
-                    },
+                    $this.tagify({
+                        maxTags: maxTags,
+                        whitelist: whitelist,
+                        dropdown: {
+                            enabled: 1,
+                        },
+                    });
+                    try {
+                        callback = eval(onchange);
+                    } catch (e) {
+                        var callback = "";
+                    }
+                    if (typeof callback == "function") {
+                        $this.on("removeTag", function () {
+                            callback();
+                        });
+                        $this.on("add", function () {
+                            callback();
+                        });
+                    }
                 });
-                try {
-                    callback = eval(onchange);
-                } catch (e) {
-                    var callback = '';
-                }
-                if (typeof callback == 'function') {
-                    $this.on('removeTag',function(){
-                        callback();
-                    });
-                    $this.on('add',function(){
-                        callback();
-                    });
-                }
-            });
         },
         textEditor: function () {
             $(".aiz-text-editor").each(function (el) {
@@ -905,7 +915,7 @@ $.fn.toggleAttr = function (attr, attr1, attr2) {
                     : buttons;
                 placeholder = !placeholder ? "" : placeholder;
                 minHeight = !minHeight ? 200 : minHeight;
-                format = (typeof format == 'undefined') ? false : format;
+                format = typeof format == "undefined" ? false : format;
 
                 $this.summernote({
                     toolbar: buttons,
@@ -916,24 +926,36 @@ $.fn.toggleAttr = function (attr, attr1, attr2) {
                             data.pop();
                         },
                         onPaste: function (e) {
-                            if(!format){
-                                var bufferText = ((e.originalEvent || e).clipboardData || window.clipboardData).getData('Text');
+                            if (!format) {
+                                var bufferText = (
+                                    (e.originalEvent || e).clipboardData ||
+                                    window.clipboardData
+                                ).getData("Text");
                                 e.preventDefault();
-                                document.execCommand('insertText', false, bufferText);
+                                document.execCommand(
+                                    "insertText",
+                                    false,
+                                    bufferText
+                                );
                             }
-                        }
-                    }
+                        },
+                    },
                 });
 
-                var nativeHtmlBuilderFunc = $this.summernote('module', 'videoDialog').createVideoNode;
+                var nativeHtmlBuilderFunc = $this.summernote(
+                    "module",
+                    "videoDialog"
+                ).createVideoNode;
 
-                $this.summernote('module', 'videoDialog').createVideoNode =  function(url) 
-                {   
-                    var wrap = $('<div class="embed-responsive embed-responsive-16by9"></div>');
-                    var html = nativeHtmlBuilderFunc(url);
-                        html = $(html).addClass('embed-responsive-item');
-                    return wrap.append(html)[0];
-                };
+                $this.summernote("module", "videoDialog").createVideoNode =
+                    function (url) {
+                        var wrap = $(
+                            '<div class="embed-responsive embed-responsive-16by9"></div>'
+                        );
+                        var html = nativeHtmlBuilderFunc(url);
+                        html = $(html).addClass("embed-responsive-item");
+                        return wrap.append(html)[0];
+                    };
             });
         },
         dateRange: function () {
@@ -980,7 +1002,9 @@ $.fn.toggleAttr = function (attr, attr1, attr2) {
                 minDate = !pastDisable ? minDate : today;
                 maxDate = !futureDisable ? maxDate : today;
                 timePicker = !timePicker ? false : timePicker;
-                timePickerIncrement = !timePickerIncrement ? 1 : timePickerIncrement;
+                timePickerIncrement = !timePickerIncrement
+                    ? 1
+                    : timePickerIncrement;
                 ranges = !advncdRange ? "" : ranges;
 
                 $this.daterangepicker({
@@ -1114,7 +1138,9 @@ $.fn.toggleAttr = function (attr, attr1, attr2) {
                         strings: {
                             addMoreFiles: AIZ.local.add_more_files,
                             addingMoreFiles: AIZ.local.adding_more_files,
-                            dropPaste: AIZ.local.drop_files_here_paste_or+' %{browse}',
+                            dropPaste:
+                                AIZ.local.drop_files_here_paste_or +
+                                " %{browse}",
                             browse: AIZ.local.browse,
                             uploadComplete: AIZ.local.upload_complete,
                             uploadPaused: AIZ.local.upload_paused,
@@ -1123,28 +1149,40 @@ $.fn.toggleAttr = function (attr, attr1, attr2) {
                             retryUpload: AIZ.local.retry_upload,
                             cancelUpload: AIZ.local.cancel_upload,
                             xFilesSelected: {
-                                0: '%{smart_count} '+AIZ.local.file_selected,
-                                1: '%{smart_count} '+AIZ.local.files_selected
+                                0: "%{smart_count} " + AIZ.local.file_selected,
+                                1: "%{smart_count} " + AIZ.local.files_selected,
                             },
                             uploadingXFiles: {
-                                0: AIZ.local.uploading+' %{smart_count} '+AIZ.local.file,
-                                1: AIZ.local.uploading+' %{smart_count} '+AIZ.local.files
+                                0:
+                                    AIZ.local.uploading +
+                                    " %{smart_count} " +
+                                    AIZ.local.file,
+                                1:
+                                    AIZ.local.uploading +
+                                    " %{smart_count} " +
+                                    AIZ.local.files,
                             },
                             processingXFiles: {
-                                0: AIZ.local.processing+' %{smart_count} '+AIZ.local.file,
-                                1: AIZ.local.processing+' %{smart_count} '+AIZ.local.files
+                                0:
+                                    AIZ.local.processing +
+                                    " %{smart_count} " +
+                                    AIZ.local.file,
+                                1:
+                                    AIZ.local.processing +
+                                    " %{smart_count} " +
+                                    AIZ.local.files,
                             },
                             uploading: AIZ.local.uploading,
                             complete: AIZ.local.complete,
-                        }
-                    }
+                        },
+                    },
                 });
                 uppy.use(Uppy.XHRUpload, {
                     endpoint: AIZ.data.appUrl + "/aiz-uploader/upload",
                     fieldName: "aiz_file",
                     formData: true,
                     headers: {
-                        'X-CSRF-TOKEN': AIZ.data.csrf,
+                        "X-CSRF-TOKEN": AIZ.data.csrf,
                     },
                 });
                 uppy.on("upload-success", function () {
@@ -1155,155 +1193,186 @@ $.fn.toggleAttr = function (attr, attr1, attr2) {
             }
         },
         tooltip: function () {
-            $('body').tooltip({selector: '[data-toggle="tooltip"]'}).click(function () {
-                $('[data-toggle="tooltip"]').tooltip("hide");
-            });
+            $("body")
+                .tooltip({ selector: '[data-toggle="tooltip"]' })
+                .click(function () {
+                    $('[data-toggle="tooltip"]').tooltip("hide");
+                });
         },
         countDown: function () {
             if ($(".aiz-count-down").length > 0) {
                 $(".aiz-count-down").each(function () {
-
                     var $this = $(this);
                     var date = $this.data("date");
                     // console.log(date)
 
-                    $this.countdown(date).on("update.countdown", function (event) {
-                        var $this = $(this).html(
-                            event.strftime(
-                                "" +
-                                    '<div class="countdown-item"><span class="countdown-digit">%-D</span></div><span class="countdown-separator">:</span>' +
-                                    '<div class="countdown-item"><span class="countdown-digit">%H</span></div><span class="countdown-separator">:</span>' +
-                                    '<div class="countdown-item"><span class="countdown-digit">%M</span></div><span class="countdown-separator">:</span>' +
-                                    '<div class="countdown-item"><span class="countdown-digit">%S</span></div>'
-                            )
-                        );
-                    });
-
+                    $this
+                        .countdown(date)
+                        .on("update.countdown", function (event) {
+                            var $this = $(this).html(
+                                event.strftime(
+                                    "" +
+                                        '<div class="countdown-item"><span class="countdown-digit">%-D</span></div><span class="countdown-separator">:</span>' +
+                                        '<div class="countdown-item"><span class="countdown-digit">%H</span></div><span class="countdown-separator">:</span>' +
+                                        '<div class="countdown-item"><span class="countdown-digit">%M</span></div><span class="countdown-separator">:</span>' +
+                                        '<div class="countdown-item"><span class="countdown-digit">%S</span></div>'
+                                )
+                            );
+                        });
                 });
             }
         },
         slickCarousel: function () {
-            $(".aiz-carousel").not(".slick-initialized").each(function () {
-                var $this = $(this);
+            $(".aiz-carousel")
+                .not(".slick-initialized")
+                .each(function () {
+                    var $this = $(this);
 
-                var slidesRtl = false;
+                    var slidesRtl = false;
 
-                var slidesPerViewXs = $this.data("xs-items");
-                var slidesPerViewSm = $this.data("sm-items");
-                var slidesPerViewMd = $this.data("md-items");
-                var slidesPerViewLg = $this.data("lg-items");
-                var slidesPerViewXl = $this.data("xl-items");
-                var slidesPerView = $this.data("items");
+                    var slidesPerViewXs = $this.data("xs-items");
+                    var slidesPerViewSm = $this.data("sm-items");
+                    var slidesPerViewMd = $this.data("md-items");
+                    var slidesPerViewLg = $this.data("lg-items");
+                    var slidesPerViewXl = $this.data("xl-items");
+                    var slidesPerView = $this.data("items");
 
-                var slidesCenterMode = $this.data("center");
-                var slidesArrows = $this.data("arrows");
-                var slidesDots = $this.data("dots");
-                var slidesRows = $this.data("rows");
-                var slidesAutoplay = $this.data("autoplay");
-                var slidesFade = $this.data("fade");
-                var asNavFor = $this.data("nav-for");
-                var infinite = $this.data("infinite");
-                var focusOnSelect = $this.data("focus-select");
-                var adaptiveHeight = $this.data("auto-height");
+                    var slidesCenterMode = $this.data("center");
+                    var slidesArrows = $this.data("arrows");
+                    var slidesDots = $this.data("dots");
+                    var slidesRows = $this.data("rows");
+                    var slidesAutoplay = $this.data("autoplay");
+                    var slidesFade = $this.data("fade");
+                    var asNavFor = $this.data("nav-for");
+                    var infinite = $this.data("infinite");
+                    var focusOnSelect = $this.data("focus-select");
+                    var adaptiveHeight = $this.data("auto-height");
+                    var variableWidth = $this.data("auto-width");
 
+                    var vertical = $this.data("vertical");
+                    var verticalXs = $this.data("vertical-xs");
+                    var verticalSm = $this.data("vertical-sm");
+                    var verticalMd = $this.data("vertical-md");
+                    var verticalLg = $this.data("vertical-lg");
+                    var verticalXl = $this.data("vertical-xl");
 
-                var vertical = $this.data("vertical");
-                var verticalXs = $this.data("vertical-xs");
-                var verticalSm = $this.data("vertical-sm");
-                var verticalMd = $this.data("vertical-md");
-                var verticalLg = $this.data("vertical-lg");
-                var verticalXl = $this.data("vertical-xl");
+                    slidesPerView = !slidesPerView ? 1 : slidesPerView;
+                    slidesPerViewXl = !slidesPerViewXl
+                        ? slidesPerView
+                        : slidesPerViewXl;
+                    slidesPerViewLg = !slidesPerViewLg
+                        ? slidesPerViewXl
+                        : slidesPerViewLg;
+                    slidesPerViewMd = !slidesPerViewMd
+                        ? slidesPerViewLg
+                        : slidesPerViewMd;
+                    slidesPerViewSm = !slidesPerViewSm
+                        ? slidesPerViewMd
+                        : slidesPerViewSm;
+                    slidesPerViewXs = !slidesPerViewXs
+                        ? slidesPerViewSm
+                        : slidesPerViewXs;
 
-                slidesPerView = !slidesPerView ? 1 : slidesPerView;
-                slidesPerViewXl = !slidesPerViewXl ? slidesPerView : slidesPerViewXl;
-                slidesPerViewLg = !slidesPerViewLg ? slidesPerViewXl : slidesPerViewLg;
-                slidesPerViewMd = !slidesPerViewMd ? slidesPerViewLg : slidesPerViewMd;
-                slidesPerViewSm = !slidesPerViewSm ? slidesPerViewMd : slidesPerViewSm;
-                slidesPerViewXs = !slidesPerViewXs ? slidesPerViewSm : slidesPerViewXs;
+                    vertical = !vertical ? false : vertical;
+                    verticalXl =
+                        typeof verticalXl == "undefined"
+                            ? vertical
+                            : verticalXl;
+                    verticalLg =
+                        typeof verticalLg == "undefined"
+                            ? verticalXl
+                            : verticalLg;
+                    verticalMd =
+                        typeof verticalMd == "undefined"
+                            ? verticalLg
+                            : verticalMd;
+                    verticalSm =
+                        typeof verticalSm == "undefined"
+                            ? verticalMd
+                            : verticalSm;
+                    verticalXs =
+                        typeof verticalXs == "undefined"
+                            ? verticalSm
+                            : verticalXs;
 
+                    slidesCenterMode = !slidesCenterMode
+                        ? false
+                        : slidesCenterMode;
+                    slidesArrows = !slidesArrows ? false : slidesArrows;
+                    slidesDots = !slidesDots ? false : slidesDots;
+                    slidesRows = !slidesRows ? 1 : slidesRows;
+                    slidesAutoplay = !slidesAutoplay ? false : slidesAutoplay;
+                    slidesFade = !slidesFade ? false : slidesFade;
+                    asNavFor = !asNavFor ? null : asNavFor;
+                    infinite = !infinite ? false : infinite;
+                    focusOnSelect = !focusOnSelect ? false : focusOnSelect;
+                    adaptiveHeight = !adaptiveHeight ? false : adaptiveHeight;
+                    variableWidth = !variableWidth ? false : variableWidth;
 
-                vertical = !vertical ? false : vertical;
-                verticalXl = (typeof verticalXl == 'undefined') ? vertical : verticalXl;
-                verticalLg = (typeof verticalLg == 'undefined') ? verticalXl : verticalLg;
-                verticalMd = (typeof verticalMd == 'undefined') ? verticalLg : verticalMd;
-                verticalSm = (typeof verticalSm == 'undefined') ? verticalMd : verticalSm;
-                verticalXs = (typeof verticalXs == 'undefined') ? verticalSm : verticalXs;
-
-
-                slidesCenterMode = !slidesCenterMode ? false : slidesCenterMode;
-                slidesArrows = !slidesArrows ? false : slidesArrows;
-                slidesDots = !slidesDots ? false : slidesDots;
-                slidesRows = !slidesRows ? 1 : slidesRows;
-                slidesAutoplay = !slidesAutoplay ? false : slidesAutoplay;
-                slidesFade = !slidesFade ? false : slidesFade;
-                asNavFor = !asNavFor ? null : asNavFor;
-                infinite = !infinite ? false : infinite;
-                focusOnSelect = !focusOnSelect ? false : focusOnSelect;
-                adaptiveHeight = !adaptiveHeight ? false : adaptiveHeight;
-
-
-                if ($("html").attr("dir") === "rtl") {
-                    slidesRtl = true;
-                }
-                $this.slick({
-                    slidesToShow: slidesPerView,
-                    autoplay: slidesAutoplay,
-                    dots: slidesDots,
-                    arrows: slidesArrows,
-                    infinite: infinite,
-                    vertical: vertical,
-                    rtl: slidesRtl,
-                    rows: slidesRows,
-                    centerPadding: "0px",
-                    centerMode: slidesCenterMode,
-                    fade: slidesFade,
-                    asNavFor: asNavFor,
-                    focusOnSelect: focusOnSelect,
-                    adaptiveHeight: adaptiveHeight,
-                    slidesToScroll: 1,
-                    prevArrow:
-                        '<button type="button" class="slick-prev"><i class="las la-angle-left"></i></button>',
-                    nextArrow:
-                        '<button type="button" class="slick-next"><i class="las la-angle-right"></i></button>',
-                    responsive: [
-                        {
-                            breakpoint: 1500,
-                            settings: {
-                                slidesToShow: slidesPerViewXl,
-                                vertical: verticalXl,
+                    if ($("html").attr("dir") === "rtl") {
+                        slidesRtl = true;
+                    }
+                    $this.slick({
+                        slidesToShow: slidesPerView,
+                        autoplay: slidesAutoplay,
+                        dots: slidesDots,
+                        arrows: slidesArrows,
+                        infinite: infinite,
+                        vertical: vertical,
+                        rtl: slidesRtl,
+                        rows: slidesRows,
+                        centerPadding: "0px",
+                        centerMode: slidesCenterMode,
+                        fade: slidesFade,
+                        asNavFor: asNavFor,
+                        focusOnSelect: focusOnSelect,
+                        adaptiveHeight: adaptiveHeight,
+                        variableWidth: variableWidth,
+                        centerPadding: "60px",
+                        slidesToScroll: 1,
+                        prevArrow:
+                            '<button type="button" class="slick-prev"><i class="las la-angle-left"></i></button>',
+                        nextArrow:
+                            '<button type="button" class="slick-next"><i class="las la-angle-right"></i></button>',
+                        responsive: [
+                            {
+                                breakpoint: 1500,
+                                settings: {
+                                    slidesToShow: slidesPerViewXl,
+                                    vertical: verticalXl,
+                                },
                             },
-                        },
-                        {
-                            breakpoint: 1200,
-                            settings: {
-                                slidesToShow: slidesPerViewLg,
-                                vertical: verticalLg,
+                            {
+                                breakpoint: 1200,
+                                settings: {
+                                    slidesToShow: slidesPerViewLg,
+                                    vertical: verticalLg,
+                                },
                             },
-                        },
-                        {
-                            breakpoint: 992,
-                            settings: {
-                                slidesToShow: slidesPerViewMd,
-                                vertical: verticalMd,
+                            {
+                                breakpoint: 992,
+                                settings: {
+                                    slidesToShow: slidesPerViewMd,
+                                    vertical: verticalMd,
+                                },
                             },
-                        },
-                        {
-                            breakpoint: 768,
-                            settings: {
-                                slidesToShow: slidesPerViewSm,
-                                vertical: verticalSm,
+                            {
+                                breakpoint: 768,
+                                settings: {
+                                    slidesToShow: slidesPerViewSm,
+                                    vertical: verticalSm,
+                                },
                             },
-                        },
-                        {
-                            breakpoint: 576,
-                            settings: {
-                                slidesToShow: slidesPerViewXs,
-                                vertical: verticalXs,
+                            {
+                                breakpoint: 576,
+                                settings: {
+                                    slidesToShow: slidesPerViewXs,
+                                    vertical: verticalXs,
+                                },
                             },
-                        },
-                    ],
+                        ],
+                    });
                 });
-            });
         },
         chart: function (selector, config) {
             if (!$(selector).length) return;
@@ -1314,13 +1383,17 @@ $.fn.toggleAttr = function (attr, attr1, attr2) {
                 var aizChart = new Chart($this, config);
             });
         },
-        noUiSlider: function(){
+        noUiSlider: function () {
             if ($(".aiz-range-slider")[0]) {
                 $(".aiz-range-slider").each(function () {
                     var c = document.getElementById("input-slider-range"),
-                    d = document.getElementById("input-slider-range-value-low"),
-                    e = document.getElementById("input-slider-range-value-high"),
-                    f = [d, e];
+                        d = document.getElementById(
+                            "input-slider-range-value-low"
+                        ),
+                        e = document.getElementById(
+                            "input-slider-range-value-high"
+                        ),
+                        f = [d, e];
 
                     noUiSlider.create(c, {
                         start: [
@@ -1329,83 +1402,98 @@ $.fn.toggleAttr = function (attr, attr1, attr2) {
                         ],
                         connect: !0,
                         range: {
-                            min: parseInt(c.getAttribute("data-range-value-min")),
-                            max: parseInt(c.getAttribute("data-range-value-max")),
+                            min: parseInt(
+                                c.getAttribute("data-range-value-min")
+                            ),
+                            max: parseInt(
+                                c.getAttribute("data-range-value-max")
+                            ),
                         },
                     }),
-                    
-                    c.noUiSlider.on("update", function (a, b) {
-                        f[b].textContent = a[b];
-                    }),
-                    c.noUiSlider.on("change", function (a, b) {
-                        rangefilter(a);
-                    });
+                        c.noUiSlider.on("update", function (a, b) {
+                            f[b].textContent = a[b];
+                        }),
+                        c.noUiSlider.on("change", function (a, b) {
+                            rangefilter(a);
+                        });
                 });
             }
         },
-        zoom: function(){
-            if($('.img-zoom')[0]){
-                $('.img-zoom').zoom({
-                    magnify:1.5
+        zoom: function () {
+            if ($(".img-zoom")[0]) {
+                $(".img-zoom").zoom({
+                    magnify: 1.5,
                 });
-                if((('ontouchstart' in window) || (navigator.maxTouchPoints > 0) || (navigator.msMaxTouchPoints > 0))){
-                    $('.img-zoom').trigger('zoom.destroy');
+                if (
+                    "ontouchstart" in window ||
+                    navigator.maxTouchPoints > 0 ||
+                    navigator.msMaxTouchPoints > 0
+                ) {
+                    $(".img-zoom").trigger("zoom.destroy");
                 }
             }
         },
-        jsSocials: function(){
-            if($('.aiz-share')[0]){
-                $('.aiz-share').jsSocials({
+        jsSocials: function () {
+            if ($(".aiz-share")[0]) {
+                $(".aiz-share").jsSocials({
                     showLabel: false,
                     showCount: false,
                     shares: [
                         {
                             share: "email",
-                            logo: "lar la-envelope"
+                            logo: "lar la-envelope",
                         },
                         {
                             share: "twitter",
-                            logo: "lab la-twitter"
+                            logo: "lab la-twitter",
                         },
                         {
                             share: "facebook",
-                            logo: "lab la-facebook-f"
+                            logo: "lab la-facebook-f",
                         },
                         {
                             share: "linkedin",
-                            logo: "lab la-linkedin-in"
+                            logo: "lab la-linkedin-in",
                         },
                         {
                             share: "whatsapp",
-                            logo: "lab la-whatsapp"
-                        }
-                    ]
+                            logo: "lab la-whatsapp",
+                        },
+                    ],
                 });
             }
-        }
+        },
     };
     AIZ.extra = {
-        refreshToken: function (){
-            $.get(AIZ.data.appUrl+'/refresh-csrf').done(function(data){
+        refreshToken: function () {
+            $.get(AIZ.data.appUrl + "/refresh-csrf").done(function (data) {
                 AIZ.data.csrf = data;
             });
             // console.log(AIZ.data.csrf);
         },
         mobileNavToggle: function () {
-            if(window.matchMedia('(max-width: 1200px)').matches){
-                $('body').addClass('side-menu-closed')
+            if (window.matchMedia("(max-width: 1200px)").matches) {
+                $("body").addClass("side-menu-closed");
             }
             $('[data-toggle="aiz-mobile-nav"]').on("click", function () {
                 if ($("body").hasClass("side-menu-open")) {
-                    $("body").addClass("side-menu-closed").removeClass("side-menu-open");
-                } else if($("body").hasClass("side-menu-closed")) {
-                    $("body").removeClass("side-menu-closed").addClass("side-menu-open");
-                }else{
-                    $("body").removeClass("side-menu-open").addClass("side-menu-closed");
+                    $("body")
+                        .addClass("side-menu-closed")
+                        .removeClass("side-menu-open");
+                } else if ($("body").hasClass("side-menu-closed")) {
+                    $("body")
+                        .removeClass("side-menu-closed")
+                        .addClass("side-menu-open");
+                } else {
+                    $("body")
+                        .removeClass("side-menu-open")
+                        .addClass("side-menu-closed");
                 }
             });
             $(".aiz-sidebar-overlay").on("click", function () {
-                $("body").removeClass("side-menu-open").addClass('side-menu-closed');
+                $("body")
+                    .removeClass("side-menu-open")
+                    .addClass("side-menu-closed");
             });
         },
         initActiveMenu: function () {
@@ -1473,9 +1561,9 @@ $.fn.toggleAttr = function (attr, attr1, attr2) {
                         .addClass("modal-stack");
                 }, 0);
             });
-            $(document).on('hidden.bs.modal', function () {
-                if($('.modal.show').length > 0){
-                    $('body').addClass('modal-open');
+            $(document).on("hidden.bs.modal", function () {
+                if ($(".modal.show").length > 0) {
+                    $("body").addClass("modal-open");
                 }
             });
         },
@@ -1492,18 +1580,20 @@ $.fn.toggleAttr = function (attr, attr1, attr2) {
                         .next(".custom-file-name")
                         .html(files.length + " " + AIZ.local.files_selected);
                 } else {
-                    $(this).next(".custom-file-name").html(AIZ.local.choose_file);
+                    $(this)
+                        .next(".custom-file-name")
+                        .html(AIZ.local.choose_file);
                 }
             });
         },
-        stopPropagation: function(){
-            $(document).on('click', '.stop-propagation', function (e) {
+        stopPropagation: function () {
+            $(document).on("click", ".stop-propagation", function (e) {
                 e.stopPropagation();
             });
         },
-        outsideClickHide: function(){
-            $(document).on('click', function (e) {
-                $('.document-click-d-none').addClass('d-none');
+        outsideClickHide: function () {
+            $(document).on("click", function (e) {
+                $(".document-click-d-none").addClass("d-none");
             });
         },
         inputRating: function () {
@@ -1551,51 +1641,59 @@ $.fn.toggleAttr = function (attr, attr1, attr2) {
             });
         },
         classToggle: function () {
-            $(document).on('click','[data-toggle="class-toggle"]',function () {
-                var $this = $(this);
-                var target = $this.data("target");
-                var sameTriggers = $this.data("same");
-                var backdrop = $(this).data("backdrop");
+            $(document).on(
+                "click",
+                '[data-toggle="class-toggle"]',
+                function () {
+                    var $this = $(this);
+                    var target = $this.data("target");
+                    var sameTriggers = $this.data("same");
+                    var backdrop = $(this).data("backdrop");
 
-                if ($(target).hasClass("active")) {
-                    $(target).removeClass("active");
-                    $(sameTriggers).removeClass("active");
-                    $this.removeClass("active");
-                    $('body').removeClass("overflow-hidden");
-                } else {
-                    $(target).addClass("active");
-                    $this.addClass("active");
-                    if(backdrop == 'static'){
-                        $('body').addClass("overflow-hidden");
+                    if ($(target).hasClass("active")) {
+                        $(target).removeClass("active");
+                        $(sameTriggers).removeClass("active");
+                        $this.removeClass("active");
+                        $("body").removeClass("overflow-hidden");
+                    } else {
+                        $(target).addClass("active");
+                        $this.addClass("active");
+                        if (backdrop == "static") {
+                            $("body").addClass("overflow-hidden");
+                        }
                     }
                 }
-            });
+            );
         },
         collapseSidebar: function () {
-            $(document).on('click','[data-toggle="collapse-sidebar"]',function (i, el) {
-                var $this = $(this);
-                var target = $(this).data("target");
-                var sameTriggers = $(this).data("siblings");
+            $(document).on(
+                "click",
+                '[data-toggle="collapse-sidebar"]',
+                function (i, el) {
+                    var $this = $(this);
+                    var target = $(this).data("target");
+                    var sameTriggers = $(this).data("siblings");
 
-                // var showOverlay = $this.data('overlay');
-                // var overlayMarkup = '<div class="overlay overlay-fixed dark c-pointer" data-toggle="collapse-sidebar" data-target="'+target+'"></div>';
+                    // var showOverlay = $this.data('overlay');
+                    // var overlayMarkup = '<div class="overlay overlay-fixed dark c-pointer" data-toggle="collapse-sidebar" data-target="'+target+'"></div>';
 
-                // showOverlay = !showOverlay ? true : showOverlay;
+                    // showOverlay = !showOverlay ? true : showOverlay;
 
-                // if (showOverlay && $(target).siblings('.overlay').length !== 1) {
-                //     $(target).after(overlayMarkup);
-                // }
+                    // if (showOverlay && $(target).siblings('.overlay').length !== 1) {
+                    //     $(target).after(overlayMarkup);
+                    // }
 
-                e.preventDefault();
-                if ($(target).hasClass("opened")) {
-                    $(target).removeClass("opened");
-                    $(sameTriggers).removeClass("opened");
-                    $($this).removeClass("opened");
-                } else {
-                    $(target).addClass("opened");
-                    $($this).addClass("opened");
+                    e.preventDefault();
+                    if ($(target).hasClass("opened")) {
+                        $(target).removeClass("opened");
+                        $(sameTriggers).removeClass("opened");
+                        $($this).removeClass("opened");
+                    } else {
+                        $(target).addClass("opened");
+                        $($this).addClass("opened");
+                    }
                 }
-            });
+            );
         },
         autoScroll: function () {
             if ($(".aiz-auto-scroll").length > 0) {
@@ -1664,10 +1762,10 @@ $.fn.toggleAttr = function (attr, attr1, attr2) {
                 }
             );
         },
-        selectHideShow: function() {
-            $('[data-show="selectShow"]').each(function() {
+        selectHideShow: function () {
+            $('[data-show="selectShow"]').each(function () {
                 var target = $(this).data("target");
-                $(this).on("change", function() {
+                $(this).on("change", function () {
                     var value = $(this).val();
                     // console.log(value);
                     $(target)
@@ -1680,20 +1778,22 @@ $.fn.toggleAttr = function (attr, attr1, attr2) {
                 });
             });
         },
-        plusMinus: function(){
-            $('.aiz-plus-minus input').each(function() {
+        plusMinus: function () {
+            $(".aiz-plus-minus input").each(function () {
                 var $this = $(this);
                 var min = parseInt($(this).attr("min"));
                 var max = parseInt($(this).attr("max"));
                 var value = parseInt($(this).val());
-                if(value <= min){
-                    $this.siblings('[data-type="minus"]').attr('disabled',true)
+                if (value <= min) {
+                    $this
+                        .siblings('[data-type="minus"]')
+                        .attr("disabled", true);
                 }
-                if(value >= max){
-                    $this.siblings('[data-type="plus"]').attr('disabled',true)
+                if (value >= max) {
+                    $this.siblings('[data-type="plus"]').attr("disabled", true);
                 }
             });
-            $('.aiz-plus-minus button').on('click', function(e) {
+            $(".aiz-plus-minus button").on("click", function (e) {
                 e.preventDefault();
 
                 var fieldName = $(this).attr("data-field");
@@ -1721,54 +1821,65 @@ $.fn.toggleAttr = function (attr, attr1, attr2) {
                     input.val(0);
                 }
             });
-            $('.aiz-plus-minus input').on('change', function () {
+            $(".aiz-plus-minus input").on("change", function () {
                 var minValue = parseInt($(this).attr("min"));
                 var maxValue = parseInt($(this).attr("max"));
                 var valueCurrent = parseInt($(this).val());
 
                 name = $(this).attr("name");
                 if (valueCurrent >= minValue) {
-                    $(this).siblings("[data-type='minus']").removeAttr("disabled");
+                    $(this)
+                        .siblings("[data-type='minus']")
+                        .removeAttr("disabled");
                 } else {
                     alert("Sorry, the minimum limit has been reached");
                     $(this).val(minValue);
                 }
                 if (valueCurrent <= maxValue) {
-                    $(this).siblings("[data-type='plus']").removeAttr("disabled");
+                    $(this)
+                        .siblings("[data-type='plus']")
+                        .removeAttr("disabled");
                 } else {
                     alert("Sorry, the maximum limit has been reached");
                     $(this).val(maxValue);
                 }
             });
         },
-        hovCategoryMenu: function(){
+        hovCategoryMenu: function () {
             $("#category-menu-icon, #category-sidebar")
                 .on("mouseover", function (event) {
-                    $("#hover-category-menu").addClass('active').removeClass('d-none');
+                    $("#hover-category-menu")
+                        .addClass("active")
+                        .removeClass("d-none");
                 })
                 .on("mouseout", function (event) {
-                    $("#hover-category-menu").addClass('d-none').removeClass('active');
+                    $("#hover-category-menu")
+                        .addClass("d-none")
+                        .removeClass("active");
                 });
         },
-        trimAppUrl: function(){
-            if(AIZ.data.appUrl.slice(-1) == '/'){
-                AIZ.data.appUrl = AIZ.data.appUrl.slice(0, AIZ.data.appUrl.length -1);
+        trimAppUrl: function () {
+            if (AIZ.data.appUrl.slice(-1) == "/") {
+                AIZ.data.appUrl = AIZ.data.appUrl.slice(
+                    0,
+                    AIZ.data.appUrl.length - 1
+                );
                 // console.log(AIZ.data.appUrl);
             }
         },
-        setCookie: function(cname, cvalue, exdays) {
+        setCookie: function (cname, cvalue, exdays) {
             var d = new Date();
-            d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
+            d.setTime(d.getTime() + exdays * 24 * 60 * 60 * 1000);
             var expires = "expires=" + d.toUTCString();
             document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
         },
-        getCookie: function(cname) {
+        getCookie: function (cname) {
             var name = cname + "=";
             var decodedCookie = decodeURIComponent(document.cookie);
-            var ca = decodedCookie.split(';');
+            var ca = decodedCookie.split(";");
             for (var i = 0; i < ca.length; i++) {
                 var c = ca[i];
-                while (c.charAt(0) === ' ') {
+                while (c.charAt(0) === " ") {
                     c = c.substring(1);
                 }
                 if (c.indexOf(name) === 0) {
@@ -1777,20 +1888,20 @@ $.fn.toggleAttr = function (attr, attr1, attr2) {
             }
             return "";
         },
-        acceptCookie: function(){
+        acceptCookie: function () {
             if (!AIZ.extra.getCookie("acceptCookies")) {
                 $(".aiz-cookie-alert").addClass("show");
             }
-            $(".aiz-cookie-accept").on("click", function() {
+            $(".aiz-cookie-accept").on("click", function () {
                 AIZ.extra.setCookie("acceptCookies", true, 60);
                 $(".aiz-cookie-alert").removeClass("show");
             });
         },
-        setSession: function(){
-            $('.set-session').each(function() {
+        setSession: function () {
+            $(".set-session").each(function () {
                 var $this = $(this);
-                var key = $this.data('key');
-                var value = $this.data('value');
+                var key = $this.data("key");
+                var value = $this.data("value");
 
                 const now = new Date();
                 const item = {
@@ -1798,30 +1909,33 @@ $.fn.toggleAttr = function (attr, attr1, attr2) {
                     expiry: now.getTime() + 3600000,
                 };
 
-                $this.on('click', function(){
+                $this.on("click", function () {
                     localStorage.setItem(key, JSON.stringify(item));
                 });
             });
         },
-        showSessionPopup: function(){
-            $('.removable-session').each(function() {
+        showSessionPopup: function () {
+            $(".removable-session").each(function () {
                 var $this = $(this);
-                var key = $this.data('key');
-                var value = $this.data('value');
+                var key = $this.data("key");
+                var value = $this.data("value");
                 var item = {};
                 if (localStorage.getItem(key)) {
                     item = localStorage.getItem(key);
                     item = JSON.parse(item);
                 }
-                const now = new Date()
-                if (typeof item.expiry == 'undefined' || now.getTime() > item.expiry){
-                    $this.removeClass('d-none');
+                const now = new Date();
+                if (
+                    typeof item.expiry == "undefined" ||
+                    now.getTime() > item.expiry
+                ) {
+                    $this.removeClass("d-none");
                 }
             });
-        }
+        },
     };
 
-    setInterval(function(){
+    setInterval(function () {
         AIZ.extra.refreshToken();
     }, 3600000);
 
@@ -1846,7 +1960,7 @@ $.fn.toggleAttr = function (attr, attr1, attr2) {
     AIZ.extra.trimAppUrl();
     AIZ.extra.acceptCookie();
     AIZ.extra.setSession();
-    AIZ.extra.showSessionPopup()
+    AIZ.extra.showSessionPopup();
 
     AIZ.plugins.metismenu();
     AIZ.plugins.bootstrapSelect();
@@ -1870,5 +1984,4 @@ $.fn.toggleAttr = function (attr, attr1, attr2) {
     // $(document).ajaxComplete(function(){
     //     AIZ.plugins.bootstrapSelect('refresh');
     // });
-
 })(jQuery);

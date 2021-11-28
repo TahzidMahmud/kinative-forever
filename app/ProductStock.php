@@ -11,4 +11,7 @@ class ProductStock extends Model
     public function product(){
     	return $this->belongsTo(Product::class);
     }
+    public function inventory_stock(){
+    	return $this->hasMany(InventoryStock::class);
+    }
 }

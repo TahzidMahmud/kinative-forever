@@ -1,0 +1,123 @@
+[25-Jun-2021 13:56:59 UTC] PHP Fatal error:  Uncaught PDOException: SQLSTATE[28000] [1045] Access denied for user 'root'@'localhost' (using password: NO) in /home/ascoxtzb/ihw.ascottbd.com/vendor/laravel/framework/src/Illuminate/Database/Connectors/Connector.php:70
+Stack trace:
+#0 /home/ascoxtzb/ihw.ascottbd.com/vendor/laravel/framework/src/Illuminate/Database/Connectors/Connector.php(70): PDO->__construct('mysql:host=loca...', 'root', '', Array)
+#1 /home/ascoxtzb/ihw.ascottbd.com/vendor/laravel/framework/src/Illuminate/Database/Connectors/Connector.php(46): Illuminate\Database\Connectors\Connector->createPdoConnection('mysql:host=loca...', 'root', '', Array)
+#2 /home/ascoxtzb/ihw.ascottbd.com/vendor/laravel/framework/src/Illuminate/Database/Connectors/MySqlConnector.php(24): Illuminate\Database\Connectors\Connector->createConnection('mysql:host=loca...', Array, Array)
+#3 /home/ascoxtzb/ihw.ascottbd.com/vendor/laravel/framework/src/Illuminate/Database/Connectors/ConnectionFactory.php(182): Illuminate\Database\Connectors\MySqlConnector->connect(Array)
+#4 in /home/ascoxtzb/ihw.ascottbd.com/vendor/laravel/framework/src/Illuminate/Database/Connection.php on line 669
+[25-Jun-2021 13:57:26 UTC] PHP Fatal error:  Uncaught Symfony\Component\Routing\Exception\RouteNotFoundException: Route [home] not defined. in /home/ascoxtzb/ihw.ascottbd.com/vendor/laravel/framework/src/Illuminate/Routing/UrlGenerator.php:420
+Stack trace:
+#0 /home/ascoxtzb/ihw.ascottbd.com/vendor/laravel/framework/src/Illuminate/Foundation/helpers.php(777): Illuminate\Routing\UrlGenerator->route('home', Array, true)
+#1 /home/ascoxtzb/ihw.ascottbd.com/storage/framework/views/3e4b33aa01968865d3a51d12a1dbcc6a0bc77e0a.php(40): route('home')
+#2 /home/ascoxtzb/ihw.ascottbd.com/vendor/laravel/framework/src/Illuminate/View/Engines/PhpEngine.php(43): include('/home/ascoxtzb/...')
+#3 /home/ascoxtzb/ihw.ascottbd.com/vendor/laravel/framework/src/Illuminate/View/Engines/CompilerEngine.php(59): Illuminate\View\Engines\PhpEngine->evaluatePath('/home/ascoxtzb/...', Array)
+#4 /home/ascoxtzb/ihw.ascottbd.com/vendor/laravel/framework/src/Illuminate/View/View.php(143): Illuminate\View\Engines\CompilerEngine->get('/home/ascoxtzb/...', Array)
+#5 /home/ascoxtzb/ihw.ascottbd. in /home/ascoxtzb/ihw.ascottbd.com/vendor/laravel/framework/src/Illuminate/Routing/UrlGenerator.php on line 420
+[25-Jun-2021 17:20:35 UTC] PHP Fatal error:  Uncaught Symfony\Component\Debug\Exception\FatalThrowableError: Class 'App\AffiliateUser' not found in /home/ascoxtzb/ihw.ascottbd.com/vendor/laravel/framework/src/Illuminate/Database/Eloquent/Concerns/HasRelationships.php:718
+Stack trace:
+#0 /home/ascoxtzb/ihw.ascottbd.com/vendor/laravel/framework/src/Illuminate/Database/Eloquent/Concerns/HasRelationships.php(57): Illuminate\Database\Eloquent\Model->newRelatedInstance('App\\AffiliateUs...')
+#1 /home/ascoxtzb/ihw.ascottbd.com/app/User.php(56): Illuminate\Database\Eloquent\Model->hasOne('App\\AffiliateUs...')
+#2 /home/ascoxtzb/ihw.ascottbd.com/vendor/laravel/framework/src/Illuminate/Database/Eloquent/Concerns/HasAttributes.php(415): App\User->affiliate_user()
+#3 /home/ascoxtzb/ihw.ascottbd.com/vendor/laravel/framework/src/Illuminate/Database/Eloquent/Concerns/HasAttributes.php(401): Illuminate\Database\Eloquent\Model->getRelationshipFromMethod('affiliate_user')
+#4 /home/ascoxtzb/ihw.ascottbd.com/vendor/laravel/framework/src/Illuminate/Database/Eloquent/Concern in /home/ascoxtzb/ihw.ascottbd.com/vendor/laravel/framework/src/Illuminate/Database/Eloquent/Concerns/HasRelationships.php on line 718
+[10-Aug-2021 12:50:23 Asia/Dhaka] PHP Fatal error:  Uncaught ErrorException: Invalid argument supplied for foreach() in /home/ascoxtzb/ihw.ascottbd.com/storage/framework/views/c0dc6481cbe3243386f81416a62cffaa2718f466.php:101
+Stack trace:
+#0 /home/ascoxtzb/ihw.ascottbd.com/storage/framework/views/c0dc6481cbe3243386f81416a62cffaa2718f466.php(101): Illuminate\Foundation\Bootstrap\HandleExceptions->handleError(2, 'Invalid argumen...', '/home/ascoxtzb/...', 101, Array)
+#1 /home/ascoxtzb/ihw.ascottbd.com/vendor/laravel/framework/src/Illuminate/View/Engines/PhpEngine.php(43): include('/home/ascoxtzb/...')
+#2 /home/ascoxtzb/ihw.ascottbd.com/vendor/laravel/framework/src/Illuminate/View/Engines/CompilerEngine.php(59): Illuminate\View\Engines\PhpEngine->evaluatePath('/home/ascoxtzb/...', Array)
+#3 /home/ascoxtzb/ihw.ascottbd.com/vendor/laravel/framework/src/Illuminate/View/View.php(143): Illuminate\View\Engines\CompilerEngine->get('/home/ascoxtzb/...', Array)
+#4 /home/ascoxtzb/ihw.ascottbd.com/vendor/laravel/framework/src/Illuminate/View/View.php(126): Illuminate\View\Vi in /home/ascoxtzb/ihw.ascottbd.com/storage/framework/views/c0dc6481cbe3243386f81416a62cffaa2718f466.php on line 101
+[10-Aug-2021 12:50:31 Asia/Dhaka] PHP Fatal error:  Uncaught ErrorException: Invalid argument supplied for foreach() in /home/ascoxtzb/ihw.ascottbd.com/storage/framework/views/c0dc6481cbe3243386f81416a62cffaa2718f466.php:101
+Stack trace:
+#0 /home/ascoxtzb/ihw.ascottbd.com/storage/framework/views/c0dc6481cbe3243386f81416a62cffaa2718f466.php(101): Illuminate\Foundation\Bootstrap\HandleExceptions->handleError(2, 'Invalid argumen...', '/home/ascoxtzb/...', 101, Array)
+#1 /home/ascoxtzb/ihw.ascottbd.com/vendor/laravel/framework/src/Illuminate/View/Engines/PhpEngine.php(43): include('/home/ascoxtzb/...')
+#2 /home/ascoxtzb/ihw.ascottbd.com/vendor/laravel/framework/src/Illuminate/View/Engines/CompilerEngine.php(59): Illuminate\View\Engines\PhpEngine->evaluatePath('/home/ascoxtzb/...', Array)
+#3 /home/ascoxtzb/ihw.ascottbd.com/vendor/laravel/framework/src/Illuminate/View/View.php(143): Illuminate\View\Engines\CompilerEngine->get('/home/ascoxtzb/...', Array)
+#4 /home/ascoxtzb/ihw.ascottbd.com/vendor/laravel/framework/src/Illuminate/View/View.php(126): Illuminate\View\Vi in /home/ascoxtzb/ihw.ascottbd.com/storage/framework/views/c0dc6481cbe3243386f81416a62cffaa2718f466.php on line 101
+[12-Aug-2021 14:27:53 Asia/Dhaka] PHP Fatal error:  Uncaught PDOException: SQLSTATE[HY000] [2002] Can't connect to local MySQL server through socket '/var/lib/mysql/mysql.sock' (2) in /home/ascoxtzb/ihw.ascottbd.com/vendor/laravel/framework/src/Illuminate/Database/Connectors/Connector.php:70
+Stack trace:
+#0 /home/ascoxtzb/ihw.ascottbd.com/vendor/laravel/framework/src/Illuminate/Database/Connectors/Connector.php(70): PDO->__construct('mysql:host=loca...', 'ascoxtzb_ihw', 'ascoxtzb_ihw', Array)
+#1 /home/ascoxtzb/ihw.ascottbd.com/vendor/laravel/framework/src/Illuminate/Database/Connectors/Connector.php(46): Illuminate\Database\Connectors\Connector->createPdoConnection('mysql:host=loca...', 'ascoxtzb_ihw', 'ascoxtzb_ihw', Array)
+#2 /home/ascoxtzb/ihw.ascottbd.com/vendor/laravel/framework/src/Illuminate/Database/Connectors/MySqlConnector.php(24): Illuminate\Database\Connectors\Connector->createConnection('mysql:host=loca...', Array, Array)
+#3 /home/ascoxtzb/ihw.ascottbd.com/vendor/laravel/framework/src/Illuminate/Database/Connectors/ConnectionFactory.php(182): Illu in /home/ascoxtzb/ihw.ascottbd.com/vendor/laravel/framework/src/Illuminate/Database/Connection.php on line 669
+[12-Aug-2021 14:27:53 Asia/Dhaka] PHP Fatal error:  Uncaught PDOException: SQLSTATE[HY000] [2002] Can't connect to local MySQL server through socket '/var/lib/mysql/mysql.sock' (2) in /home/ascoxtzb/ihw.ascottbd.com/vendor/laravel/framework/src/Illuminate/Database/Connectors/Connector.php:70
+Stack trace:
+#0 /home/ascoxtzb/ihw.ascottbd.com/vendor/laravel/framework/src/Illuminate/Database/Connectors/Connector.php(70): PDO->__construct('mysql:host=loca...', 'ascoxtzb_ihw', 'ascoxtzb_ihw', Array)
+#1 /home/ascoxtzb/ihw.ascottbd.com/vendor/laravel/framework/src/Illuminate/Database/Connectors/Connector.php(46): Illuminate\Database\Connectors\Connector->createPdoConnection('mysql:host=loca...', 'ascoxtzb_ihw', 'ascoxtzb_ihw', Array)
+#2 /home/ascoxtzb/ihw.ascottbd.com/vendor/laravel/framework/src/Illuminate/Database/Connectors/MySqlConnector.php(24): Illuminate\Database\Connectors\Connector->createConnection('mysql:host=loca...', Array, Array)
+#3 /home/ascoxtzb/ihw.ascottbd.com/vendor/laravel/framework/src/Illuminate/Database/Connectors/ConnectionFactory.php(182): Illu in /home/ascoxtzb/ihw.ascottbd.com/vendor/laravel/framework/src/Illuminate/Database/Connection.php on line 669
+[12-Aug-2021 14:27:54 Asia/Dhaka] PHP Fatal error:  Uncaught PDOException: SQLSTATE[HY000] [2002] Can't connect to local MySQL server through socket '/var/lib/mysql/mysql.sock' (2) in /home/ascoxtzb/ihw.ascottbd.com/vendor/laravel/framework/src/Illuminate/Database/Connectors/Connector.php:70
+Stack trace:
+#0 /home/ascoxtzb/ihw.ascottbd.com/vendor/laravel/framework/src/Illuminate/Database/Connectors/Connector.php(70): PDO->__construct('mysql:host=loca...', 'ascoxtzb_ihw', 'ascoxtzb_ihw', Array)
+#1 /home/ascoxtzb/ihw.ascottbd.com/vendor/laravel/framework/src/Illuminate/Database/Connectors/Connector.php(46): Illuminate\Database\Connectors\Connector->createPdoConnection('mysql:host=loca...', 'ascoxtzb_ihw', 'ascoxtzb_ihw', Array)
+#2 /home/ascoxtzb/ihw.ascottbd.com/vendor/laravel/framework/src/Illuminate/Database/Connectors/MySqlConnector.php(24): Illuminate\Database\Connectors\Connector->createConnection('mysql:host=loca...', Array, Array)
+#3 /home/ascoxtzb/ihw.ascottbd.com/vendor/laravel/framework/src/Illuminate/Database/Connectors/ConnectionFactory.php(182): Illu in /home/ascoxtzb/ihw.ascottbd.com/vendor/laravel/framework/src/Illuminate/Database/Connection.php on line 669
+[12-Aug-2021 14:27:55 Asia/Dhaka] PHP Fatal error:  Uncaught PDOException: SQLSTATE[HY000] [2002] Can't connect to local MySQL server through socket '/var/lib/mysql/mysql.sock' (2) in /home/ascoxtzb/ihw.ascottbd.com/vendor/laravel/framework/src/Illuminate/Database/Connectors/Connector.php:70
+Stack trace:
+#0 /home/ascoxtzb/ihw.ascottbd.com/vendor/laravel/framework/src/Illuminate/Database/Connectors/Connector.php(70): PDO->__construct('mysql:host=loca...', 'ascoxtzb_ihw', 'ascoxtzb_ihw', Array)
+#1 /home/ascoxtzb/ihw.ascottbd.com/vendor/laravel/framework/src/Illuminate/Database/Connectors/Connector.php(46): Illuminate\Database\Connectors\Connector->createPdoConnection('mysql:host=loca...', 'ascoxtzb_ihw', 'ascoxtzb_ihw', Array)
+#2 /home/ascoxtzb/ihw.ascottbd.com/vendor/laravel/framework/src/Illuminate/Database/Connectors/MySqlConnector.php(24): Illuminate\Database\Connectors\Connector->createConnection('mysql:host=loca...', Array, Array)
+#3 /home/ascoxtzb/ihw.ascottbd.com/vendor/laravel/framework/src/Illuminate/Database/Connectors/ConnectionFactory.php(182): Illu in /home/ascoxtzb/ihw.ascottbd.com/vendor/laravel/framework/src/Illuminate/Database/Connection.php on line 669
+[12-Aug-2021 14:27:55 Asia/Dhaka] PHP Fatal error:  Uncaught PDOException: SQLSTATE[HY000] [2002] Can't connect to local MySQL server through socket '/var/lib/mysql/mysql.sock' (2) in /home/ascoxtzb/ihw.ascottbd.com/vendor/laravel/framework/src/Illuminate/Database/Connectors/Connector.php:70
+Stack trace:
+#0 /home/ascoxtzb/ihw.ascottbd.com/vendor/laravel/framework/src/Illuminate/Database/Connectors/Connector.php(70): PDO->__construct('mysql:host=loca...', 'ascoxtzb_ihw', 'ascoxtzb_ihw', Array)
+#1 /home/ascoxtzb/ihw.ascottbd.com/vendor/laravel/framework/src/Illuminate/Database/Connectors/Connector.php(46): Illuminate\Database\Connectors\Connector->createPdoConnection('mysql:host=loca...', 'ascoxtzb_ihw', 'ascoxtzb_ihw', Array)
+#2 /home/ascoxtzb/ihw.ascottbd.com/vendor/laravel/framework/src/Illuminate/Database/Connectors/MySqlConnector.php(24): Illuminate\Database\Connectors\Connector->createConnection('mysql:host=loca...', Array, Array)
+#3 /home/ascoxtzb/ihw.ascottbd.com/vendor/laravel/framework/src/Illuminate/Database/Connectors/ConnectionFactory.php(182): Illu in /home/ascoxtzb/ihw.ascottbd.com/vendor/laravel/framework/src/Illuminate/Database/Connection.php on line 669
+[12-Aug-2021 14:27:56 Asia/Dhaka] PHP Fatal error:  Uncaught PDOException: SQLSTATE[HY000] [2002] Can't connect to local MySQL server through socket '/var/lib/mysql/mysql.sock' (2) in /home/ascoxtzb/ihw.ascottbd.com/vendor/laravel/framework/src/Illuminate/Database/Connectors/Connector.php:70
+Stack trace:
+#0 /home/ascoxtzb/ihw.ascottbd.com/vendor/laravel/framework/src/Illuminate/Database/Connectors/Connector.php(70): PDO->__construct('mysql:host=loca...', 'ascoxtzb_ihw', 'ascoxtzb_ihw', Array)
+#1 /home/ascoxtzb/ihw.ascottbd.com/vendor/laravel/framework/src/Illuminate/Database/Connectors/Connector.php(46): Illuminate\Database\Connectors\Connector->createPdoConnection('mysql:host=loca...', 'ascoxtzb_ihw', 'ascoxtzb_ihw', Array)
+#2 /home/ascoxtzb/ihw.ascottbd.com/vendor/laravel/framework/src/Illuminate/Database/Connectors/MySqlConnector.php(24): Illuminate\Database\Connectors\Connector->createConnection('mysql:host=loca...', Array, Array)
+#3 /home/ascoxtzb/ihw.ascottbd.com/vendor/laravel/framework/src/Illuminate/Database/Connectors/ConnectionFactory.php(182): Illu in /home/ascoxtzb/ihw.ascottbd.com/vendor/laravel/framework/src/Illuminate/Database/Connection.php on line 669
+[12-Aug-2021 14:27:56 Asia/Dhaka] PHP Fatal error:  Uncaught PDOException: SQLSTATE[HY000] [2002] Can't connect to local MySQL server through socket '/var/lib/mysql/mysql.sock' (2) in /home/ascoxtzb/ihw.ascottbd.com/vendor/laravel/framework/src/Illuminate/Database/Connectors/Connector.php:70
+Stack trace:
+#0 /home/ascoxtzb/ihw.ascottbd.com/vendor/laravel/framework/src/Illuminate/Database/Connectors/Connector.php(70): PDO->__construct('mysql:host=loca...', 'ascoxtzb_ihw', 'ascoxtzb_ihw', Array)
+#1 /home/ascoxtzb/ihw.ascottbd.com/vendor/laravel/framework/src/Illuminate/Database/Connectors/Connector.php(46): Illuminate\Database\Connectors\Connector->createPdoConnection('mysql:host=loca...', 'ascoxtzb_ihw', 'ascoxtzb_ihw', Array)
+#2 /home/ascoxtzb/ihw.ascottbd.com/vendor/laravel/framework/src/Illuminate/Database/Connectors/MySqlConnector.php(24): Illuminate\Database\Connectors\Connector->createConnection('mysql:host=loca...', Array, Array)
+#3 /home/ascoxtzb/ihw.ascottbd.com/vendor/laravel/framework/src/Illuminate/Database/Connectors/ConnectionFactory.php(182): Illu in /home/ascoxtzb/ihw.ascottbd.com/vendor/laravel/framework/src/Illuminate/Database/Connection.php on line 669
+[12-Aug-2021 14:27:56 Asia/Dhaka] PHP Fatal error:  Uncaught PDOException: SQLSTATE[HY000] [2002] Can't connect to local MySQL server through socket '/var/lib/mysql/mysql.sock' (2) in /home/ascoxtzb/ihw.ascottbd.com/vendor/laravel/framework/src/Illuminate/Database/Connectors/Connector.php:70
+Stack trace:
+#0 /home/ascoxtzb/ihw.ascottbd.com/vendor/laravel/framework/src/Illuminate/Database/Connectors/Connector.php(70): PDO->__construct('mysql:host=loca...', 'ascoxtzb_ihw', 'ascoxtzb_ihw', Array)
+#1 /home/ascoxtzb/ihw.ascottbd.com/vendor/laravel/framework/src/Illuminate/Database/Connectors/Connector.php(46): Illuminate\Database\Connectors\Connector->createPdoConnection('mysql:host=loca...', 'ascoxtzb_ihw', 'ascoxtzb_ihw', Array)
+#2 /home/ascoxtzb/ihw.ascottbd.com/vendor/laravel/framework/src/Illuminate/Database/Connectors/MySqlConnector.php(24): Illuminate\Database\Connectors\Connector->createConnection('mysql:host=loca...', Array, Array)
+#3 /home/ascoxtzb/ihw.ascottbd.com/vendor/laravel/framework/src/Illuminate/Database/Connectors/ConnectionFactory.php(182): Illu in /home/ascoxtzb/ihw.ascottbd.com/vendor/laravel/framework/src/Illuminate/Database/Connection.php on line 669
+[12-Aug-2021 14:27:56 Asia/Dhaka] PHP Fatal error:  Uncaught PDOException: SQLSTATE[HY000] [2002] Can't connect to local MySQL server through socket '/var/lib/mysql/mysql.sock' (2) in /home/ascoxtzb/ihw.ascottbd.com/vendor/laravel/framework/src/Illuminate/Database/Connectors/Connector.php:70
+Stack trace:
+#0 /home/ascoxtzb/ihw.ascottbd.com/vendor/laravel/framework/src/Illuminate/Database/Connectors/Connector.php(70): PDO->__construct('mysql:host=loca...', 'ascoxtzb_ihw', 'ascoxtzb_ihw', Array)
+#1 /home/ascoxtzb/ihw.ascottbd.com/vendor/laravel/framework/src/Illuminate/Database/Connectors/Connector.php(46): Illuminate\Database\Connectors\Connector->createPdoConnection('mysql:host=loca...', 'ascoxtzb_ihw', 'ascoxtzb_ihw', Array)
+#2 /home/ascoxtzb/ihw.ascottbd.com/vendor/laravel/framework/src/Illuminate/Database/Connectors/MySqlConnector.php(24): Illuminate\Database\Connectors\Connector->createConnection('mysql:host=loca...', Array, Array)
+#3 /home/ascoxtzb/ihw.ascottbd.com/vendor/laravel/framework/src/Illuminate/Database/Connectors/ConnectionFactory.php(182): Illu in /home/ascoxtzb/ihw.ascottbd.com/vendor/laravel/framework/src/Illuminate/Database/Connection.php on line 669
+[12-Aug-2021 14:27:56 Asia/Dhaka] PHP Fatal error:  Uncaught PDOException: SQLSTATE[HY000] [2002] Can't connect to local MySQL server through socket '/var/lib/mysql/mysql.sock' (2) in /home/ascoxtzb/ihw.ascottbd.com/vendor/laravel/framework/src/Illuminate/Database/Connectors/Connector.php:70
+Stack trace:
+#0 /home/ascoxtzb/ihw.ascottbd.com/vendor/laravel/framework/src/Illuminate/Database/Connectors/Connector.php(70): PDO->__construct('mysql:host=loca...', 'ascoxtzb_ihw', 'ascoxtzb_ihw', Array)
+#1 /home/ascoxtzb/ihw.ascottbd.com/vendor/laravel/framework/src/Illuminate/Database/Connectors/Connector.php(46): Illuminate\Database\Connectors\Connector->createPdoConnection('mysql:host=loca...', 'ascoxtzb_ihw', 'ascoxtzb_ihw', Array)
+#2 /home/ascoxtzb/ihw.ascottbd.com/vendor/laravel/framework/src/Illuminate/Database/Connectors/MySqlConnector.php(24): Illuminate\Database\Connectors\Connector->createConnection('mysql:host=loca...', Array, Array)
+#3 /home/ascoxtzb/ihw.ascottbd.com/vendor/laravel/framework/src/Illuminate/Database/Connectors/ConnectionFactory.php(182): Illu in /home/ascoxtzb/ihw.ascottbd.com/vendor/laravel/framework/src/Illuminate/Database/Connection.php on line 669
+[12-Aug-2021 14:29:41 Asia/Dhaka] PHP Fatal error:  Uncaught PDOException: SQLSTATE[HY000] [2002] Can't connect to local MySQL server through socket '/var/lib/mysql/mysql.sock' (2) in /home/ascoxtzb/ihw.ascottbd.com/vendor/laravel/framework/src/Illuminate/Database/Connectors/Connector.php:70
+Stack trace:
+#0 /home/ascoxtzb/ihw.ascottbd.com/vendor/laravel/framework/src/Illuminate/Database/Connectors/Connector.php(70): PDO->__construct('mysql:host=loca...', 'ascoxtzb_ihw', 'ascoxtzb_ihw', Array)
+#1 /home/ascoxtzb/ihw.ascottbd.com/vendor/laravel/framework/src/Illuminate/Database/Connectors/Connector.php(46): Illuminate\Database\Connectors\Connector->createPdoConnection('mysql:host=loca...', 'ascoxtzb_ihw', 'ascoxtzb_ihw', Array)
+#2 /home/ascoxtzb/ihw.ascottbd.com/vendor/laravel/framework/src/Illuminate/Database/Connectors/MySqlConnector.php(24): Illuminate\Database\Connectors\Connector->createConnection('mysql:host=loca...', Array, Array)
+#3 /home/ascoxtzb/ihw.ascottbd.com/vendor/laravel/framework/src/Illuminate/Database/Connectors/ConnectionFactory.php(182): Illu in /home/ascoxtzb/ihw.ascottbd.com/vendor/laravel/framework/src/Illuminate/Database/Connection.php on line 669
+[17-Aug-2021 11:26:30 Asia/Dhaka] PHP Fatal error:  Uncaught ErrorException: Invalid argument supplied for foreach() in /home/ascoxtzb/ihw.ascottbd.com/storage/framework/views/c0dc6481cbe3243386f81416a62cffaa2718f466.php:101
+Stack trace:
+#0 /home/ascoxtzb/ihw.ascottbd.com/storage/framework/views/c0dc6481cbe3243386f81416a62cffaa2718f466.php(101): Illuminate\Foundation\Bootstrap\HandleExceptions->handleError(2, 'Invalid argumen...', '/home/ascoxtzb/...', 101, Array)
+#1 /home/ascoxtzb/ihw.ascottbd.com/vendor/laravel/framework/src/Illuminate/View/Engines/PhpEngine.php(43): include('/home/ascoxtzb/...')
+#2 /home/ascoxtzb/ihw.ascottbd.com/vendor/laravel/framework/src/Illuminate/View/Engines/CompilerEngine.php(59): Illuminate\View\Engines\PhpEngine->evaluatePath('/home/ascoxtzb/...', Array)
+#3 /home/ascoxtzb/ihw.ascottbd.com/vendor/laravel/framework/src/Illuminate/View/View.php(143): Illuminate\View\Engines\CompilerEngine->get('/home/ascoxtzb/...', Array)
+#4 /home/ascoxtzb/ihw.ascottbd.com/vendor/laravel/framework/src/Illuminate/View/View.php(126): Illuminate\View\Vi in /home/ascoxtzb/ihw.ascottbd.com/storage/framework/views/c0dc6481cbe3243386f81416a62cffaa2718f466.php on line 101
+[17-Aug-2021 11:32:40 Asia/Dhaka] PHP Fatal error:  Uncaught ErrorException: Invalid argument supplied for foreach() in /home/ascoxtzb/ihw.ascottbd.com/storage/framework/views/c0dc6481cbe3243386f81416a62cffaa2718f466.php:101
+Stack trace:
+#0 /home/ascoxtzb/ihw.ascottbd.com/storage/framework/views/c0dc6481cbe3243386f81416a62cffaa2718f466.php(101): Illuminate\Foundation\Bootstrap\HandleExceptions->handleError(2, 'Invalid argumen...', '/home/ascoxtzb/...', 101, Array)
+#1 /home/ascoxtzb/ihw.ascottbd.com/vendor/laravel/framework/src/Illuminate/View/Engines/PhpEngine.php(43): include('/home/ascoxtzb/...')
+#2 /home/ascoxtzb/ihw.ascottbd.com/vendor/laravel/framework/src/Illuminate/View/Engines/CompilerEngine.php(59): Illuminate\View\Engines\PhpEngine->evaluatePath('/home/ascoxtzb/...', Array)
+#3 /home/ascoxtzb/ihw.ascottbd.com/vendor/laravel/framework/src/Illuminate/View/View.php(143): Illuminate\View\Engines\CompilerEngine->get('/home/ascoxtzb/...', Array)
+#4 /home/ascoxtzb/ihw.ascottbd.com/vendor/laravel/framework/src/Illuminate/View/View.php(126): Illuminate\View\Vi in /home/ascoxtzb/ihw.ascottbd.com/storage/framework/views/c0dc6481cbe3243386f81416a62cffaa2718f466.php on line 101
+[17-Aug-2021 11:32:46 Asia/Dhaka] PHP Fatal error:  Uncaught ErrorException: Invalid argument supplied for foreach() in /home/ascoxtzb/ihw.ascottbd.com/storage/framework/views/c0dc6481cbe3243386f81416a62cffaa2718f466.php:101
+Stack trace:
+#0 /home/ascoxtzb/ihw.ascottbd.com/storage/framework/views/c0dc6481cbe3243386f81416a62cffaa2718f466.php(101): Illuminate\Foundation\Bootstrap\HandleExceptions->handleError(2, 'Invalid argumen...', '/home/ascoxtzb/...', 101, Array)
+#1 /home/ascoxtzb/ihw.ascottbd.com/vendor/laravel/framework/src/Illuminate/View/Engines/PhpEngine.php(43): include('/home/ascoxtzb/...')
+#2 /home/ascoxtzb/ihw.ascottbd.com/vendor/laravel/framework/src/Illuminate/View/Engines/CompilerEngine.php(59): Illuminate\View\Engines\PhpEngine->evaluatePath('/home/ascoxtzb/...', Array)
+#3 /home/ascoxtzb/ihw.ascottbd.com/vendor/laravel/framework/src/Illuminate/View/View.php(143): Illuminate\View\Engines\CompilerEngine->get('/home/ascoxtzb/...', Array)
+#4 /home/ascoxtzb/ihw.ascottbd.com/vendor/laravel/framework/src/Illuminate/View/View.php(126): Illuminate\View\Vi in /home/ascoxtzb/ihw.ascottbd.com/storage/framework/views/c0dc6481cbe3243386f81416a62cffaa2718f466.php on line 101

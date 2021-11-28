@@ -32,7 +32,7 @@
 			<div class="form-group row">
 				<label class="col-sm-2 col-from-label" for="name">{{translate('Title')}} <span class="text-danger">*</span> <i class="las la-language text-danger" title="{{translate('Translatable')}}"></i></label>
 				<div class="col-sm-10">
-					<input type="text" class="form-control" placeholder="{{translate('Title')}}" name="title" value="{{ $page->getTranslation('title',$lang) }}" required>
+					<input type="text" class="form-control" placeholder="Title" name="title" value="{{ $page->getTranslation('title',$lang) }}" required>
 				</div>
 			</div>
 
@@ -57,7 +57,7 @@
 				<div class="col-sm-10">
 					<textarea
 						class="aiz-text-editor form-control"
-						placeholder="{{translate('Content..')}}"
+						placeholder="Content.."
 						data-buttons='[["font", ["bold", "underline", "italic", "clear"]],["para", ["ul", "ol", "paragraph"]],["style", ["style"]],["color", ["color"]],["table", ["table"]],["insert", ["link", "picture", "video"]],["view", ["fullscreen", "codeview", "undo", "redo"]]]'
 						data-min-height="300"
 						name="content"
@@ -75,14 +75,14 @@
 			<div class="form-group row">
 				<label class="col-sm-2 col-from-label" for="name">{{translate('Meta Title')}}</label>
 				<div class="col-sm-10">
-					<input type="text" class="form-control" placeholder="{{translate('Title')}}" name="meta_title" value="{{ $page->meta_title }}">
+					<input type="text" class="form-control" placeholder="Title" name="meta_title" value="{{ $page->meta_title }}">
 				</div>
 			</div>
 
 			<div class="form-group row">
 				<label class="col-sm-2 col-from-label" for="name">{{translate('Meta Description')}}</label>
 				<div class="col-sm-10">
-					<textarea class="resize-off form-control" placeholder="{{translate('Description')}}" name="meta_description">
+					<textarea class="resize-off form-control" placeholder="Description" name="meta_description">
 						@php
 							echo $page->meta_description
 						@endphp
@@ -93,7 +93,7 @@
 			<div class="form-group row">
 				<label class="col-sm-2 col-from-label" for="name">{{translate('Keywords')}}</label>
 				<div class="col-sm-10">
-					<textarea class="resize-off form-control" placeholder="{{translate('Keyword, Keyword')}}" name="keywords">
+					<textarea class="resize-off form-control" placeholder="Keyword, Keyword" name="keywords">
 						@php
 							echo $page->keywords
 						@endphp
@@ -106,11 +106,11 @@
 				<label class="col-sm-2 col-from-label" for="name">{{translate('Meta Image')}}</label>
 				<div class="col-sm-10">
 					<div class="input-group " data-toggle="aizuploader" data-type="image">
-						<div class="input-group-prepend">
-								<div class="input-group-text bg-soft-secondary font-weight-medium">{{ translate('Browse') }}</div>
-						</div>
-						<div class="form-control file-amount">{{ translate('Choose File') }}</div>
-						<input type="hidden" name="meta_image" class="selected-files" value="{{ $page->meta_image }}">
+							<div class="input-group-prepend">
+									<div class="input-group-text bg-soft-secondary font-weight-medium">{{ translate('Browse') }}</div>
+							</div>
+							<div class="form-control file-amount">{{ translate('Choose File') }}</div>
+							<input type="hidden" name="meta_image" class="selected-files" value="{{ $page->meta_image }}">
 					</div>
 					<div class="file-preview">
 					</div>

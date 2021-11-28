@@ -36,15 +36,21 @@
                     </thead>
                     <tbody>
                         @foreach ($products as $key => $product)
-                            @php
-                                $qty = 0;
-                                foreach ($product->stocks as $key => $stock) {
-                                    $qty += $stock->qty;
-                                }
-                            @endphp
                             <tr>
                                 <td>{{ $product->getTranslation('name') }}</td>
-                                <td>{{ $qty }}</td>
+                                <td>
+                                    @php
+                                        $qty = 0;
+                                        if($product->variant_product){
+                                            foreach ($product->stocks as $key => $stock) {
+                                                echo $stock->variant.' - '.$stock->qty.'<br>';
+                                            }
+                                        }
+                                        else{
+                                            echo $product->current_stock;
+                                        }
+                                    @endphp
+                                </td>
                             </tr>
                         @endforeach
                     </tbody>

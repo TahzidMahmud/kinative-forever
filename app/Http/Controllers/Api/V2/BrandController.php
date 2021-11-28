@@ -22,4 +22,8 @@ class BrandController extends Controller
     {
         return new BrandCollection(Brand::where('top', 1)->get());
     }
+
+    public function top10_brands(){
+        return new BrandCollection(Brand::latest()->limit(9)->get());
+    }
 }

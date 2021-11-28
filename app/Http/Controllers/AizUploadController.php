@@ -15,8 +15,7 @@ class AizUploadController extends Controller
 
     public function index(Request $request){
 
-
-        $all_uploads = (auth()->user()->user_type == 'seller') ? Upload::where('user_id',auth()->user()->id) : Upload::query();
+        $all_uploads = Upload::query();
         $search = null;
         $sort_by = null;
 
@@ -46,16 +45,11 @@ class AizUploadController extends Controller
 
         $all_uploads = $all_uploads->paginate(60)->appends(request()->query());
 
-
-        return (auth()->user()->user_type == 'seller')
-            ? view('frontend.user.seller.uploads.index', compact('all_uploads', 'search', 'sort_by'))
-            : view('backend.uploaded_files.index', compact('all_uploads', 'search', 'sort_by'));
+        return view('backend.uploaded_files.index', compact('all_uploads', 'search', 'sort_by') );
     }
 
     public function create(){
-        return (auth()->user()->user_type == 'seller')
-            ? view('frontend.user.seller.uploads.create')
-            : view('backend.uploaded_files.create');
+        return view('backend.uploaded_files.create');
     }
 
 
@@ -119,12 +113,6 @@ class AizUploadController extends Controller
                 $path = $request->file('aiz_file')->store('uploads/all', 'local');
                 $size = $request->file('aiz_file')->getSize();
 
-                // Return MIME type ala mimetype extension
-                $finfo = finfo_open(FILEINFO_MIME_TYPE); 
-
-                // Get the MIME type of the file
-                $file_mime = finfo_file($finfo, base_path('public/').$path);
-
                 if($type[$extension] == 'image' && get_setting('disable_image_optimization') != 1){
                     try {
                         $img = Image::make($request->file('aiz_file')->getRealPath())->encode();
@@ -149,14 +137,7 @@ class AizUploadController extends Controller
                 }
                 
                 if (env('FILESYSTEM_DRIVER') == 's3') {
-                    Storage::disk('s3')->put(
-                        $path,
-                        file_get_contents(base_path('public/').$path),
-                        [
-                            'visibility' => 'public',
-                            'ContentType' =>  $extension == 'svg' ? 'image/svg+xml' : $file_mime
-                        ]
-                    );
+                    Storage::disk('s3')->put($path, file_get_contents(base_path('public/').$path));
                     unlink(base_path('public/').$path);
                 }
 
@@ -201,24 +182,18 @@ class AizUploadController extends Controller
 
     public function destroy(Request $request,$id)
     {
-        $upload = Upload::findOrFail($id);
-
-        if(auth()->user()->user_type == 'seller' && $upload->user_id != auth()->user()->id){
-            flash(translate("You don't have permission for deleting this!"))->error();
-            return back();
-        }
         try{
             if(env('FILESYSTEM_DRIVER') == 's3'){
-                Storage::disk('s3')->delete($upload->file_name);
+                Storage::disk('s3')->delete(Upload::where('id', $id)->first()->file_name);
             }
             else{
-                unlink(public_path().'/'.$upload->file_name);
+                unlink(public_path().'/'.Upload::where('id', $id)->first()->file_name);
             }
-            $upload->delete();
+            Upload::destroy($id);
             flash(translate('File deleted successfully'))->success();
         }
         catch(\Exception $e){
-            $upload->delete();
+            Upload::destroy($id);
             flash(translate('File deleted successfully'))->success();
         }
         return back();
@@ -247,10 +222,7 @@ class AizUploadController extends Controller
     public function file_info(Request $request)
     {
         $file = Upload::findOrFail($request['id']);
-
-        return (auth()->user()->user_type == 'seller')
-            ? view('frontend.user.seller.uploads.info',compact('file'))
-            : view('backend.uploaded_files.info',compact('file'));
+        return view('backend.uploaded_files.info',compact('file'));
     }
 
 }

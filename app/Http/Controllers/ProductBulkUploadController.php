@@ -65,13 +65,6 @@ class ProductBulkUploadController extends Controller
         if($request->hasFile('bulk_file')){
             $import = new ProductsImport;
             Excel::import($import, request()->file('bulk_file'));
-            
-            if(\App\Addon::where('unique_identifier', 'seller_subscription')->first() != null && 
-                    \App\Addon::where('unique_identifier', 'seller_subscription')->first()->activated){
-                $seller = Auth::user()->seller;
-                $seller->remaining_uploads -= $import->getRowCount();
-                $seller->save();
-            }
 //            dd('Row count: ' . $import->getRowCount());
         }
         

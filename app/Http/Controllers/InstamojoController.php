@@ -47,6 +47,9 @@ class InstamojoController extends Controller
                             "purpose" => ucfirst(str_replace('_', ' ', Session::get('payment_type'))),
                             "amount" => round($order->grand_total),
                             "send_email" => false,
+//                            "buyer_name" => Session::get('shipping_info')['name'],
+//                            "email" => Session::get('shipping_info')['email'],
+//                            "phone" => Session::get('shipping_info')['phone'],
                             "email" => Auth::user()->email,
                             "phone" => Auth::user()->phone,
                             "redirect_url" => url('instamojo/payment/pay-success')
@@ -57,8 +60,8 @@ class InstamojoController extends Controller
                         print('Error: ' . $e->getMessage());
                     }
                 } else {
-                    flash('Please add phone number to your profile')->warning();
-                    return redirect()->route('profile');
+                    flash(translate('Invalid phone number'))->error();
+                    return redirect()->route('checkout.shipping_info');
                 }
             }
            elseif (Session::get('payment_type') == 'wallet_payment') {
@@ -78,8 +81,8 @@ class InstamojoController extends Controller
                         return back();
                     }
                 } else {
-                    flash('Please add phone number to your profile')->warning();
-                    return redirect()->route('profile');
+                    flash(translate('Invalid phone number'))->error();
+                    return redirect()->route('checkout.shipping_info');
                 }
             }
            elseif (Session::get('payment_type') == 'customer_package_payment') {
@@ -100,8 +103,8 @@ class InstamojoController extends Controller
                         return back();
                     }
                 } else {
-                    flash('Please add phone number to your profile')->warning();
-                    return redirect()->route('profile');
+                    flash(translate('Invalid phone number'))->error();
+                    return redirect()->route('checkout.shipping_info');
                 }
             }
            elseif (Session::get('payment_type') == 'seller_package_payment') {
@@ -122,8 +125,8 @@ class InstamojoController extends Controller
                         return back();
                     }
                 } else {
-                    flash('Please add phone number to your profile')->warning();
-                    return redirect()->route('profile');
+                    flash(translate('Invalid phone number'))->error();
+                    return redirect()->route('checkout.shipping_info');
                 }
             }
         }

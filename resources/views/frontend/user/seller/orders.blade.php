@@ -119,27 +119,6 @@
             </div>
         </div>
     </div>
-
-    <div class="modal fade" id="order_details" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered modal-xl" role="document">
-            <div class="modal-content">
-                <div id="order-details-modal-body">
-
-                </div>
-            </div>
-        </div>
-    </div>
-
-
-    <div class="modal fade" id="payment_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
-            <div class="modal-content">
-                <div id="payment_modal_body">
-
-                </div>
-            </div>
-        </div>
-    </div>
 @endsection
 
 @section('script')

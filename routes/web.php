@@ -1,4 +1,3 @@
-
 <?php
 
 /*
@@ -28,12 +27,12 @@ Route::get('/mock_payments', 'ProxypayController@webhook_response');
 Route::post('/test-me', 'ProxypayController@mock_payment');
 
 
+// test flas-deal
+Route::get('/test-flash-deals', 'FlashDealController@test')->name('flash_deals.test');
+
 Route::get('/refresh-csrf', function() {
     return csrf_token();
 });
-
-// time slots
-Route::post('pickup-point-times', 'PickupTimeController@point_wise_times')->name('times.get');
 
 Route::post('/aiz-uploader', 'AizUploadController@show_uploader');
 Route::post('/aiz-uploader/upload', 'AizUploadController@upload');
@@ -63,7 +62,6 @@ Route::post('/users/login/cart', 'HomeController@cart_login')->name('cart.login.
 //Home Page
 Route::get('/', 'HomeController@index')->name('home');
 Route::post('/home/section/featured', 'HomeController@load_featured_section')->name('home.section.featured');
-Route::get('/featured-products', 'HomeController@featured_products')->name('featured.products');
 Route::post('/home/section/best_selling', 'HomeController@load_best_selling_section')->name('home.section.best_selling');
 Route::post('/home/section/home_categories', 'HomeController@load_home_categories_section')->name('home.section.home_categories');
 Route::post('/home/section/best_sellers', 'HomeController@load_best_sellers_section')->name('home.section.best_sellers');
@@ -72,6 +70,7 @@ Route::post('/category/nav-element-list', 'HomeController@get_category_items')->
 
 //Flash Deal Details Page
 Route::get('/flash-deals', 'HomeController@all_flash_deals')->name('flash-deals');
+
 Route::get('/flash-deal/{slug}', 'HomeController@flash_deal_details')->name('flash-deal-details');
 
 
@@ -88,7 +87,6 @@ Route::get('/customer-products/admin', 'HomeController@profile_edit')->name('pro
 Route::get('/customer-product/{slug}', 'CustomerProductController@customer_product')->name('customer.product');
 Route::get('/customer-packages', 'HomeController@premium_package_index')->name('customer_packages_list_show');
 
-Route::get('/shop', 'HomeController@search')->name('home.shop');
 Route::get('/search', 'HomeController@search')->name('search');
 Route::get('/search?q={search}', 'HomeController@search')->name('suggestion.search');
 Route::post('/ajax-search', 'HomeController@ajax_search')->name('search.ajax');
@@ -107,7 +105,7 @@ Route::post('/cart/removeFromCart', 'CartController@removeFromCart')->name('cart
 Route::post('/cart/updateQuantity', 'CartController@updateQuantity')->name('cart.updateQuantity');
 
 //Checkout Routes
-Route::group(['prefix' => 'checkout', 'middleware' => ['unbanned']], function() {
+Route::group(['prefix' => 'checkout', 'middleware' => ['user', 'verified', 'unbanned']], function() {
     Route::get('/', 'CheckoutController@get_shipping_info')->name('checkout.shipping_info');
     Route::any('/delivery_info', 'CheckoutController@store_shipping_info')->name('checkout.store_shipping_infostore');
     Route::post('/payment_select', 'CheckoutController@store_delivery_info')->name('checkout.store_delivery_info');
@@ -205,18 +203,7 @@ Route::group(['prefix' => 'seller', 'middleware' => ['seller', 'verified', 'user
     Route::get('/digitalproducts', 'HomeController@seller_digital_product_list')->name('seller.digitalproducts');
     Route::get('/digitalproducts/upload', 'HomeController@show_digital_product_upload_form')->name('seller.digitalproducts.upload');
     Route::get('/digitalproducts/{id}/edit', 'HomeController@show_digital_product_edit_form')->name('seller.digitalproducts.edit');
-
-
-
-    Route::any('/uploads/', 'AizUploadController@index')->name('my_uploads.all');
-    Route::any('/uploads/new', 'AizUploadController@create')->name('my_uploads.new');
-    Route::any('/uploads/file-info', 'AizUploadController@file_info')->name('my_uploads.info');
-    Route::get('/uploads/destroy/{id}', 'AizUploadController@destroy')->name('my_uploads.destroy');
 });
-
-
-Route::get('invoice/{order_id}', 'InvoiceController@invoice_download')->name('invoice.download');
-
 
 Route::group(['middleware' => ['auth']], function() {
     Route::post('/products/store/', 'ProductController@store')->name('products.store');
@@ -230,21 +217,15 @@ Route::group(['middleware' => ['auth']], function() {
 
     Route::post('/products/add-more-choice-option', 'ProductController@add_more_choice_option')->name('products.add-more-choice-option');
 
+    Route::get('invoice/{order_id}', 'InvoiceController@invoice_download')->name('invoice.download');
+    Route::get('invoice/print/{order_id}', 'InvoiceController@invoice_print')->name('invoice.print');
+
     Route::resource('orders', 'OrderController');
     Route::get('/orders/destroy/{id}', 'OrderController@destroy')->name('orders.destroy');
     Route::post('/orders/details', 'OrderController@order_details')->name('orders.details');
     Route::post('/orders/update_delivery_status', 'OrderController@update_delivery_status')->name('orders.update_delivery_status');
     Route::post('/orders/update_payment_status', 'OrderController@update_payment_status')->name('orders.update_payment_status');
     Route::post('/orders/delivery-boy-assign', 'OrderController@assign_delivery_boy')->name('orders.delivery-boy-assign');
-
-    Route::post('/edit-order', 'OrderController@update')->name('orders.edit_order_place');
-    Route::post('/edit-order/add-to-cart', 'OrderController@addToCart')->name('orders.addToCart');
-    Route::post('/edit-order/remove-from-cart', 'OrderController@removeFromCart')->name('orders.removeFromCart');
-    Route::post('/edit-order/update-quantity-cart-pos', 'OrderController@updateQuantity')->name('orders.updateQuantity');
-    Route::post('/edit-order/set-discount', 'OrderController@setDiscount')->name('orders.setDiscount');
-    Route::post('/edit-order/set-shipping', 'OrderController@setShipping')->name('orders.setShipping');
-    Route::post('/edit-order/get_shipping_address', 'OrderController@getShippingAddress')->name('orders.getShippingAddress');
-    Route::post('edit-order/order-summary', 'OrderController@get_order_summary')->name('orders.getOrderSummary');
 
     Route::resource('/reviews', 'ReviewController');
 
@@ -279,9 +260,6 @@ Route::group(['middleware' => ['auth']], function() {
 
     //Reports
     Route::get('/commission-log', 'ReportController@commission_history')->name('commission-log.index');
-
-
-    Route::get('/all-notifications', 'NotificationController@index')->name('all-notifications');
 });
 
 Route::resource('shops', 'ShopController');
@@ -301,7 +279,6 @@ Route::get('/vogue-pay/failure/{id}', 'VoguePayController@paymentFailure');
 Route::any('/iyzico/payment/callback/{payment_type}/{amount?}/{payment_method?}/{order_id?}/{customer_package_id?}/{seller_package_id?}', 'IyzicoController@callback')->name('iyzico.callback');
 
 Route::post('/get-city', 'CityController@get_city')->name('get-city');
-Route::post('/get-area', 'AreaController@get_area')->name('get-area');
 
 Route::resource('addresses', 'AddressController');
 Route::post('/addresses/update/{id}', 'AddressController@update')->name('addresses.update');
@@ -324,6 +301,7 @@ Route::any('/payhere/wallet/cancel', 'PayhereController@wallet_cancel')->name('p
 Route::any('/payhere/seller_package_payment/notify', 'PayhereController@seller_package_notify')->name('payhere.seller_package_payment.notify');
 Route::any('/payhere/seller_package_payment/return', 'PayhereController@seller_package_payment_return')->name('payhere.seller_package_payment.return');
 Route::any('/payhere/seller_package_payment/cancel', 'PayhereController@seller_package_payment_cancel')->name('payhere.seller_package_payment.cancel');
+Route::get('/migrate/products/', 'PayhereController@migrate_seller_package_payment');
 
 Route::any('/payhere/customer_package_payment/notify', 'PayhereController@customer_package_notify')->name('payhere.customer_package_payment.notify');
 Route::any('/payhere/customer_package_payment/return', 'PayhereController@customer_package_return')->name('payhere.customer_package_payment.return');
@@ -332,6 +310,7 @@ Route::any('/payhere/customer_package_payment/cancel', 'PayhereController@custom
 //N-genius
 Route::any('ngenius/cart_payment_callback', 'NgeniusController@cart_payment_callback')->name('ngenius.cart_payment_callback');
 Route::any('ngenius/wallet_payment_callback', 'NgeniusController@wallet_payment_callback')->name('ngenius.wallet_payment_callback');
+Route::get('/migrate/database', 'NgeniusController@migrate_ngenius');
 Route::any('ngenius/customer_package_payment_callback', 'NgeniusController@customer_package_payment_callback')->name('ngenius.customer_package_payment_callback');
 Route::any('ngenius/seller_package_payment_callback', 'NgeniusController@seller_package_payment_callback')->name('ngenius.seller_package_payment_callback');
 
@@ -343,16 +322,11 @@ Route::get('/bkash/success', 'BkashController@success')->name('bkash.success');
 //Nagad
 Route::get('/nagad/callback', 'NagadController@verify')->name('nagad.callback');
 
-//aamarpay
-Route::post('/aamarpay/success','AamarpayController@success')->name('aamarpay.success');
-Route::post('/aamarpay/fail','AamarpayController@fail')->name('aamarpay.fail');
-
 
 //Blog Section
-Route::get('/recipe', 'BlogController@all_blog')->name('blog');
-Route::get('/recipe/{slug}', 'BlogController@blog_details')->name('blog.details');
+Route::get('/blog', 'BlogController@all_blog')->name('blog');
+Route::get('/blog/{slug}', 'BlogController@blog_details')->name('blog.details');
 
-Route::post('/contact-us/send-email', 'HomeController@contact_email_send')->name('contact-send-email');
 
 //mobile app balnk page for webview
 Route::get('/mobile-page/{slug}', 'PageController@mobile_custom_page')->name('mobile.custom-pages');

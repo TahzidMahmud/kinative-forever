@@ -1,7 +1,6 @@
 @extends('frontend.layouts.app')
 
 @section('content')
-
 <section class="pt-5 mb-4">
     <div class="container">
         <div class="row">
@@ -13,22 +12,16 @@
                             <h3 class="fs-14 fw-600 d-none d-lg-block">{{ translate('1. Shipping info')}}</h3>
                         </div>
                     </div>
-                    <div class="col done">
-                        <div class="text-center text-success">
-                            <i class="la-3x mb-2 las la-truck"></i>
-                            <h3 class="fs-14 fw-600 d-none d-lg-block">{{ translate('2. Delivery info')}}</h3>
-                        </div>
-                    </div>
                     <div class="col active">
                         <div class="text-center text-primary">
                             <i class="la-3x mb-2 las la-credit-card"></i>
-                            <h3 class="fs-14 fw-600 d-none d-lg-block">{{ translate('3. Payment')}}</h3>
+                            <h3 class="fs-14 fw-600 d-none d-lg-block">{{ translate('2. Payment')}}</h3>
                         </div>
                     </div>
                     <div class="col">
                         <div class="text-center">
                             <i class="la-3x mb-2 opacity-50 las la-check-circle"></i>
-                            <h3 class="fs-14 fw-600 d-none d-lg-block opacity-50">{{ translate('4. Confirmation')}}</h3>
+                            <h3 class="fs-14 fw-600 d-none d-lg-block opacity-50">{{ translate('3. Confirmation')}}</h3>
                         </div>
                     </div>
                 </div>
@@ -39,16 +32,15 @@
 <section class="mb-4">
     <div class="container text-left">
         <div class="row">
-            <div class="col-lg-4 mt-4 mt-lg-0  d-lg-none" id="cart_summary">
+            <div class="col-lg-4 mt-4 mt-lg-0 d-lg-none" id="cart_summary">
                 @include('frontend.partials.cart_summary')
             </div>
             <div class="col-lg-8">
                 <form action="{{ route('payment.checkout') }}" class="form-default" role="form" method="POST" id="checkout-form">
                     @csrf
-                    {{-- <input type="hidden" name="note" value="{{ $note }}"> --}}
                     <input type="hidden" name="owner_id" value="{{ $carts[0]['owner_id'] }}">
 
-                    <div class="card shadow-none border-gray-200 rounded">
+                    <div class="card shadow-sm border-0 rounded">
                         <div class="card-header p-3">
                             <h3 class="fs-16 fw-600 mb-0">
                                 {{ translate('Select a payment option')}}
@@ -209,19 +201,6 @@
                                                         <img src="{{ static_asset('assets/img/cards/bkash.png')}}" class="img-fluid mb-2">
                                                         <span class="d-block text-center">
                                                             <span class="d-block fw-600 fs-15">{{ translate('Bkash')}}</span>
-                                                        </span>
-                                                    </span>
-                                                </label>
-                                            </div>
-                                        @endif
-                                        @if(get_setting('aamarpay') == 1)
-                                            <div class="col-6 col-md-4">
-                                                <label class="aiz-megabox d-block mb-3">
-                                                    <input value="aamarpay" class="online_payment" type="radio" name="payment_option" checked>
-                                                    <span class="d-block p-3 aiz-megabox-elem">
-                                                        <img src="{{ static_asset('assets/img/cards/aamarpay.png')}}" class="img-fluid mb-2">
-                                                        <span class="d-block text-center">
-                                                            <span class="d-block fw-600 fs-15">{{ translate('Aamarpay')}}</span>
                                                         </span>
                                                     </span>
                                                 </label>
@@ -470,7 +449,7 @@
                 processData: false,
                 success: function (data, textStatus, jqXHR) {
                     AIZ.plugins.notify(data.response_message.response, data.response_message.message);
-//                    console.log(data.response_message);
+                    console.log(data.response_message);
                     $("#cart_summary").html(data.html);
                 }
             })

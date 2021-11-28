@@ -17,7 +17,7 @@
 			<div class="form-group row">
 				<label class="col-sm-2 col-from-label" for="name">{{translate('Title')}} <span class="text-danger">*</span></label>
 				<div class="col-sm-10">
-					<input type="text" class="form-control" placeholder="{{translate('Title')}}" name="title" required>
+					<input type="text" class="form-control" placeholder="Title" name="title" required>
 				</div>
 			</div>
 			<div class="form-group row">
@@ -53,21 +53,21 @@
 			<div class="form-group row">
 					<label class="col-sm-2 col-from-label" for="name">{{translate('Meta Title')}}</label>
 					<div class="col-sm-10">
-						<input type="text" class="form-control" placeholder="{{translate('Title')}}" name="meta_title">
+						<input type="text" class="form-control" placeholder="Title" name="meta_title">
 					</div>
 			</div>
 
 			<div class="form-group row">
 					<label class="col-sm-2 col-from-label" for="name">{{translate('Meta Description')}}</label>
 					<div class="col-sm-10">
-						<textarea class="resize-off form-control" placeholder="{{translate('Description')}}" name="meta_description"></textarea>
+						<textarea class="resize-off form-control" placeholder="Description" name="meta_description"></textarea>
 					</div>
 			</div>
 
 			<div class="form-group row">
 					<label class="col-sm-2 col-from-label" for="name">{{translate('Keywords')}}</label>
 					<div class="col-sm-10">
-						<textarea class="resize-off form-control" placeholder="{{translate('Keyword, Keyword')}}" name="keywords"></textarea>
+						<textarea class="resize-off form-control" placeholder="Keyword, Keyword" name="keywords"></textarea>
 						<small class="text-muted">{{ translate('Separate with coma') }}</small>
 					</div>
 			</div>

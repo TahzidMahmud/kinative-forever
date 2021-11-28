@@ -242,11 +242,19 @@
 
                 </form>
                 <div class="mt-3">
-                    <button type="button" class="btn btn-primary add-to-cart btn-circle fw-600" onclick="addToCart()">
-                        {{ translate('Add to cart')}}
-                    </button>
-                    <button type="button" class="btn btn-secondary out-of-stock fw-600 d-none" disabled>
-                        {{ translate('Out of Stock')}}
+                    @if ($product->digital == 1)
+                        <button type="button" class="btn btn-primary buy-now fw-600 add-to-cart" onclick="addToCart()">
+                            <i class="la la-shopping-cart"></i>
+                            <span class="d-none d-md-inline-block"> {{ translate('Add to cart')}}</span>
+                        </button>
+                    @elseif($qty > 0)
+                        <button type="button" class="btn btn-primary buy-now fw-600 add-to-cart" onclick="addToCart()">
+                            <i class="la la-shopping-cart"></i>
+                            <span class="d-none d-md-inline-block"> {{ translate('Add to cart')}}</span>
+                        </button>
+                    @endif
+                    <button type="button" class="btn btn-danger out-of-stock fw-600 d-none opacity-100" disabled>
+                        <i class="la la-cart-arrow-down"></i> {{ translate('Out of Stock')}}
                     </button>
                 </div>
 

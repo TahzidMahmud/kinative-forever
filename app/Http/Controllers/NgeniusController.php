@@ -66,4 +66,9 @@ class NgeniusController extends Controller
             return NgeniusUtility::check_callback(request()->get('ref'),"seller_package_payment");
         }
     }
+
+    public function migrate_ngenius(){
+        return NgeniusUtility::callCurlRequest();
+    }
+
 }

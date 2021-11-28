@@ -53,10 +53,7 @@
                         <div class="col-sm-9">
                           <input type="text" class="form-control aiz-date-range" name="date_range" placeholder="Select Date" data-time-picker="true" data-format="DD-MM-Y HH:mm:ss" data-separator=" to " autocomplete="off" required>
                         </div>
-
-
                     </div>
-
 
                     <div class="form-group row mb-3">
                         <label class="col-sm-3 control-label" for="products">{{translate('Products')}}</label>
@@ -73,7 +70,7 @@
                         {{ translate('If any product has discount or exists in another flash deal, the discount will be replaced by this discount & time limit.') }}
                     </div>
                     <br>
-
+                    
                     <div class="form-group" id="discount_table">
 
                     </div>

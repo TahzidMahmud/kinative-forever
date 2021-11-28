@@ -25,13 +25,13 @@
         <div class="row">
             <div class="col-xxl-5 col-xl-6 col-lg-8 mx-auto">
                 <form class="" action="{{ route('orders.track') }}" method="GET" enctype="multipart/form-data">
-                    <div class="bg-white rounded border border-gray-200">
+                    <div class="bg-white rounded shadow-sm">
                         <div class="fs-15 fw-600 p-3 border-bottom text-center">
                             {{ translate('Check Your Order Status')}}
                         </div>
                         <div class="form-box-content p-3">
                             <div class="form-group">
-                                <input type="text" class="form-control mb-3" placeholder="{{ translate('Order Code Or Mobile Number')}}" name="order_code" required>
+                                <input type="text" class="form-control mb-3" placeholder="{{ translate('Order Code')}}" name="order_code" required>
                             </div>
                             <div class="text-center">
                                 <button type="submit" class="btn btn-primary">{{ translate('Track Order')}}</button>

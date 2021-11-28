@@ -11,21 +11,10 @@ class DeliveryBoyPurchaseHistoryMiniCollection extends ResourceCollection
     {
         return [
             'data' => $this->collection->map(function($data) {
-                $shipping_address = json_decode($data->shipping_address,true);
-                $location_available = false;
-                $lat = 90.99;
-                $lang = 180.99;
-
-                if(isset($shipping_address['lat_lang'])){
-                    $location_available = true;
-                    $exploded_lat_lang = explode(',',$shipping_address['lat_lang']);
-                    $lat = floatval($exploded_lat_lang[0]);
-                    $lang = floatval($exploded_lat_lang[1]);
-                }
                 return [
                     'id' => $data->id,
                     'code' => $data->code,
-                    'user_id' => $data->user_id,
+                    'user_id' => intval($data->user_id),
                     'payment_type' => ucwords(str_replace('_', ' ', $data->payment_type)) ,
                     'payment_status' => $data->payment_status,
                     'payment_status_string' => ucwords(str_replace('_', ' ', $data->payment_status)),
@@ -35,12 +24,9 @@ class DeliveryBoyPurchaseHistoryMiniCollection extends ResourceCollection
                     'date' => Carbon::createFromFormat('Y-m-d H:i:s',$data->delivery_history_date)->format('d-m-Y'),
                     'cancel_request' => $data->cancel_request == 1,
                     'delivery_history_date' => $data->delivery_history_date,
-                    'location_available' => $location_available,
-                    'lat' => $lat,
-                    'lang' => $lang,
-                    'links' => [
-                        'details' => route('purchaseHistory.details', $data->id)
-                    ]
+                    // 'links' => [
+                    //     'details' => route('purchaseHistory.details', $data->id)
+                    // ]
                 ];
             })
         ];

@@ -7,7 +7,7 @@
         <h1 class="h2 fs-16 mb-0">{{ translate('Order Details') }}</h1>
     </div>
     <div class="card-body">
-        <div class="row gutters-5 mb-5">
+        <div class="row gutters-5">
             <div class="col text-center text-md-left">
             </div>
             @php
@@ -30,62 +30,56 @@
                         @endforeach
                     </select>
                     @else
-                        <input type="text" class="form-control" value="{{ optional($order->delivery_boy)->name }}" disabled>
+                        <input type="text" class="form-control" value="{{ optional($order->delivery_boy)->name }}">
                     @endif
                 </div>
             @endif
 
             <div class="col-md-3 ml-auto">
-                <label for=update_payment_status"">{{translate('Payment Status')}}</label>
+                <label for="update_payment_status">{{translate('Payment Status')}}</label>
                 <select class="form-control aiz-selectpicker"  data-minimum-results-for-search="Infinity" id="update_payment_status">
-                    <option value="unpaid" @if ($payment_status == 'unpaid') selected @endif>{{translate('Unpaid')}}</option>
                     <option value="paid" @if ($payment_status == 'paid') selected @endif>{{translate('Paid')}}</option>
+                    <option value="unpaid" @if ($payment_status == 'unpaid') selected @endif>{{translate('Unpaid')}}</option>
                 </select>
             </div>
             <div class="col-md-3 ml-auto">
-                <label for=update_delivery_status"">{{translate('Delivery Status')}}</label>
+                <label for="update_delivery_status">{{translate('Delivery Status')}}</label>
                 @if($delivery_status != 'delivered' && $delivery_status != 'cancelled')
                     <select class="form-control aiz-selectpicker"  data-minimum-results-for-search="Infinity" id="update_delivery_status">
                         <option value="pending" @if ($delivery_status == 'pending') selected @endif>{{translate('Pending')}}</option>
                         <option value="confirmed" @if ($delivery_status == 'confirmed') selected @endif>{{translate('Confirmed')}}</option>
                         <option value="picked_up" @if ($delivery_status == 'picked_up') selected @endif>{{translate('Picked Up')}}</option>
                         <option value="on_the_way" @if ($delivery_status == 'on_the_way') selected @endif>{{translate('On The Way')}}</option>
+                        <!--<option value="on_delivery" @if ($delivery_status == 'on_delivery') selected @endif>{{translate('On delivery')}}</option>-->
                         <option value="delivered" @if ($delivery_status == 'delivered') selected @endif>{{translate('Delivered')}}</option>
                         <option value="cancelled" @if ($delivery_status == 'cancelled') selected @endif>{{translate('Cancel')}}</option>
+                        <option value="non_delivered" @if ($delivery_status == 'non_delivered') selected @endif>{{translate('Non Delivered')}}</option>
+                        <option value="delivery_cancel" @if ($delivery_status == 'delivery_cancel') selected @endif>{{translate('Delivery Canceled')}}</option>
+                        <option value="delivery_boy_cancel" @if ($delivery_status == 'delivery_boy_cancel') selected @endif>{{translate('Cancel DeliveryBoy ')}}</option>
                     </select>
                 @else
-                    <input type="text" class="form-control" value="{{ $delivery_status }}" disabled>
+                    <input type="text" class="form-control" value="{{ $delivery_status }}">
                 @endif
             </div>
         </div>
         <div class="row gutters-5">
-            <div class="col-lg-4 text-center text-md-left">
-                <h5>Shipping Address</h5>
+            <div class="col text-center text-md-left">
                 <address>
                     <strong class="text-main">{{ json_decode($order->shipping_address)->name }}</strong><br>
+                    {{ json_decode($order->shipping_address)->email }}<br>
                     {{ json_decode($order->shipping_address)->phone }}<br>
                     {{ json_decode($order->shipping_address)->address }}, {{ json_decode($order->shipping_address)->city }}, {{ json_decode($order->shipping_address)->postal_code }}<br>
                     {{ json_decode($order->shipping_address)->country }}
                 </address>
-
                 @if ($order->manual_payment && is_array(json_decode($order->manual_payment_data, true)))
-                    <br>
-                    <strong class="text-main">{{ translate('Payment Information') }}</strong><br>
-                    {{ translate('Name') }}: {{ json_decode($order->manual_payment_data)->name }}, {{ translate('Amount') }}: {{ single_price(json_decode($order->manual_payment_data)->amount) }}, {{ translate('TRX ID') }}: {{ json_decode($order->manual_payment_data)->trx_id }}
-                    <br>
-                    <a href="{{ uploaded_asset(json_decode($order->manual_payment_data)->photo) }}" target="_blank"><img src="{{ uploaded_asset(json_decode($order->manual_payment_data)->photo) }}" alt="" height="100"></a>
+                <br>
+                <strong class="text-main">{{ translate('Payment Information') }}</strong><br>
+                {{ translate('Name') }}: {{ json_decode($order->manual_payment_data)->name }}, {{ translate('Amount') }}: {{ single_price(json_decode($order->manual_payment_data)->amount) }}, {{ translate('TRX ID') }}: {{ json_decode($order->manual_payment_data)->trx_id }}
+                <br>
+                <a href="{{ uploaded_asset(json_decode($order->manual_payment_data)->photo) }}" target="_blank"><img src="{{ uploaded_asset(json_decode($order->manual_payment_data)->photo) }}" alt="" height="100"></a>
                 @endif
             </div>
-            <div class="col-lg-4">
-                <h5>Billing Address</h5>
-                <address>
-                    <strong class="text-main">{{ json_decode($order->billing_address)->name }}</strong><br>
-                    {{ json_decode($order->billing_address)->phone }}<br>
-                    {{ json_decode($order->billing_address)->address }}, {{ json_decode($order->billing_address)->city }}, {{ json_decode($order->billing_address)->postal_code }}<br>
-                    {{ json_decode($order->billing_address)->country }}
-                </address>
-            </div>
-            <div class="col-lg-4">
+            <div class="col-md-4 ml-auto">
                 <table>
                     <tbody>
                         <tr>
@@ -94,11 +88,14 @@
                         </tr>
                         <tr>
                             <td class="text-main text-bold">{{translate('Order Status')}}</td>
+                            @php
+                            $status = $order->orderDetails->first()->delivery_status;
+                            @endphp
                             <td class="text-right">
-                                @if($delivery_status == 'delivered')
-                                <span class="badge badge-inline badge-success">{{ translate(ucfirst(str_replace('_', ' ', $delivery_status))) }}</span>
+                                @if($status == 'delivered')
+                                <span class="badge badge-inline badge-success">{{ translate(ucfirst(str_replace('_', ' ', $status))) }}</span>
                                 @else
-                                <span class="badge badge-inline badge-info">{{ translate(ucfirst(str_replace('_', ' ', $delivery_status))) }}</span>
+                                <span class="badge badge-inline badge-info">{{ translate(ucfirst(str_replace('_', ' ', $status))) }}</span>
                                 @endif
                             </td>
                         </tr>
@@ -177,7 +174,6 @@
                 </table>
             </div>
         </div>
-
         <div class="clearfix float-right">
             <table class="table">
                 <tbody>
@@ -221,16 +217,23 @@
                             {{ single_price($order->grand_total) }}
                         </td>
                     </tr>
+                    <tr>
+                        <td>
+                            <strong class="text-muted">{{translate('Due')}} :</strong>
+                        </td>
+                        <td class="text-muted h5">
+                            @if($order->payment_status == 'unpaid')
+                                {{ single_price($order->grand_total) }}
+                            @else
+                                {{ single_price(0) }}
+                            @endif
+                        </td>
+                    </tr>
                 </tbody>
             </table>
-
             <div class="text-right no-print">
-                <a href="{{ route('invoice.download', $order->id) }}" type="button" class="btn btn-icon btn-light"><i class="las la-print"></i></a>
+                <a href="javascript:void(0)" onclick="print_invoice('{{ route('invoice.print',$order->id) }}')" title="{{ translate('Print invoice') }}" type="button" class="btn btn-icon btn-light"><i class="las la-print"></i></a>
             </div>
-        </div>
-        <div class="row">
-            <h6 class="text-left"><b class="mx-3">Note ::</b>
-            {{ $order->note }} </h6>
         </div>
 
     </div>
@@ -260,6 +263,9 @@
                 status:status
             }, function(data){
                 AIZ.plugins.notify('success', '{{ translate('Delivery status has been updated') }}');
+               if(status=='delivery_boy_cancel'){
+                   location.replace('{{ route('all_orders.index') }}');
+               }
             });
         });
 
@@ -269,6 +275,13 @@
             $.post('{{ route('orders.update_payment_status') }}', {_token:'{{ @csrf_token() }}',order_id:order_id,status:status}, function(data){
                 AIZ.plugins.notify('success', '{{ translate('Payment status has been updated') }}');
             });
+
         });
+
+        function print_invoice(url){
+            var h = $(window).height();
+            var w = $(window).width();
+            window.open( url, '_blank', 'height='+h+',width='+w+',scrollbars=yes,status=no' );
+        }
     </script>
 @endsection

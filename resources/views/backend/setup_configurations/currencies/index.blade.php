@@ -66,6 +66,7 @@
                             <select class="form-control aiz-selectpicker" name="decimal_separator">
                                 <option value="1" @if(get_setting('decimal_separator') == 1) selected @endif>1,23,456.70</option>
                                 <option value="2" @if(get_setting('decimal_separator') == 2) selected @endif>1.23.456,70</option>
+                                <option value="3" @if(get_setting('decimal_separator') == 3) selected @endif>12345</option>
                             </select>
                         </div>
                     </div>

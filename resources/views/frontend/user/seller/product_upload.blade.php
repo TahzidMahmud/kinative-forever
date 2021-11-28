@@ -266,7 +266,7 @@
                             </select>
                         </div>
                     </div>
-
+                    
                     <div id="show-hide-div">
                         <div class="form-group row">
                             <label class="col-md-3 col-from-label">{{translate('Quantity')}}</label>
@@ -504,9 +504,9 @@
                         </label>
                         <div class="input-group">
                             <input type="number" class="form-control" name="est_shipping_days" min="1" step="1"
-                                placeholder="{{translate('Shipping Days')}}">
+                                placeholder="Shipping Days">
                             <div class="input-group-prepend">
-                                <span class="input-group-text" id="inputGroupPrepend">{{translate('Days')}}</span>
+                                <span class="input-group-text" id="inputGroupPrepend">Days</span>
                             </div>
                         </div>
                     </div>
@@ -544,7 +544,7 @@
         <div class="col-12">
             <div class="mar-all text-right">
                 <button type="submit" name="button" value="publish"
-                    class="btn btn-primary">{{ translate('Upload Product') }}</button>
+                    class="btn btn-primary">{{ translate('Uplaod Product') }}</button>
             </div>
         </div>
     </div>
@@ -595,7 +595,7 @@
             }
         });
 
-
+            
         }
 
         $('input[name="colors_active"]').on('change', function() {

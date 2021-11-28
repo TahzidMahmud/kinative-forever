@@ -85,7 +85,7 @@
                             <label class="col-md-3 col-from-label">{{translate('Refundable')}}</label>
                             <div class="col-md-8">
                                 <label class="aiz-switch aiz-switch-success mb-0">
-                                    <input type="checkbox" name="refundable" checked>
+                                    <input type="checkbox" name="refundable">
                                     <span></span>
                                 </label>
                             </div>
@@ -215,7 +215,7 @@
                         <div class="form-group row">
 	                        <label class="col-sm-3 control-label" for="start_date">{{translate('Discount Date Range')}}</label>
 	                        <div class="col-sm-9">
-	                          <input type="text" class="form-control aiz-date-range" name="date_range" placeholder="{{translate('Select Date')}}" data-time-picker="true" data-format="DD-MM-Y HH:mm:ss" data-separator=" to " autocomplete="off">
+	                          <input type="text" class="form-control aiz-date-range" name="date_range" placeholder="Select Date" data-time-picker="true" data-format="DD-MM-Y HH:mm:ss" data-separator=" to " autocomplete="off">
 	                        </div>
 	                    </div>
 
@@ -570,9 +570,9 @@
                                 {{translate('Shipping Days')}}
                             </label>
                             <div class="input-group">
-                                <input type="number" class="form-control" name="est_shipping_days" min="1" step="1" placeholder="{{translate('Shipping Days')}}">
+                                <input type="text" class="form-control" name="est_shipping_days" placeholder="Shipping Days">
                                 <div class="input-group-prepend">
-                                    <span class="input-group-text" id="inputGroupPrepend">{{translate('Days')}}</span>
+                                    <span class="input-group-text" id="inputGroupPrepend">Days</span>
                                 </div>
                             </div>
                         </div>
@@ -630,7 +630,7 @@
 <script type="text/javascript">
     $("[name=shipping_type]").on("change", function (){
         $(".flat_rate_shipping_div").hide();
-
+        
         if($(this).val() == 'flat_rate'){
             $(".flat_rate_shipping_div").show();
         }
@@ -665,7 +665,7 @@
            }
        });
 
-
+        
     }
 
     $('input[name="colors_active"]').on('change', function() {

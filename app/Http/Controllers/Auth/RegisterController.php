@@ -126,7 +126,6 @@ class RegisterController extends Controller
 
     public function register(Request $request)
     {
-
         if (filter_var($request->email, FILTER_VALIDATE_EMAIL)) {
             if(User::where('email', $request->email)->first() != null){
                 flash(translate('Email or Phone already exists.'));
@@ -162,9 +161,10 @@ class RegisterController extends Controller
 
     protected function registered(Request $request, $user)
     {
-        if($user->email == null) {
+        if ($user->email == null) {
             return redirect()->route('verification');
-        }elseif (session('link') != null){
+        }
+        elseif(session('link') != null){
             return redirect(session('link'));
         }
         else {

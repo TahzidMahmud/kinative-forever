@@ -6,12 +6,6 @@ use App\City;
 use App\Country;
 use App\Http\Resources\V2\AddressCollection;
 use App\Address;
-use App\Area;
-use App\PickupPointTranslation;
-use App\PickupPoint;
-use App\PickupTime;
-
-
 use App\Http\Resources\V2\CitiesCollection;
 use App\Http\Resources\V2\CountriesCollection;
 use Illuminate\Http\Request;
@@ -54,19 +48,6 @@ class AddressController extends Controller
         return response()->json([
             'result' => true,
             'message' => 'Shipping information has been updated successfully'
-        ]);
-    }
-
-    public function updateShippingAddressLocation(Request $request)
-    {
-        $address = Address::find($request->id);
-        $address->latitude = $request->latitude;
-        $address->longitude = $request->longitude;
-        $address->save();
-
-        return response()->json([
-            'result' => true,
-            'message' => 'Shipping location in map updated successfully'
         ]);
     }
 
@@ -115,59 +96,12 @@ class AddressController extends Controller
 
     public function getCities()
     {
+
         return new CitiesCollection(City::all());
     }
 
     public function getCountries()
     {
         return new CountriesCollection(Country::where('status', 1)->get());
-    }
-    public function getArea($id){
-        $res=Area::all()->where('city_id',$id);
-        $areas=[];
-        foreach($res as $key=>$area){
-            $temp=[];
-            $temp['id']=$area->id;
-            $temp['name']= $area->name;
-            array_push($areas,$temp);
-        }
-        return response()->json(
-            [
-                "areas"=>$areas
-            ]
-        );
-    }
-    public function getPickuppoints($lang){
-        $res=PickupPoint::all()->where('pick_up_status',1);
-        $pick_up_points=[];
-        foreach($res as $key=>$point){
-            $temp=[];
-
-            $res_trans=PickupPointTranslation::where('pickup_point_id',$point->id)->where('lang',$lang)->first();
-            $temp["name"]=$res_trans->name;
-            $temp["address"]=$res_trans->address;
-            $temp["phone"]=$point->phone;
-            $temp["time_slot_ids"]=json_decode($point->time_slots);
-            $slots=[];
-            if(json_decode($point->time_slots)){
-                $res=PickupTime::whereIn('id',json_decode($point->time_slots))->get();
-                foreach($res as $key=>$slot){
-                    $temp2=[];
-                    $temp2["id"]=$slot->id;
-                    $temp2["days"]=json_decode($slot->days);
-                    $temp2["start_at"]=$slot->start_time;
-                    $temp2["end_at"]=$slot->end_time;
-                    array_push($slots,$temp2);
-                }
-
-            }
-            $temp["time_slot_details"]=$slots;
-            array_push($pick_up_points,$temp);
-
-        }
-
-        return response()->json([
-            "pick_up_points"=>$pick_up_points
-        ]);
     }
 }

@@ -28,9 +28,6 @@ class ProductController extends Controller
     {
         return new ProductDetailCollection(Product::where('id', $id)->get());
     }
-    public function product_slug($slug){
-        return new ProductDetailCollection(Product::where('slug', $slug)->get());
-    }
 
     public function admin()
     {

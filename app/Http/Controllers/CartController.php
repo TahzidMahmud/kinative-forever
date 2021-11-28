@@ -34,8 +34,7 @@ class CartController extends Controller
             $carts = Cart::where('user_id', $user_id)->get();
         } else {
             $temp_user_id = $request->session()->get('temp_user_id');
-            // $carts = Cart::where('temp_user_id', $temp_user_id)->get();
-            $carts = ($temp_user_id != null) ? Cart::where('temp_user_id', $temp_user_id)->get() : [] ;
+            $carts = Cart::where('temp_user_id', $temp_user_id)->get();
         }
 
 
@@ -53,7 +52,6 @@ class CartController extends Controller
         $product = Product::find($request->id);
         $carts = array();
         $data = array();
-        $total = 0;
 
         if(auth()->user() != null) {
             $user_id = Auth::user()->id;
@@ -76,17 +74,10 @@ class CartController extends Controller
         $str = '';
         $tax = 0;
 
-        
-        foreach ($carts as $key => $cart) {
-            $total = $total + $cart->price*$cart->quantity;
-        }
-
-
         if($product->digital != 1 && $request->quantity < $product->min_qty) {
             return array(
                 'status' => 0,
                 'cart_count' => count($carts),
-                'total' => single_price($total),
                 'modal_view' => view('frontend.partials.minQtyNotSatisfied', [ 'min_qty' => $product->min_qty ])->render(),
                 'nav_cart_view' => view('frontend.partials.sidebar_cart')->render(),
             );
@@ -121,7 +112,6 @@ class CartController extends Controller
                 return array(
                     'status' => 0,
                     'cart_count' => count($carts),
-                    'total' => single_price($total),
                     'modal_view' => view('frontend.partials.outOfStockCart')->render(),
                     'nav_cart_view' => view('frontend.partials.sidebar_cart')->render(),
                 );
@@ -189,7 +179,6 @@ class CartController extends Controller
                         return array(
                             'status' => 0,
                             'cart_count' => count($carts),
-                            'total' => single_price($total),
                             'modal_view' => view('frontend.partials.outOfStockCart')->render(),
                             'nav_cart_view' => view('frontend.partials.sidebar_cart')->render(),
                         );
@@ -217,15 +206,9 @@ class CartController extends Controller
             $temp_user_id = $request->session()->get('temp_user_id');
             $carts = Cart::where('temp_user_id', $temp_user_id)->get();
         }
-        $total = 0;
-        foreach ($carts as $key => $cart) {
-            $total = $total + $cart->price*$cart->quantity;
-        }
-
         return array(
             'status' => 1,
             'cart_count' => count($carts),
-            'total' => single_price($total),
             'modal_view' => view('frontend.partials.addedToCart', compact('product', 'data'))->render(),
             'nav_cart_view' => view('frontend.partials.sidebar_cart')->render(),
         );
@@ -234,7 +217,6 @@ class CartController extends Controller
     //removes from Cart
     public function removeFromCart(Request $request)
     {
-        $total = 0;
         Cart::destroy($request->id);
         if(auth()->user() != null) {
             $user_id = Auth::user()->id;
@@ -244,12 +226,8 @@ class CartController extends Controller
             $carts = Cart::where('temp_user_id', $temp_user_id)->get();
         }
 
-        foreach ($carts as $key => $cart) {
-            $total = $total + $cart->price*$cart->quantity;
-        }
         return array(
             'cart_count' => count($carts),
-            'total' => single_price($total),
             'cart_view' => view('frontend.partials.cart_details', compact('carts'))->render(),
             'nav_cart_view' => view('frontend.partials.sidebar_cart')->render(),
         );
@@ -259,7 +237,6 @@ class CartController extends Controller
     public function updateQuantity(Request $request)
     {
         $object = Cart::findOrFail($request->id);
-        $total = 0;
 
         if($object['id'] == $request->id){
             $product = \App\Product::find($object['product_id']);
@@ -283,13 +260,8 @@ class CartController extends Controller
             $carts = Cart::where('temp_user_id', $temp_user_id)->get();
         }
 
-        foreach ($carts as $key => $cart) {
-            $total = $total + $cart->price*$cart->quantity;
-        }
-
         return array(
             'cart_count' => count($carts),
-            'total' => single_price($total),
             'cart_view' => view('frontend.partials.cart_details', compact('carts'))->render(),
             'nav_cart_view' => view('frontend.partials.sidebar_cart')->render(),
         );

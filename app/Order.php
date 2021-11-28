@@ -6,22 +6,6 @@ use Illuminate\Database\Eloquent\Model;
 
 class Order extends Model
 {
-
-    protected $fillable = [
-        'serial_number',
-        'code'
-    ];
-
-    public static function boot()
-    {
-        parent::boot();
-
-        static::creating(function($model){
-            $model->serial_number = Order::max('serial_number')+1;
-            $model->code = '1'.str_pad($model->serial_number,5,0,STR_PAD_LEFT);
-        });
-    }
-    
     public function orderDetails()
     {
         return $this->hasMany(OrderDetail::class);

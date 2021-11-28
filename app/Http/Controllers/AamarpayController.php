@@ -3,11 +3,11 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\CustomerPackage;
-use App\SellerPackage;
-use App\Order;
-use App\BusinessSetting;
-use App\Seller;
+use App\Models\CustomerPackage;
+use App\Models\SellerPackage;
+use App\Models\CombinedOrder;
+use App\Models\BusinessSetting;
+use App\Models\Seller;
 use Session;
 use Auth;
 
@@ -17,6 +17,13 @@ class AamarpayController extends Controller
         if (Auth::user()->phone == null) {
             flash('Please add phone number to your profile')->warning();
             return redirect()->route('profile');
+        }
+        
+        if (Auth::user()->email == null) {
+            $email = 'customer@exmaple.com';
+        }
+        else{
+            $email = Auth::user()->email;
         }
 
         if (get_setting('aamarpay_sandbox') == 1) {
@@ -29,8 +36,8 @@ class AamarpayController extends Controller
         $amount = 0;
         if(Session::has('payment_type')){
             if(Session::get('payment_type') == 'cart_payment'){
-                $order = Order::findOrFail(Session::get('order_id'));
-                $amount = round($order->grand_total);
+                $combined_order = CombinedOrder::findOrFail(Session::get('combined_order_id'));
+                $amount = round($combined_order->grand_total);
             }
             elseif (Session::get('payment_type') == 'wallet_payment') {
                 $amount = round(Session::get('payment_data')['amount']);
@@ -52,7 +59,7 @@ class AamarpayController extends Controller
             'currency' => 'BDT',  //currenct will be USD/BDT
             'tran_id' => rand(1111111,9999999), //transaction id must be unique from your end
             'cus_name' => Auth::user()->name,  //customer name
-            'cus_email' => Auth::user()->email, //customer email address
+            'cus_email' => $email, //customer email address
             'cus_add1' => '',  //customer address
             'cus_add2' => '', //customer address
             'cus_city' => '',  //customer city
@@ -73,7 +80,7 @@ class AamarpayController extends Controller
             'fail_url' => route('aamarpay.fail'), //your fail route
             'cancel_url' => route('cart'), //your cancel url
             'opt_a' => Session::get('payment_type'),  //optional paramter
-            'opt_b' => Session::get('order_id'),
+            'opt_b' => Session::get('combined_order_id'),
             'opt_c' => json_encode(Session::get('payment_data')),
             'opt_d' => '',
             'signature_key' => env('AAMARPAY_SIGNATURE_KEY') //signature key will provided aamarpay, contact integration@aamarpay.com for test/live signature key

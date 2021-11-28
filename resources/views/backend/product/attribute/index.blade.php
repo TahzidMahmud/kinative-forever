@@ -20,7 +20,6 @@
 						<tr>
 							<th>#</th>
 							<th>{{ translate('Name')}}</th>
-							<th>{{ translate('Values')}}</th>
 							<th class="text-right">{{ translate('Options')}}</th>
 						</tr>
 					</thead>
@@ -29,11 +28,6 @@
 							<tr>
 								<td>{{$key+1}}</td>
 								<td>{{$attribute->getTranslation('name')}}</td>
-								<td>
-									@foreach($attribute->attribute_values as $key => $value)
-									<span class="badge badge-inline badge-md bg-soft-dark">{{ $value->value }}</span>
-									@endforeach
-								</td>
 								<td class="text-right">
 									<a class="btn btn-soft-info btn-icon btn-circle btn-sm" href="{{route('attributes.show', $attribute->id)}}" title="{{ translate('Attribute values') }}">
 										<i class="las la-cog"></i>

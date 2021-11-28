@@ -31,6 +31,7 @@
                                 <th>{{translate('Name')}}</th>
                                 <th>{{translate('Country')}}</th>
                                 <th data-breakpoints="lg">{{translate('Cost')}}</th>
+                                <th data-breakpoints="lg">{{translate('Express Cost')}}</th>
                                 <th data-breakpoints="lg" class="text-right">{{translate('Options')}}</th>
                             </tr>
                         </thead>
@@ -41,6 +42,7 @@
                                     <td>{{ $city->name }}</td>
                                     <td>{{ $city->country->name }}</td>
                                     <td>{{ $city->cost }}</td>
+                                    <td>{{ $city->express_cost }}</td>
                                     <td class="text-right">
                                         <a class="btn btn-soft-primary btn-icon btn-circle btn-sm" href="{{ route('cities.edit', ['id'=>$city->id, 'lang'=>env('DEFAULT_LANGUAGE')]) }}" title="{{ translate('Edit') }}">
                                             <i class="las la-edit"></i>
@@ -85,6 +87,10 @@
                         <div class="form-group mb-3">
     						<label for="name">{{translate('Cost')}}</label>
     						<input type="number" min="0" step="0.01" placeholder="{{translate('Cost')}}" name="cost" class="form-control" required>
+    					</div>
+                        <div class="form-group mb-3">
+    						<label for="name">{{translate('Express Cost')}}</label>
+    						<input type="number" min="0" step="0.01" placeholder="{{translate('Express Cost')}}" name="express_cost" class="form-control" required>
     					</div>
 
 

@@ -110,7 +110,7 @@
           </div>
         </div>
         <div class="col-md-5">
-          <div class="card p-5 text-center">
+          <div class="bg-white mt-4 p-5 text-center">
               <div class="mb-3">
                   @if(Auth::user()->seller->verification_status == 0)
                       <img loading="lazy"  src="{{ static_asset('assets/img/non_verified.png') }}" alt="" width="130">
@@ -182,12 +182,12 @@
                   </div>
               </div>
           @endif
-          <div class="card mb-4 p-4 text-center">
+          <div class="bg-white mt-4 p-4 text-center">
               <div class="h5 fw-600">{{ translate('Shop')}}</div>
               <p>{{ translate('Manage & organize your shop')}}</p>
               <a href="{{ route('shops.index') }}" class="btn btn-soft-primary">{{ translate('Go to setting')}}</a>
           </div>
-          <div class="card mb-4 p-4 text-center">
+          <div class="bg-white mt-4 p-4 text-center">
               <div class="h5 fw-600">{{ translate('Payment')}}</div>
               <p>{{ translate('Configure your payment method')}}</p>
               <a href="{{ route('profile') }}" class="btn btn-soft-primary">{{ translate('Configure Now')}}</a>

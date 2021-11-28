@@ -1,6 +1,6 @@
 <div class="aiz-topbar px-15px px-lg-25px d-flex align-items-stretch justify-content-between">
     <div class="d-flex">
-        <div class="aiz-topbar-nav-toggler d-flex align-items-center justify-content-start mr-2 mr-md-3 ml-0" data-toggle="aiz-mobile-nav">
+        <div class="aiz-topbar-nav-toggler d-flex align-items-center justify-content-start mr-2 mr-md-3" data-toggle="aiz-mobile-nav">
             <button class="aiz-mobile-toggler">
                 <span></span>
             </button>
@@ -42,15 +42,26 @@
             @endif
         </div>
         <div class="d-flex justify-content-around align-items-center align-items-stretch">
-            
+            @php
+                $orders = DB::table('orders')
+                            ->orderBy('code', 'desc')
+                            ->join('order_details', 'orders.id', '=', 'order_details.order_id')
+                            ->where('order_details.seller_id', \App\User::where('user_type', 'admin')->first()->id)
+                            ->where('orders.viewed', 0)
+                            ->select('orders.id')
+                            ->distinct()
+                            ->count();
+                $sellers = \App\Seller::where('verification_status', 0)->where('verification_info', '!=', null)->count();
+            @endphp
+
             <div class="aiz-topbar-item ml-2">
                 <div class="align-items-stretch d-flex dropdown">
                     <a class="dropdown-toggle no-arrow" data-toggle="dropdown" href="javascript:void(0);" role="button" aria-haspopup="false" aria-expanded="false">
-                        <span class="btn btn-icon p-0 d-flex justify-content-center align-items-center">
-                            <span class="d-flex align-items-center position-relative">
-                                <i class="las la-bell fs-24"></i>
-                                @if(count(Auth::user()->unreadNotifications) > 0)
-                                    <span class="badge badge-sm badge-dot badge-circle badge-primary position-absolute absolute-top-right"></span>
+                        <span class="btn btn-icon p-1">
+                            <span class=" position-relative d-inline-block">
+                                <i class="las la-bell la-2x"></i>
+                                @if($orders > 0 || $sellers > 0)
+                                    <span class="badge badge-dot badge-circle badge-primary position-absolute absolute-top-right"></span>
                                 @endif
                             </span>
                         </span>
@@ -59,37 +70,23 @@
                         <div class="p-3 bg-light border-bottom">
                             <h6 class="mb-0">{{ translate('Notifications') }}</h6>
                         </div>
-                        <div class="px-3 c-scrollbar-light overflow-auto " style="max-height:300px;">
-                            <ul class="list-group list-group-flush">
-                                @forelse(Auth::user()->unreadNotifications as $notification)
-                                    <li class="list-group-item d-flex justify-content-between align-items- py-3">
-                                        <div class="media text-inherit">
-                                            <div class="media-body">
-                                                @if($notification->type == 'App\Notifications\OrderNotification')
-                                                    <p class="mb-1 text-truncate-2">
-                                                        {{translate('Order code: '. $notification->data['order_code'] .' is '. ucfirst(str_replace('_', ' ', $notification->data['status'])))}}
-                                                    </p>
-                                                    <small class="text-muted">
-                                                        {{ date("F j Y, g:i a", strtotime($notification->created_at)) }}
-                                                    </small>
-                                                @endif
-                                            </div>
-                                        </div>
-                                    </li>
-                                @empty
-                                    <li class="list-group-item">
-                                        <div class="py-4 text-center fs-16">
-                                            {{ translate('No notification found') }}
-                                        </div>
-                                    </li>
-                                @endforelse
-                            </ul>
-                        </div>
-                        <div class="text-center border-top">
-                            <a href="{{ route('all-notifications') }}" class="text-reset d-block py-2">
-                                {{translate('View All Notifications')}}
-                            </a>
-                        </div>
+                        <ul class="list-group c-scrollbar-light overflow-auto" style="max-height:300px;">
+
+                            @if($orders > 0)
+                            <li class="list-group-item">
+                                <a href="{{ route('inhouse_orders.index') }}" class="text-reset">
+                                    <span class="ml-2">{{ $orders }} {{translate('new orders')}}</span>
+                                </a>
+                            </li>
+                            @endif
+                            @if($sellers > 0)
+                            <li class="list-group-item">
+                                <a href="{{ route('sellers.index') }}" class="text-reset">
+                                    <span class="ml-2">{{translate('New verification request(s)')}}</span>
+                                </a>
+                            </li>
+                            @endif
+                        </ul>
                     </div>
                 </div>
             </div>

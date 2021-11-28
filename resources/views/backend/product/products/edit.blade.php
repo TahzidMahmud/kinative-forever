@@ -244,7 +244,7 @@
                             <div class="form-group row">
                                 <div class="col-lg-3">
                                     <input type="hidden" name="choice_no[]" value="{{ $choice_option->attribute_id }}">
-                                    <input type="text" class="form-control" name="choice[]" value="{{ optional(\App\Attribute::find($choice_option->attribute_id))->getTranslation('name') }}" placeholder="{{ translate('Choice Title') }}" disabled>
+                                    <input type="text" class="form-control" name="choice[]" value="{{ \App\Attribute::find($choice_option->attribute_id)->getTranslation('name') }}" placeholder="{{ translate('Choice Title') }}" disabled>
                                 </div>
                                 <div class="col-lg-8">
                                     <select class="form-control aiz-selectpicker attribute_choice" data-live-search="true" name="choice_options_{{ $choice_option->attribute_id }}[]" multiple>
@@ -281,7 +281,7 @@
                         <div class="form-group row">
                             <label class="col-sm-3 col-from-label" for="start_date">{{translate('Discount Date Range')}}</label>
                             <div class="col-sm-9">
-                              <input type="text" class="form-control aiz-date-range" value="{{ $start_date.' to '.$end_date }}" name="date_range" placeholder="{{translate('Select Date')}}" data-time-picker="true" data-format="DD-MM-Y HH:mm:ss" data-separator=" to " autocomplete="off">
+                              <input type="text" class="form-control aiz-date-range" value="{{ $start_date.' to '.$end_date }}" name="date_range" placeholder="Select Date" data-time-picker="true" data-format="DD-MM-Y HH:mm:ss" data-separator=" to " autocomplete="off">
                             </div>
                         </div>
 
@@ -455,7 +455,7 @@
                                 </div>
                             </div>
                         </div>
-
+                        
                         <div class="form-group row">
                             <label class="col-md-6 col-from-label">{{translate('Is Product Quantity Mulitiply')}}</label>
                             <div class="col-md-6">
@@ -655,9 +655,9 @@
                                 {{translate('Shipping Days')}}
                             </label>
                             <div class="input-group">
-                                <input type="number" class="form-control" name="est_shipping_days" value="{{ $product->est_shipping_days }}" min="1" step="1" placeholder="{{translate('Shipping Days')}}">
+                                <input type="text" class="form-control" name="est_shipping_days" value="{{ $product->est_shipping_days }}"  placeholder="Shipping Days">
                                 <div class="input-group-prepend">
-                                    <span class="input-group-text" id="inputGroupPrepend">{{translate('Days')}}</span>
+                                    <span class="input-group-text" id="inputGroupPrepend">Days</span>
                                 </div>
                             </div>
                         </div>
@@ -732,7 +732,7 @@
         var shipping_val = $("[name=shipping_type]:checked").val();
 
         $(".flat_rate_shipping_div").hide();
-
+        
         if(shipping_val == 'flat_rate'){
             $(".flat_rate_shipping_div").show();
         }
@@ -766,7 +766,7 @@
            }
        });
 
-
+        
     }
 
     $('input[name="colors_active"]').on('change', function() {
@@ -806,6 +806,9 @@
            success: function(data){
                 $('#sku_combination').html(data);
                 AIZ.uploader.previewGenerate();
+                setTimeout(function(){ 
+                    AIZ.plugins.fooTable();
+                }, 500);
                 AIZ.plugins.fooTable();
                 if (data.length > 1) {
                     $('#show-hide-div').hide();

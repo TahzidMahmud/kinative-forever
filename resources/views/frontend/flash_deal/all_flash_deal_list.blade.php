@@ -2,14 +2,26 @@
 
 @section('content')
 
-<section class="mb-4 position-relative text-white">
-    <div class="">
-        <div class="aiz-carousel mobile-img-auto-height dot-small-white dots-inside-bottom " data-dots="true" data-autoplay="true">
-            @foreach(explode(",",get_setting('offers_banner')) as $value)
-            <div class="carousel-box">
-                <img src="{{ uploaded_asset($value) }}" class="img-fluid w-100">
+<section class="pt-4 mb-4">
+    <div class="container text-center">
+        <div class="row">
+            <div class="col-lg-6 text-center text-lg-left">
+                <h1 class="fw-600 h4">{{ translate('Flash Deals')}}</h1>
             </div>
-            @endforeach
+            <div class="col-lg-6">
+                <ul class="breadcrumb bg-transparent p-0 justify-content-center justify-content-lg-end">
+                    <li class="breadcrumb-item opacity-50">
+                        <a class="text-reset" href="{{ route('home') }}">
+                            {{ translate('Home')}}
+                        </a>
+                    </li>
+                    <li class="text-dark fw-600 breadcrumb-item">
+                        <a class="text-reset" href="{{ route('flash-deals') }}">
+                            "{{ translate('Flash Deals') }}"
+                        </a>
+                    </li>
+                </ul>
+            </div>
         </div>
     </div>
 </section>

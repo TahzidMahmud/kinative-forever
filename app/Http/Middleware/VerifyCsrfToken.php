@@ -27,7 +27,6 @@ class VerifyCsrfToken extends Middleware
          '/iyzico*',
          '/payfast*',
          '/bkash*',
-         '/aamarpay*',
          '/mock_payments'
      ];
 }

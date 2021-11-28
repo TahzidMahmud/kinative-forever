@@ -10,24 +10,25 @@
 @endif
 <!-- END Top Bar -->
 <!-- Top Bar -->
-<div class="top-navbar bg-primary py-10px z-1035 text-white fs-13 fw-500 ">
+<div class="top-navbar bg-alter-4 py-10px z-1035 text-white fs-13 fw-500 ">
     <div class="container">
         <div class="row align-items-center">
-            <div class="col-6 col-lg-3">
-                <div class="text-left">
-                    {{ get_setting('topbar_center') }}
+            <div class="col-6 col-lg-3  ">
+                {{ get_setting('topbar_call_text') }}:{{ get_setting('topbar_call_number') }}
+            </div>
+            <div class="col-12 col-lg-6 text-center d-none d-lg-block ml-auto">
+                <div class="text-center">
+                    {{ get_setting('topbar_left') }}
                     {{-- Welcome to Forever Strength --}}
                 </div>
             </div>
-            <div class="col-12 col-lg-6 text-center d-none d-lg-block ml-auto">
-            </div>
             <div class="col-6 col-lg-3 d-flex justify-content-end">
                 <ul class="list-inline mb-0 pl-0 mobile-hor-swipe text-center d-flex justify-content-between align-items-center">
-                    <li  class="list-inline-item mr-0 "> <a href="#faq" class="text-white">FAQ</a> </li>
-                    <li  class="list-inline-item mr-0 mx-2 ">|</li>
-                    <li  class="list-inline-item mr-0  d-none d-lg-block "><a href=" {{ get_setting('policy_link') }}" class="text-white">Policies</a></li>
-                    <li  class="list-inline-item mr-0 mx-2  d-none d-lg-block">|</li>
-                    <li  class="list-inline-item mr-0 "><a href=" {{ get_setting('topbar_left') }}" class="text-white">Contact US</a></li>
+                    <li  class="list-inline-item mr-0 "> <a href="#faq" class="text-white">About Us</a> </li>
+
+                    <li  class="list-inline-item   d-none d-lg-block mx-2 px-3 "><a href=" {{ get_setting('policy_link') }}" class="text-white">Store Locations</a></li>
+
+                    <li  class="list-inline-item mr-0 "><a href=" {{ get_setting('topbar_left') }}" class="text-white">Contact </a></li>
 
                 </ul>
             </div>
@@ -37,7 +38,7 @@
 <!-- END Top Bar -->
 
 <header class="@if(get_setting('header_stikcy') == 'on') sticky-top @endif z-1021 bg-white border-bottom shadow-sm" >
-    <div class="position-relative logo-bar-area z-1" style="background-image: url({{ static_asset("assets/img/header_patern.png") }});">
+    <div class="position-relative logo-bar-area z-1 bg-primary">
         <div class="container">
             <div class="d-flex align-items-center justify-content-between">
 
@@ -152,13 +153,13 @@
                         </div>
                     @endif
                </div>
-               
+
                    <div class="d-none d-lg-block ml-auto">
                        <div class=" d-flex justify-content-between align-items-center">
-                        <div class="mr-0 d-none d-lg-block  border-white ml-2 pl-1" data-hover="dropdown">
-                            <div class="dropdown h-100">
+                        <div class="mr-0 d-none d-lg-block  border-white px-3 border-right border-left" data-hover="dropdown" style="  border-color: 1px solid rgba(194, 190, 190, 0.5)!important;">
+                            <div class="dropdown h-100  pt-1">
                                 <a href="javascript:void(0)" class="d-flex align-items-center text-primary h-100" data-toggle="dropdown" data-display="static">
-                                    <i class="la la-user-circle " style="font-size: 1.9rem;"></i>
+                                    <img src="{{ static_asset("assets/img/account.png") }}" alt="">
                                 </a>
                                 <div class=" dropdown-menu dropdown-menu-right p-0 stop-propagation">
                                     <ul class="pl-0 list-unstyled mb-0">
@@ -177,23 +178,19 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="d-none d-lg-block mr-0 border-right border-left pr-3 pl-2 ml-2">
-                            <div class="" id="wishlist">
-                                @include('frontend.partials.wishlist')
-                            </div>
-                        </div>
-        
+
+
                         <div class="d-none d-lg-block align-self-stretch mx-3" data-hover="dropdown">
-                            <div class="nav-cart-box dropdown h-100" id="cart_items">
+                            <div class="nav-cart-box dropdown h-100" id="cart_items" style="margin-bottom: 1px;">
                                 @include('frontend.partials.cart')
                             </div>
                         </div>
                        </div>
-                       
-                   </div>
-             
 
-                @if(get_setting('topbar_call_icon') || get_setting('topbar_call_text') || get_setting('topbar_call_number'))
+                   </div>
+
+
+                {{-- @if(get_setting('topbar_call_icon') || get_setting('topbar_call_text') || get_setting('topbar_call_number'))
                     <div class="d-none d-md-flex border-left  align-items-center">
 
                         <img src="{{ uploaded_asset(get_setting('topbar_call_icon')) }}" class="pb-1" >
@@ -203,7 +200,7 @@
                             <div class="text-primary fw-600 fs-14">{{ get_setting('topbar_call_number') }}</div>
                         </div>
                     </div>
-                @endif
+                @endif --}}
             </div>
         </div>
     </div>

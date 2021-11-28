@@ -8,7 +8,7 @@
                     <img src="{{ static_asset('assets/img/avatar-place.png') }}" class="image rounded-circle" onerror="this.onerror=null;this.src='{{ static_asset('assets/img/avatar-place.png') }}';">
                 @endif
             </span>
-            <h4 class="h5 fs-16 mb-1 fw-600 text-uppercase">{{ Auth::user()->name }}</h4>
+            <h4 class="h5 fs-16 mb-1 fw-600">{{ Auth::user()->name }}</h4>
             @if(Auth::user()->phone != null)
                 <div class="text-truncate opacity-60">{{ Auth::user()->phone }}</div>
             @else
@@ -56,6 +56,14 @@
                             <i class="las la-check-circle aiz-side-nav-icon"></i>
                             <span class="aiz-side-nav-text">
                                 {{ translate('Completed Delivery') }}
+                            </span>
+                        </a>
+                    </li>
+                    <li class="aiz-side-nav-item">
+                        <a href="{{ route('non-delivered-deliveries') }}" class="aiz-side-nav-link {{ areActiveRoutes(['non-delivered-deliveries'])}}">
+                            <i class="las la-hourglass-half aiz-side-nav-icon"></i>
+                            <span class="aiz-side-nav-text">
+                                {{ translate('Non-Delivered Delivery') }}
                             </span>
                         </a>
                     </li>
@@ -157,12 +165,6 @@
                             <a href="{{ route('seller.digitalproducts') }}" class="aiz-side-nav-link {{ areActiveRoutes(['seller.digitalproducts', 'seller.digitalproducts.upload', 'seller.digitalproducts.edit'])}}">
                                 <i class="lab la-sketch aiz-side-nav-icon"></i>
                                 <span class="aiz-side-nav-text">{{ translate('Digital Products') }}</span>
-                            </a>
-                        </li>
-                        <li class="aiz-side-nav-item">
-                            <a href="{{ route('my_uploads.all') }}" class="aiz-side-nav-link {{ areActiveRoutes(['my_uploads.new'])}}">
-                                <i class="las la-folder-open aiz-side-nav-icon"></i>
-                                <span class="aiz-side-nav-text">{{ translate('Uploaded Files') }}</span>
                             </a>
                         </li>
                     @endif

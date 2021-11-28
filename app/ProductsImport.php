@@ -22,7 +22,7 @@ class ProductsImport implements ToCollection, WithHeadingRow, WithValidation, To
         $canImport = true;
         if (\App\Addon::where('unique_identifier', 'seller_subscription')->first() != null && 
                 \App\Addon::where('unique_identifier', 'seller_subscription')->first()->activated){
-            if(Auth::user()->user_type == 'seller' && count($rows) > Auth::user()->seller->remaining_uploads) {
+            if(count($rows) > Auth::user()->seller->remaining_uploads) {
                 $canImport = false;
                 flash(translate('Upload limit has been reached. Please upgrade your package.'))->warning();
             }
@@ -73,6 +73,29 @@ class ProductsImport implements ToCollection, WithHeadingRow, WithValidation, To
     {
         return $this->rows;
     }
+//    public function model(array $row)
+//    {
+//        return new Product([
+//           'name'     => $row['name'],
+//           'added_by'    => Auth::user()->user_type == 'seller' ? 'seller' : 'admin',
+//           'user_id'    => Auth::user()->user_type == 'seller' ? Auth::user()->id : User::where('user_type', 'admin')->first()->id,
+//           'category_id'    => $row['category_id'],
+//           'brand_id'    => $row['brand_id'],
+//           'video_provider'    => $row['video_provider'],
+//           'video_link'    => $row['video_link'],
+//           'unit_price'    => $row['unit_price'],
+//           'purchase_price'    => $row['purchase_price'] == null ? $row['unit_price'] : $row['purchase_price'],
+//           'unit'    => $row['unit'],
+////           'current_stock' => $row['current_stock'],
+//           'meta_title' => $row['meta_title'],
+//           'meta_description' => $row['meta_description'],
+//           'colors' => json_encode(array()),
+//           'choice_options' => json_encode(array()),
+//           'variations' => json_encode(array()),
+//           'slug' => preg_replace('/[^A-Za-z0-9\-]/', '', str_replace(' ', '-', $row['slug'])).'-'.Str::random(5),
+//           'thumbnail_img' => $this->downloadThumbnail($row['thumbnail_img']),
+//        ]);
+//    }
 
     public function rules(): array
     {

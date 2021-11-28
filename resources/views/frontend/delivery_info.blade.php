@@ -2,17 +2,6 @@
 
 @section('content')
 
-<section class="mb-4">
-    <div class="">
-        <div class="aiz-carousel mobile-img-auto-height dot-small-white dots-inside-bottom " data-dots="true" data-autoplay="true">
-            @foreach(explode(",",get_setting('product_banner')) as $value)
-            <div class="carousel-box">
-                <img src="{{ uploaded_asset($value) }}" class="img-fluid w-100">
-            </div>
-            @endforeach
-        </div>
-    </div>
-</section>
 <section class="pt-5 mb-4">
     <div class="container">
         <div class="row">
@@ -20,26 +9,32 @@
                 <div class="row aiz-steps arrow-divider">
                     <div class="col done">
                         <div class="text-center text-success">
+                            <i class="la-3x mb-2 las la-shopping-cart"></i>
+                            <h3 class="fs-14 fw-600 d-none d-lg-block">{{ translate('1. My Cart')}}</h3>
+                        </div>
+                    </div>
+                    <div class="col done">
+                        <div class="text-center text-success">
                             <i class="la-3x mb-2 las la-map"></i>
-                            <h3 class="fs-14 fw-600 d-none d-lg-block">{{ translate('1. Shipping info')}}</h3>
+                            <h3 class="fs-14 fw-600 d-none d-lg-block">{{ translate('2. Shipping info')}}</h3>
                         </div>
                     </div>
                     <div class="col active">
                         <div class="text-center text-primary">
                             <i class="la-3x mb-2 las la-truck"></i>
-                            <h3 class="fs-14 fw-600 d-none d-lg-block">{{ translate('2. Delivery info')}}</h3>
+                            <h3 class="fs-14 fw-600 d-none d-lg-block">{{ translate('3. Delivery info')}}</h3>
                         </div>
                     </div>
                     <div class="col">
                         <div class="text-center">
                             <i class="la-3x mb-2 opacity-50 las la-credit-card"></i>
-                            <h3 class="fs-14 fw-600 d-none d-lg-block opacity-50">{{ translate('3. Payment')}}</h3>
+                            <h3 class="fs-14 fw-600 d-none d-lg-block opacity-50">{{ translate('4. Payment')}}</h3>
                         </div>
                     </div>
                     <div class="col">
                         <div class="text-center">
                             <i class="la-3x mb-2 opacity-50 las la-check-circle"></i>
-                            <h3 class="fs-14 fw-600 d-none d-lg-block opacity-50">{{ translate('4. Confirmation')}}</h3>
+                            <h3 class="fs-14 fw-600 d-none d-lg-block opacity-50">{{ translate('5. Confirmation')}}</h3>
                         </div>
                     </div>
                 </div>
@@ -51,11 +46,10 @@
 <section class="py-4 gry-bg">
     <div class="container">
         <div class="row cols-xs-space cols-sm-space cols-md-space">
-            <div class="col-xxl-10 mx-auto text-left">
+            <div class="col-xxl-8 col-xl-10 mx-auto text-left">
                 @php
                     $admin_products = array();
                     $seller_products = array();
-
                     foreach ($carts as $key => $cartItem){
                         if(\App\Product::find($cartItem['product_id'])->added_by == 'admin'){
                             array_push($admin_products, $cartItem['product_id']);
@@ -69,13 +63,12 @@
                             $seller_products[\App\Product::find($cartItem['product_id'])->user_id] = $product_ids;
                         }
                     }
-                    // dd($admin_products,$seller_products);
                 @endphp
 
                 @if (!empty($admin_products))
                 <form class="form-default" action="{{ route('checkout.store_delivery_info') }}" role="form" method="POST">
                     @csrf
-                    <div class="card mb-3 shadow-none border-gray-200 rounded">
+                    <div class="card mb-3 shadow-sm border-0 rounded">
                         <div class="card-header p-3">
                             <h5 class="fs-16 fw-600 mb-0">{{ get_setting('site_name') }} {{ translate('Products') }}</h5>
                         </div>
@@ -99,7 +92,7 @@
                                 </li>
                                 @endforeach
                             </ul>
-
+                            
                             <div class="row border-top pt-3">
                                 <div class="col-md-6">
                                     <h6 class="fs-15 fw-600">{{ translate('Choose Delivery Type') }}</h6>
@@ -144,8 +137,6 @@
                                         <select
                                             class="form-control aiz-selectpicker"
                                             name="pickup_point_id_{{ \App\User::where('user_type', 'admin')->first()->id }}"
-                                            id="pickup_point_id_{{ \App\User::where('user_type', 'admin')->first()->id }}"
-                                            onchange="gettimes({{ \App\User::where('user_type', 'admin')->first()->id }})"
                                             data-live-search="true"
                                         >
                                                 <option>{{ translate('Select your nearest pickup point')}}</option>
@@ -162,47 +153,16 @@
                                             @endforeach
                                         </select>
                                     </div>
-                                    {{-- picup point time slots --}}
-                                    {{-- <div class="mt-4 d-none " id="time-slot-{{ \App\User::where('user_type', 'admin')->first()->id }}">
-                                        <select
-                                            class="form-control "
-                                            name="pickup_point_time_id_{{ \App\User::where('user_type', 'admin')->first()->id }}"
-                                            id="pickup_point_time_id_{{ \App\User::where('user_type', 'admin')->first()->id }}"
-
-                                        >
-                                                <option>{{ translate('Select a Time Slot')}}</option>
-
-                                        </select>
-                                    </div> --}}
-
-
                                 </div>
-
                             </div>
-                            <div class="form-group row my-2 pickup_point_id_admin d-none">
-                                <label class="col-sm-6 control-label fs-15 fw-600" for="delivery_date">{{translate('Expected PickUp Date & Time')}}</label>
-                                <div class="col-sm-6">
-                                  <input type="text" class="form-control aiz-date-range" name="delivery_date" data-past-disable="true" placeholder="Select Date" data-time-picker="true" data-format="DD-MM-Y HH:mm:ss" data-single="true" autocomplete="off" >
-                                </div>
-
-
-                            </div>
-
-                            <div class="form-group row my-2">
-                                <label for="exampleFormControlTextarea1" class="col-4"> <h6 class="fs-15 fw-600">{{ translate('Note') }}</h6></label>
-                                <textarea class="col-8 px-2  form-control" name="note" id="exampleFormControlTextarea1" rows="3"></textarea>
-                            </div>
+                            
                         </div>
-
-
                         <div class="card-footer justify-content-end">
                             <button type="submit" name="owner_id" value="{{ App\User::where('user_type', 'admin')->first()->id }}" class="btn fw-600 btn-primary">{{ translate('Continue to Payment')}}</a>
                         </div>
                     </div>
                 </form>
                 @endif
-
-                {{-- seller products  --}}
                 <form class="form-default"  action="{{ route('checkout.store_delivery_info') }}" role="form" method="POST">
                     @csrf
                     @if (!empty($seller_products))
@@ -231,7 +191,7 @@
                                         </li>
                                         @endforeach
                                     </ul>
-
+                                    
                                     <div class="row border-top pt-3">
                                         <div class="col-md-6">
                                             <h6 class="fs-15 fw-600">{{ translate('Choose Delivery Type') }}</h6>
@@ -274,7 +234,6 @@
                                                     @endif
                                                 @endif
                                             </div>
-
                                             @if (\App\BusinessSetting::where('type', 'pickup_point')->first()->value == 1)
                                                 @if (is_array(json_decode(\App\Shop::where('user_id', $key)->first()->pick_up_point_id)))
                                                 <div class="mt-4 pickup_point_id_{{ $key }} d-none">
@@ -301,14 +260,9 @@
                                                 </div>
                                                 @endif
                                             @endif
-
-
-
-
-
                                         </div>
                                     </div>
-
+                                    
                                 </div>
                                 <div class="card-footer justify-content-end">
                                     <button type="submit" name="owner_id" value="{{ $key }}" class="btn fw-600 btn-primary">{{ translate('Continue to Payment')}}</a>
@@ -334,27 +288,6 @@
     <script type="text/javascript">
         function display_option(key){
 
-        }
-        function gettimes(id){
-            var ids='#pickup_point_id_'+id;
-            var item=$(ids).val();
-            if(item){
-                $.post('{{ route('times.get') }}', {_token:'{{ @csrf_token() }}',id:item}, function(data){
-                    if(data.slots.length>0){
-                        let tmp='#pickup_point_time_id_'+id;
-                        let tmp2='#time-slot-'+id;
-                       data.slots.forEach(elem => {
-
-                             // $(tmp).append(new Option(`${elem.str}`,`${elem.id}`))
-                        $(tmp).append(`
-                                <option value="${elem.id}" class="fw-500 fs-14">${elem.str}</option>
-                            `);
-                       });
-                       $(tmp2).removeClass("d-none");
-
-                    }
-                });
-            }
         }
         function show_pickup_point(el) {
         	var value = $(el).val();

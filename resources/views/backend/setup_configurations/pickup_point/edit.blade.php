@@ -65,28 +65,6 @@
                             </select>
                         </div>
                     </div>
-                    <div class="form-group row ">
-                        <label class="col-sm-3 col-from-label" for="name">{{translate('Pick-up Time Slot')}}</label>
-                        <div class="col-sm-9">
-                            <input type="hidden" name="types[]" value="time_slots">
-                            <select name="time_slots[]" id="time_slots" class="form-control aiz-selectpicker" multiple required data-placeholder="{{ translate('Choose Times') }}" data-live-search="true" data-selected-text-format="count" >
-                                @php
-                                    $slots=\App\PickupTime::all();
-                                    $slot_ids=json_decode($pickup_point->time_slots,true);
-                                @endphp
-                               @if($slots)
-                               @foreach( $slots as $slot)
-                                    @if($slot_ids && in_array($slot->id,$slot_ids))
-                                    <option value="{{$slot->id}}" selected>{{ implode(",",json_decode($slot->days,true)) }} - {{ $slot->start_time }} - {{ $slot->end_time }}</option>
-                                    @else
-                                    <option value="{{$slot->id}}">{{ implode(",",json_decode($slot->days,true)) }} - {{ $slot->start_time }} - {{ $slot->end_time }}</option>
-                                    @endif
-                                @endforeach
-                               @endif
-                            </select>
-
-                        </div>
-                    </div>
                     <div class="form-group mb-0 text-right">
                         <button type="submit" class="btn btn-primary">{{translate('Save')}}</button>
                     </div>

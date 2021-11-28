@@ -9,10 +9,44 @@ use App\Wallet;
 use App\Seller;
 use App\User;
 use App\Search;
+use App\Order;
 use Auth;
+use Excel;
+use App\Exports\OrdersExport;
 
 class ReportController extends Controller
 {
+    public function sale_report(Request $request)
+    {
+        $date = $request->date;
+        $net = 0;
+        $profit = 0;
+        $items = 0;
+        $num_orders = 0;
+        $tax = 0;
+        $shipping = 0;
+        $coupon = 0;
+        $orders = Order::query();
+        if ($date != null) {
+            $orders = $orders->whereDate('created_at', '>=', date('Y-m-d', strtotime(explode(" to ", $date)[0])))->whereDate('created_at', '<=', date('Y-m-d', strtotime(explode(" to ", $date)[1])));
+        }
+        foreach ($orders->get() as $key => $order) {
+            $net += $order->grand_total;
+            $num_orders += 1;
+            $coupon += $order->coupon_discount;
+            if($order->orderDetails != null){
+                $items += $order->orderDetails->count();
+                $shipping += $order->orderDetails->sum('shipping_cost');
+                $tax += $order->orderDetails->sum('tax');
+                $profit += $order->orderDetails->sum('profit');
+            }
+        }
+        if($request->button == 'export'){
+            return Excel::download(new OrdersExport($orders->latest()->get()), 'orders.xlsx');
+        }
+        return view('backend.reports.sale_report', compact('date', 'net', 'profit', 'items', 'num_orders', 'tax', 'shipping', 'coupon'));
+    }
+    
     public function stock_report(Request $request)
     {
         $sort_by =null;

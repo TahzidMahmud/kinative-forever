@@ -76,13 +76,6 @@
                                 <div class="file-preview box sm"></div>
                             </div>
                         </div>
-                         <div class="form-group row">
-                            <label class="col-sm-3 col-from-label">{{translate('Contact email adress')}}</label>
-                            <div class="col-sm-9">
-                                <input type="hidden" name="types[]" value="contact_us_email">
-                                <input type="text" name="contact_us_email" class="form-control" value="{{ get_setting('contact_us_email') }}">
-                            </div>
-                        </div>
                         <div class="text-right">
     						<button type="submit" class="btn btn-primary">{{ translate('Update') }}</button>
     					</div>

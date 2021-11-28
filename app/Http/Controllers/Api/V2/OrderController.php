@@ -33,16 +33,13 @@ class OrderController extends Controller
         $address = Address::where('id', $cartItems->first()->address_id)->first();
         $shippingAddress = [];
         if ($address != null) {
-            $shippingAddress['name']        = $user->name;
-            $shippingAddress['email']       = $user->email;
-            $shippingAddress['address']     = $address->address;
-            $shippingAddress['country']     = $address->country;
-            $shippingAddress['city']        = $address->city;
+            $shippingAddress['name'] = $user->name;
+            $shippingAddress['email'] = $user->email;
+            $shippingAddress['address'] = $address->address;
+            $shippingAddress['country'] = $address->country;
+            $shippingAddress['city'] = $address->city;
             $shippingAddress['postal_code'] = $address->postal_code;
-            $shippingAddress['phone']       = $address->phone;
-            if($address->latitude || $address->longitude) {
-                $shippingAddress['lat_lang'] = $address->latitude.','.$address->longitude;
-            }
+            $shippingAddress['phone'] = $address->phone;
         }
 
         $sum = 0.00;

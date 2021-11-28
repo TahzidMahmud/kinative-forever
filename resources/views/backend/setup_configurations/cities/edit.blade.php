@@ -42,6 +42,10 @@
                       <label for="name">{{translate('Cost')}}</label>
                       <input type="number" min="0" step="0.01" placeholder="{{translate('Cost')}}" name="cost" class="form-control" value="{{ $city->cost }}" required>
                   </div>
+                  <div class="form-group mb-3">
+                    <label for="name">{{translate('Express Cost')}}</label>
+                    <input type="number" min="0" step="0.01" placeholder="{{translate('Express Cost')}}" name="express_cost" class="form-control" value="{{ $city->express_cost }}" required>
+                </div>
 
 
                   <div class="form-group mb-3 text-right">

@@ -12,15 +12,7 @@
 <div class="card">
 	<div class="card-header">
 		<h6 class="mb-0 fw-600">{{ translate('All Pages') }}</h6>
-		<div class="btn-group">
-			<a href="{{ route('custom-pages.create') }}" class="btn btn-primary">{{ translate('Add New Page') }}</a>
-			<button type="button" class="btn btn-secondary dropdown-toggle px-2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-			</button>
-			<div class="dropdown-menu dropdown-menu-right">
-				<a class="dropdown-item" href="{{ route('custom-pages.featured.create') }}">{{ translate('Add New Featured Page') }}</a>
-			</div>
-		</div>
-		
+		<a href="{{ route('custom-pages.create') }}" class="btn btn-primary">{{ translate('Add New Page') }}</a>
 	</div>
 	<div class="card-body">
 		<table class="table aiz-table mb-0">

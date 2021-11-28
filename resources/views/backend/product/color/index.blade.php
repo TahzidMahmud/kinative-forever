@@ -36,7 +36,7 @@
                         <tbody>
                             @foreach ($colors as $key => $color)
                                 <tr>
-                                    <td>{{ ($key+1) + ($colors->currentPage() - 1)*$colors->perPage() }}</td>
+                                    <td>{{ $key + 1 }}</td>
                                     <td>{{ $color->name }}</td>
                                     <td class="text-right">
                                         <a class="btn btn-soft-primary btn-icon btn-circle btn-sm"

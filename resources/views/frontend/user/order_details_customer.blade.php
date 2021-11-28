@@ -42,9 +42,6 @@
           <b class="fs-15">{{ translate('Order Summary') }}</b>
         </div>
         <div class="card-body">
-            <div class="py-4">
-                {{ renderOrderSteps($order->delivery_status) }}
-            </div>
             <div class="row">
                 <div class="col-lg-6">
                     <table class="table table-borderless">
@@ -53,20 +50,34 @@
                             <td>{{ $order->code }}</td>
                         </tr>
                         <tr>
-                            <td class="w-50 fw-600">{{ translate('Order date')}}:</td>
-                            <td>{{ date('d-m-Y H:i A', $order->date) }}</td>
+                            <td class="w-50 fw-600">{{ translate('Customer')}}:</td>
+                            <td>{{ json_decode($order->shipping_address)->name }}</td>
                         </tr>
                         <tr>
-                            <td class="w-50 fw-600">{{ translate('Total order amount')}}:</td>
-                            <td>{{ single_price($order->orderDetails->sum('price') + $order->orderDetails->sum('tax')) }}</td>
+                            <td class="w-50 fw-600">{{ translate('Email')}}:</td>
+                            @if ($order->user_id != null)
+                                <td>{{ $order->user->email }}</td>
+                            @endif
+                        </tr>
+                        <tr>
+                            <td class="w-50 fw-600">{{ translate('Shipping address')}}:</td>
+                            <td>{{ json_decode($order->shipping_address)->address }}, {{ json_decode($order->shipping_address)->city }}, {{ json_decode($order->shipping_address)->postal_code }}, {{ json_decode($order->shipping_address)->country }}</td>
                         </tr>
                     </table>
                 </div>
                 <div class="col-lg-6">
                     <table class="table table-borderless">
                         <tr>
+                            <td class="w-50 fw-600">{{ translate('Order date')}}:</td>
+                            <td>{{ date('d-m-Y H:i A', $order->date) }}</td>
+                        </tr>
+                        <tr>
                             <td class="w-50 fw-600">{{ translate('Order status')}}:</td>
                             <td>{{ translate(ucfirst(str_replace('_', ' ', $status))) }}</td>
+                        </tr>
+                        <tr>
+                            <td class="w-50 fw-600">{{ translate('Total order amount')}}:</td>
+                            <td>{{ single_price($order->orderDetails->sum('price') + $order->orderDetails->sum('tax')) }}</td>
                         </tr>
                         <tr>
                             <td class="w-50 fw-600">{{ translate('Shipping method')}}:</td>
@@ -76,6 +87,7 @@
                             <td class="w-50 fw-600">{{ translate('Payment method')}}:</td>
                             <td>{{ ucfirst(str_replace('_', ' ', $order->payment_type)) }}</td>
                         </tr>
+
                         
                         @if(get_setting('proxypay') == 1 && !$order->proxy_cart_reference_id->isEmpty())
                             <tr>
@@ -84,79 +96,6 @@
                             </tr>
                         @endif
                     </table>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="card mt-4">
-        <div class="card-body">
-            <div class="row gutters-5">
-                <div class="col-md-6">
-                    <h5 class="fw-600 mb-3 fs-17 pb-2">{{ translate('Shipping Address')}}</h5>
-                    <div>
-                        <div class="d-flex mt-1">
-                            <span class="opacity-70 w-25">{{ translate('Name') }}:</span>
-                            <span class="fw-600 ml-2">{{ json_decode($order->shipping_address)->name }}</span>
-                        </div>
-                        <div class="d-flex mt-1">
-                            <span class="opacity-70 w-25">{{ translate('Address') }}:</span>
-                            <span class="fw-600 ml-2">{{ json_decode($order->shipping_address)->address }}</span>
-                        </div>
-                        <div class="d-flex mt-1">
-                            <span class="opacity-70 w-25">{{ translate('Postal Code') }}:</span>
-                            <span class="fw-600 ml-2">{{ json_decode($order->shipping_address)->postal_code }}</span>
-                        </div>
-                        <div class="d-flex mt-1">
-                            <span class="opacity-70 w-25">{{ translate('Area') }}:</span>
-                            <span class="fw-600 ml-2">{{ json_decode($order->shipping_address)->area }}</span>
-                        </div>
-                        <div class="d-flex mt-1">
-                            <span class="opacity-70 w-25">{{ translate('City') }}:</span>
-                            <span class="fw-600 ml-2">{{ json_decode($order->shipping_address)->city }}</span>
-                        </div>
-                        <div class="d-flex mt-1">
-                            <span class="opacity-70 w-25">{{ translate('Country') }}:</span>
-                            <span class="fw-600 ml-2">{{ json_decode($order->shipping_address)->country }}</span>
-                        </div>
-                        <div class="d-flex mt-1">
-                            <span class="opacity-70 w-25">{{ translate('Phone') }}:</span>
-                            <span class="fw-600 ml-2">{{ json_decode($order->shipping_address)->phone }}</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-6">
-                    <h5 class="fw-600 mb-3 fs-17 pb-2">{{ translate('Billing Address')}}</h5>
-                    <div>
-                        <div class="d-flex mt-1">
-                            <span class="opacity-70 w-25">{{ translate('Name') }}:</span>
-                            <span class="fw-600 ml-2">{{ json_decode($order->billing_address)->name }}</span>
-                        </div>
-                        <div class="d-flex mt-1">
-                            <span class="opacity-70 w-25">{{ translate('Address') }}:</span>
-                            <span class="fw-600 ml-2">{{ json_decode($order->billing_address)->address }}</span>
-                        </div>
-                        <div class="d-flex mt-1">
-                            <span class="opacity-70 w-25">{{ translate('Postal Code') }}:</span>
-                            <span class="fw-600 ml-2">{{ json_decode($order->billing_address)->postal_code }}</span>
-                        </div>
-                        <div class="d-flex mt-1">
-                            <span class="opacity-70 w-25">{{ translate('Area') }}:</span>
-                            <span class="fw-600 ml-2">{{ json_decode($order->billing_address)->area }}</span>
-                        </div>
-                        <div class="d-flex mt-1">
-                            <span class="opacity-70 w-25">{{ translate('City') }}:</span>
-                            <span class="fw-600 ml-2">{{ json_decode($order->billing_address)->city }}</span>
-                        </div>
-                        <div class="d-flex mt-1">
-                            <span class="opacity-70 w-25">{{ translate('Country') }}:</span>
-                            <span class="fw-600 ml-2">{{ json_decode($order->billing_address)->country }}</span>
-                        </div>
-                        <div class="d-flex mt-1">
-                            <span class="opacity-70 w-25">{{ translate('Phone') }}:</span>
-                            <span class="fw-600 ml-2">{{ json_decode($order->billing_address)->phone }}</span>
-                        </div>
-                    </div>
                 </div>
             </div>
         </div>
@@ -279,6 +218,16 @@
                                 <td class="w-50 fw-600">{{ translate('Total')}}</td>
                                 <td class="text-right">
                                     <strong><span>{{ single_price($order->grand_total) }}</span></strong>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="w-50 fw-600">{{ translate('Due')}}</td>
+                                <td class="text-right">
+                                    @if($order->payment_status == 'unpaid')
+                                    <strong><span>{{ single_price($order->grand_total) }}</span></strong>
+                                    @else
+                                    <strong><span>{{ single_price(0) }}</span></strong>
+                                    @endif
                                 </td>
                             </tr>
                         </tbody>

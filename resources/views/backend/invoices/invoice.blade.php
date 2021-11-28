@@ -16,7 +16,7 @@
             direction: <?php echo  $direction ?>;
             text-align: <?php echo  $text_align ?>;
 			padding:0;
-			margin:0;
+			margin:0; 
 		}
 		.gry-color *,
 		.gry-color{
@@ -53,7 +53,7 @@
 	<div>
 
 		@php
-			$logo = get_setting('system_logo_white');
+			$logo = get_setting('header_logo');
 		@endphp
 
 		<div style="background: #eceff4;padding: 1rem;">
@@ -84,13 +84,7 @@
 				</tr>
 				<tr>
 					<td class="gry-color small">{{  translate('Phone') }}: {{ get_setting('contact_phone') }}</td>
-					<td class="text-right small"><span class="gry-color small">{{  translate('Order Date') }}:</span> <span class=" strong">{{ date('d-m-Y', $order->date) }}</span>
-                        <br><span class="gry-color small">{{  translate('Expected PickUp') }}:</span> <span class=" strong">{{ date('d-m-Y H:i A', $order->delivery_date) }}</span></td>
-
-				</tr>
-				<tr>
-					<td class="gry-color small"></td>
-					<td class="text-right small"><span class="gry-color small">{{  translate('Payment Typs') }}:</span> <span class=" strong">{{ translate(ucfirst(str_replace('_', ' ', $order->payment_type))) }}</span></td>
+					<td class="text-right small"><span class="gry-color small">{{  translate('Order Date') }}:</span> <span class=" strong">{{ date('d-m-Y', $order->date) }}</span></td>
 				</tr>
 			</table>
 
@@ -98,42 +92,14 @@
 
 		<div style="padding: 1rem;padding-bottom: 0">
             <table>
-            	<thead>
-	        		<tr>
-	        			<th width="60%"></th>
-	        			<th width="40%"></th>
-	        		</tr>
-        		</thead>
-            	<tbody>
-            		<tr>
-            			<td>
-            				<table>
-            					<tbody>
-									@php
-										$shipping_address = json_decode($order->shipping_address);
-									@endphp
-									<tr><td class="strong small gry-color">{{ translate('Shipping Address') }}:</td></tr>
-									<tr><td class="strong">Name: {{ optional($shipping_address)->name }}</td></tr>
-									<tr><td class="gry-color small">{{ optional($shipping_address)->address }}, {{ optional($shipping_address)->area }}, {{ optional($shipping_address)->city }}, {{ optional($shipping_address)->country }}</td></tr>
-									<tr><td class="gry-color small">{{ translate('Phone') }}: {{ optional($shipping_address)->phone }}</td></tr>
-								</tbody>
-							</table>
-						</td>
-            			<td>
-            				<table >
-            					<tbody>
-									@php
-										$billing_address = json_decode($order->billing_address);
-									@endphp
-									<tr><td class="strong small gry-color">{{ translate('Billing Address') }}:</td></tr>
-									<tr><td class="strong">Name: {{ optional($billing_address)->name }}</td></tr>
-									<tr><td class="gry-color small">{{ optional($billing_address)->address }}, {{ optional($billing_address)->area }}, {{ optional($billing_address)->city }}, {{ optional($billing_address)->country }}</td></tr>
-									<tr><td class="gry-color small">{{ translate('Phone') }}: {{ optional($billing_address)->phone }}</td></tr>
-								</tbody>
-							</table>
-						</td>
-					</tr>
-				</tbody>
+				@php
+					$shipping_address = json_decode($order->shipping_address);
+				@endphp
+				<tr><td class="strong small gry-color">{{ translate('Bill to') }}:</td></tr>
+				<tr><td class="strong">{{ $shipping_address->name }}</td></tr>
+				<tr><td class="gry-color small">{{ $shipping_address->address }}, {{ $shipping_address->city }}, {{ $shipping_address->country }}</td></tr>
+				<tr><td class="gry-color small">{{ translate('Email') }}: {{ $shipping_address->email }}</td></tr>
+				<tr><td class="gry-color small">{{ translate('Phone') }}: {{ $shipping_address->phone }}</td></tr>
 			</table>
 		</div>
 
@@ -141,8 +107,8 @@
 			<table class="padding text-left small border-bottom">
 				<thead>
 	                <tr class="gry-color" style="background: #eceff4;">
-	                    <th width="30%" class="text-left">{{ translate('Product Name') }}</th>
-						<th width="20%" class="text-left">{{ translate('Delivery Type') }}</th>
+	                    <th width="35%" class="text-left">{{ translate('Product Name') }}</th>
+						<th width="15%" class="text-left">{{ translate('Delivery Type') }}</th>
 	                    <th width="10%" class="text-left">{{ translate('Qty') }}</th>
 	                    <th width="15%" class="text-left">{{ translate('Unit Price') }}</th>
 	                    <th width="10%" class="text-left">{{ translate('Tax') }}</th>
@@ -161,14 +127,6 @@
 										@if ($orderDetail->pickup_point != null)
 											{{ $orderDetail->pickup_point->getTranslation('name') }} ({{ translate('Pickip Point') }})
 										@endif
-                                        @if ($orderDetail->time_slot != null)
-                                        {{-- @php
-                                            $time=\App\PickupTime::findOrFail($orderDetail->time_slot);
-
-                                        @endphp
-                                        <br> Days: {{ implode(",",json_decode($time->days)) }} <br> From : {{ $time->start_time }} to {{ $time->end_time }} --}}
-
-                                    @endif
 									@endif
 								</td>
 								<td class="">{{ $orderDetail->quantity }}</td>
@@ -217,16 +175,22 @@
 							            <th class="text-left strong">{{ translate('Grand Total') }}</th>
 							            <td class="currency">{{ single_price($order->grand_total) }}</td>
 							        </tr>
+							        <tr>
+							            <th class="text-left strong">{{ translate('Due') }}</th>
+							            <td class="currency">
+							            	@if($order->payment_status == 'unpaid')
+                                            	{{ single_price($order->grand_total) }}
+                                            @else
+                                            	{{ single_price(0) }}
+                                            @endif
+							            </td>
+							        </tr>
 						        </tbody>
 						    </table>
 			            </td>
 			        </tr>
 		        </tbody>
 		    </table>
-            <div class="row">
-                <h5><b class="mx-3">Note ::</b>
-                {{ $order->note }} </h5>
-            </div>
 	    </div>
 
 	</div>

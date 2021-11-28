@@ -38,10 +38,8 @@
                             </label>
                         </div>
                     </div>
-
                     <div class="form-group row row">
                         <label class="col-sm-3 col-from-label" for="name">{{translate('Pick-up Point Manager')}}</label>
-
                         <div class="col-sm-9">
                             <select name="staff_id" class="form-control aiz-selectpicker" required>
                                 @foreach(\App\Staff::all() as $staff)
@@ -52,31 +50,6 @@
                             </select>
                         </div>
                     </div>
-                    <div class="form-group row ">
-                        <label class="col-sm-3 col-from-label" for="name">{{translate('Pick-up Time Slot')}}</label>
-                        <div class="col-sm-9">
-                            <input type="hidden" name="types[]" value="time_slots">
-                            <select name="time_slots[]" id="time_slots" class="form-control aiz-selectpicker" multiple required data-live-search="true" data-selected-text-format="count">
-                                @php
-                                    $slots=\App\PickupTime::all();
-                                @endphp
-                               @if($slots)
-                               @foreach( $slots as $slot)
-                                    <option value="{{$slot->id}}">{{ implode(",",json_decode($slot->days,true)) }} - {{ $slot->start_time }} - {{ $slot->end_time }}</option>
-                                @endforeach
-                               @endif
-                            </select>
-                        </div>
-                    </div>
-
-                    <button
-                            type="button"
-                            class="btn btn-soft-secondary btn-sm col-sm-2 "
-                            data-toggle="modal"
-                            data-target="#add-time-modal">
-                            {{ translate('Add New') }}
-                    </button>
-
                     <div class="form-group mb-0 text-right">
                         <button type="submit" class="btn btn-primary">{{translate('Save')}}</button>
                     </div>
@@ -87,9 +60,3 @@
 </div>
 
 @endsection
-@section('modal')
-    @include('modals.add_timeslot_modal')
-@endsection
-
-
-

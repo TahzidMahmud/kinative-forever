@@ -6,6 +6,11 @@
             <div class="container">
                 <div class="row">
                     <div class="col-xxl-4 col-xl-5 col-lg-6 col-md-8 mx-auto">
+                        @if(session()->has('checkout.message') && session()->has('link'))
+                        <div class="alert alert-info">
+                            {{ session('checkout.message') }}
+                        </div>
+                        @endif
                         <div class="card">
                             <div class="text-center pt-4">
                                 <h1 class="h4 fw-600">

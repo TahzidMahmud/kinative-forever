@@ -20,7 +20,4 @@ class PickupPoint extends Model
     public function staff(){
     	return $this->belongsTo(Staff::class);
     }
-    public function pick_up_times(){
-        return $this->hasMany(PickupTime::class);
-    }
 }

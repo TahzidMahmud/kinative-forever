@@ -25,6 +25,7 @@ class IsUser
         }
         else{
             session(['link' => url()->current()]);
+            session(['checkout.message' => 'Please login before checkout.']);
             return redirect()->route('user.login');
         }
     }

@@ -13,11 +13,11 @@ if(auth()->user() != null) {
     <span class="position-relative">
         {{-- <i class="la la-shopping-cart fs-23 opacity-60 text-dark"></i> --}}
         <img src="{{ static_asset("assets/img/cart.png") }}" alt="">
-        <span class="absolute-top-right " style="right: -10px;top: -9px;">
+        <span class="absolute-top-right " style="right: -10px;top: -10px;">
             @if(isset($cart) && count($cart) > 0)
-                <span class="badge bg-alter-6 fs-4 text-light badge-inline badge-pill  cart-count badge-circle badge-sm">{{ count($cart) }}</span>
+                <span class="badge bg-dark text-light badge-inline badge-pill  cart-count badge-circle badge-sm">{{ count($cart) }}</span>
             @else
-                <span class="badge bg-alter-6 fs-4 text-light badge-inline badge-pill cart-count badge-circle badge-sm">0</span>
+                <span class="badge bg-dark text-light badge-inline badge-pill cart-count badge-circle badge-sm">0</span>
             @endif
         </span>
     </span>

@@ -1,25 +1,36 @@
 @extends('frontend.layouts.user_panel')
 
 @section('panel_content')
-    <div class="aiz-titlebar mt-2 mb-4">
-      <div class="row align-items-center">
-        <div class="col-md-6">
-            <h1 class="h3">{{ translate('Shop Verification')}}
-                <a href="{{ route('shop.visit', $shop->slug) }}" class="btn btn-link btn-sm" target="_blank">({{ translate('Visit Shop')}})<i class="la la-external-link"></i>)</a>
-            </h1>
+    <!-- Page title -->
+    <div class="page-title">
+        <div class="row align-items-center">
+            <div class="col-md-6">
+                <h2 class="heading heading-6 text-capitalize strong-600 mb-0">
+                    {{ translate('Shop Verification')}}
+                    <a href="{{ route('shop.visit', $shop->slug) }}" class="btn btn-link btn-sm" target="_blank">({{ translate('Visit Shop')}} <i class="la la-external-link"></i>)</a>
+                </h2>
+            </div>
+            <div class="col-md-6">
+                <div class="float-md-right">
+                    <ul class="breadcrumb">
+                        <li><a href="{{ route('home') }}">{{ translate('Home')}}</a></li>
+                        <li><a href="{{ route('dashboard') }}">{{ translate('Dashboard')}}</a></li>
+                        <li class="active"><a href="{{ route('shops.index') }}">{{ translate('Shop Settings')}}</a></li>
+                    </ul>
+                </div>
+            </div>
         </div>
-      </div>
     </div>
     <form class="" action="{{ route('shop.verify.store') }}" method="POST" enctype="multipart/form-data">
         @csrf
-        <div class="card">
-            <div class="card-header">
-                <h4 class="mb-0 h6">{{ translate('Verification info')}}</h4>
+        <div class="form-box bg-white mt-4">
+            <div class="form-box-title px-3 py-2">
+                {{ translate('Verification info')}}
             </div>
             @php
                 $verification_form = get_setting('verification_form');
             @endphp
-            <div class="card-body">
+            <div class="form-box-content p-3">
                 @foreach (json_decode($verification_form) as $key => $element)
                     @if ($element->type == 'text')
                         <div class="row">
@@ -36,12 +47,11 @@
                                 <label>{{ $element->label }}</label>
                             </div>
                             <div class="col-md-10">
-                                <div class="custom-file">
-                                    <label class="custom-file-label">
-                                        <input type="{{ $element->type }}" name="element_{{ $key }}" id="file-{{ $key }}" class="custom-file-input">
-                                        <span class="custom-file-name">Choose file</span>
-                                    </label>
-                                </div>
+                                <label class="custom-file-label">
+                                    <input type="{{ $element->type }}" name="element_{{ $key }}" id="file-{{ $key }}" class="custom-file-input" data-multiple-caption="{count} files selected" required/>
+                                    <input type="file" class="custom-file-input">
+                                    <span class="custom-file-name">{{ translate('Choose file')}}</span>
+                                </label>
                             </div>
                         </div>
                     @elseif ($element->type == 'select' && is_array(json_decode($element->options)))
@@ -92,10 +102,10 @@
                         </div>
                     @endif
                 @endforeach
-                <div class="text-right mt-4">
-                    <button type="submit" class="btn btn-primary">{{ translate('Apply')}}</button>
-                </div>
-            </div>
+         </div>
+        </div>
+        <div class="text-right mt-4">
+            <button type="submit" class="btn btn-primary">{{ translate('Apply')}}</button>
         </div>
     </form>
 @endsection

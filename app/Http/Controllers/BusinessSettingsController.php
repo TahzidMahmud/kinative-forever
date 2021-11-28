@@ -38,23 +38,13 @@ class BusinessSettingsController extends Controller
     public function google_analytics(Request $request)
     {
         CoreComponentRepository::instantiateShopRepository();
-        return view('backend.setup_configurations.google_configuration.google_analytics');
+        return view('backend.setup_configurations.google_analytics');
     }
 
     public function google_recaptcha(Request $request)
     {
         CoreComponentRepository::instantiateShopRepository();
-        return view('backend.setup_configurations.google_configuration.google_recaptcha');
-    }
-
-    public function google_map(Request $request) {
-        CoreComponentRepository::instantiateShopRepository();
-        return view('backend.setup_configurations.google_configuration.google_map');
-    }
-
-    public function google_firebase(Request $request) {
-        CoreComponentRepository::instantiateShopRepository();
-        return view('backend.setup_configurations.google_configuration.google_firebase');
+        return view('backend.setup_configurations.google_recaptcha');
     }
 
     public function facebook_chat(Request $request)
@@ -147,52 +137,6 @@ class BusinessSettingsController extends Controller
         $business_settings = BusinessSetting::where('type', 'google_recaptcha')->first();
 
         if ($request->has('google_recaptcha')) {
-            $business_settings->value = 1;
-            $business_settings->save();
-        }
-        else{
-            $business_settings->value = 0;
-            $business_settings->save();
-        }
-
-        Artisan::call('cache:clear');
-
-        flash(translate("Settings updated successfully"))->success();
-        return back();
-    }
-
-    public function google_map_update(Request $request)
-    {
-        foreach ($request->types as $key => $type) {
-            $this->overWriteEnvFile($type, $request[$type]);
-        }
-
-        $business_settings = BusinessSetting::where('type', 'google_map')->first();
-
-        if ($request->has('google_map')) {
-            $business_settings->value = 1;
-            $business_settings->save();
-        }
-        else{
-            $business_settings->value = 0;
-            $business_settings->save();
-        }
-
-        Artisan::call('cache:clear');
-
-        flash(translate("Settings updated successfully"))->success();
-        return back();
-    }
-
-    public function google_firebase_update(Request $request)
-    {
-        foreach ($request->types as $key => $type) {
-            $this->overWriteEnvFile($type, $request[$type]);
-        }
-
-        $business_settings = BusinessSetting::where('type', 'google_firebase')->first();
-
-        if ($request->has('google_firebase')) {
             $business_settings->value = 1;
             $business_settings->save();
         }
@@ -350,8 +294,6 @@ class BusinessSettingsController extends Controller
         $business_settings = BusinessSetting::where('type', 'verification_form')->first();
         $business_settings->value = json_encode($form);
         if($business_settings->save()){
-            Artisan::call('cache:clear');
-
             flash(translate("Verification form updated successfully"))->success();
             return back();
         }
@@ -359,8 +301,7 @@ class BusinessSettingsController extends Controller
 
     public function update(Request $request)
     {
-
-
+        // dd($request);
         foreach ($request->types as $key => $type) {
             if($type == 'site_name'){
                 $this->overWriteEnvFile('APP_NAME', $request[$type]);
@@ -369,15 +310,7 @@ class BusinessSettingsController extends Controller
                 $this->overWriteEnvFile('APP_TIMEZONE', $request[$type]);
             }
             else {
-                $lang = null;
-                if(gettype($type) == 'array'){
-                    $lang = array_key_first($type);
-                    $type = $type[$lang];
-                    $business_settings = BusinessSetting::where('type', $type)->where('lang',$lang)->first();
-                }else{
-                    $business_settings = BusinessSetting::where('type', $type)->first();
-                }
-
+                $business_settings = BusinessSetting::where('type', $type)->first();
                 if($business_settings!=null){
                     if(gettype($request[$type]) == 'array'){
                         $business_settings->value = json_encode($request[$type]);
@@ -385,7 +318,6 @@ class BusinessSettingsController extends Controller
                     else {
                         $business_settings->value = $request[$type];
                     }
-                    $business_settings->lang = $lang;
                     $business_settings->save();
                 }
                 else{
@@ -397,7 +329,6 @@ class BusinessSettingsController extends Controller
                     else {
                         $business_settings->value = $request[$type];
                     }
-                    $business_settings->lang = $lang;
                     $business_settings->save();
                 }
             }

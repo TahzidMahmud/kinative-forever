@@ -61,4 +61,10 @@ class InvoiceController extends Controller
             'not_text_align' => $not_text_align
         ], [], [])->download('order-'.$order->code.'.pdf');
     }
+    
+    public function invoice_print($order_id)
+    {
+        $order = Order::findOrFail($order_id);
+        return view('backend.invoices.invoice_print', compact('order'));
+    }
 }

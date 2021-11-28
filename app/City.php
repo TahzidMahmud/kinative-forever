@@ -7,6 +7,10 @@ use App;
 
 class City extends Model
 {
+    public function country()
+    {
+        return $this->belongsTo(Country::class);
+    }
 
     public function getTranslation($field = '', $lang = false){
         $lang = $lang == false ? App::getLocale() : $lang;
@@ -16,15 +20,5 @@ class City extends Model
 
     public function city_translations(){
       return $this->hasMany(CityTranslation::class);
-    }
-
-    public function country()
-    {
-        return $this->belongsTo(Country::class);
-    }
-
-    public function areas()
-    {
-        return $this->hasMany(Area::class);
     }
 }
