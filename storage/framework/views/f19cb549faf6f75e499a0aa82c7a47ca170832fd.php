@@ -147,7 +147,7 @@
     <script src="https://www.gstatic.com/firebasejs/7.23.0/firebase.js"></script>
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script>
     <script>
-    
+
         var firebaseConfig = {
             apiKey: "AIzaSyBR_frjj7ItK7A33BHe3jjUW6GFX8ghWlI",
               authDomain: "yuhi-deliveryboy-dd905.firebaseapp.com",
@@ -157,11 +157,11 @@
               appId: "1:957586946304:web:a01522f23f347470535be5",
               measurementId: "G-DTWYMK6CYN"
         };
-    
+
         firebase.initializeApp(firebaseConfig);
         const messaging = firebase.messaging();
-    
-        
+
+
         messaging.onMessage(function(payload) {
             const noteTitle = payload.notification.title;
             const noteOptions = {
@@ -170,10 +170,10 @@
             };
             new Notification(noteTitle, noteOptions);
         });
-    
+
     </script>
     <!-- aiz-main-wrapper -->
-    <div class="aiz-main-wrapper d-flex flex-column " style="overflow: hidden;">
+    <div class="aiz-main-wrapper d-flex flex-column " style="overflow: hidden;background-image: url(<?php echo e(static_asset('assets/img/whole_bg.jpg')); ?>);">
 
         <!-- Header -->
         <?php echo $__env->make('frontend.inc.nav', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?>

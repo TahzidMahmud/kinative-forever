@@ -64,6 +64,8 @@ class CategoryController extends Controller
         $category->icon = $request->icon;
         $category->meta_title = $request->meta_title;
         $category->meta_description = $request->meta_description;
+        $category->cat_min_desc = $request->cat_min_desc;
+        $category->cat_long_desc = $request->cat_long_desc;
 
         if ($request->parent_id != "0") {
             $category->parent_id = $request->parent_id;

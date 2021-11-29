@@ -1,4 +1,22 @@
 
+<div class="container py-5">
+    <div class="row d-flex justify-content-center align-items-center">
+        <div class="col-md-5">
+            <h5 class="px-5 text-center mx-2">Subscribe to newsletter to get exciting offers!</h5>
+            <form class="form-inline" method="POST" action="{{ route('subscribers.store') }}">
+                @csrf
+                <div class="input-group flex-grow-1">
+                    <input type="email" class="form-control w-lg-250px" placeholder="{{ translate('Provide your email') }}" name="email" required>
+                    <div class="input-group-append">
+                        <button type="submit" class="btn btn-primary px-4 text-uppercase fs-13 bg-alter-2 border-gray-100">{{ translate('Submit') }}</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
 <section class="bg-blue py-3 text-light footer-widget "  style="background-color: rgba(70, 12, 90, 0.733)!important;background-image: url({{static_asset('assets/img/footer_bg.png')}});">
     <div class="container">
         <div class="row py-1">

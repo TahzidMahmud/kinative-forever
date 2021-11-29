@@ -19,7 +19,7 @@ main-btn{
 
 :root{
 	--alter: #ffffff;
-	--alter2: #f89f00;
+	--alter2: #eea66c;
 	--alter3: #fff7de;
 	--alter4: #330c31;
     --alter9:#fef1f0;
@@ -108,7 +108,7 @@ main-btn{
     background-size: contain;
 }
 .filters-button-group .active {
-    color: #ff0000!important;
+    color: var(--primary)!important;
     font-weight: 800;
     opacity: 1.0!important;
 }

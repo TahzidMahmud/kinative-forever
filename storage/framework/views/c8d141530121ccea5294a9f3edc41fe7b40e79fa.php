@@ -2,16 +2,16 @@
 <section class="mb-4">
     <div class="container" >
                <div class="row">
-                   <div class="col" style="min-width: 15%;max-width:20%;"></div>
-                   <div class="col"style="max-width:80%;">
-                        <div class="nav flex-grow filters-button-group text-uppercase  mobile-hor-swipe d-block d-md-flex justify-content-around " style="background-color: rgba(255, 255, 255, 0)!important;">
+                   
+                   <div class="col d-flex justify-content-center">
+                        <div class="nav flex-grow filters-button-group text-uppercase  mobile-hor-swipe d-block d-md-flex justify-content-around text-dark" style="background-color: rgba(255, 255, 255, 0)!important;">
                             <?php $__currentLoopData = $home_categories; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $key => $value): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                                 <?php $category = \App\Category::find($value); ?>
                                 <?php if($category != null): ?>
                                     <?php if($key==0): ?>
-                                        <a class=" border-0 button fw-700 px-2 py-4 text-uppercase text-reset fs-12 opacity-40 active" style="display: inline-block;" data-toggle="tab" href="#category-<?php echo e($category->id); ?>"><span class="py-4 my-4" style="background-color: rgba(255, 255, 255, 0.007)!important;"><?php echo e($category->getTranslation('name')); ?></span></a>
+                                        <a class=" border-0 button fw-700 px-4 py-4 text-uppercase text-reset fs-12 opacity-60 active" style="display: inline-block;" data-toggle="tab" href="#category-<?php echo e($category->id); ?>"><span class="py-4 my-4" style="background-color: rgba(255, 255, 255, 0.007)!important;"><?php echo e($category->getTranslation('name')); ?></span></a>
                                     <?php else: ?>
-                                        <a class=" border-0 button fw-700 px-2 py-4 text-uppercase text-reset fs-12 opacity-40" style="display: inline-block;" data-toggle="tab" href="#category-<?php echo e($category->id); ?>"><span class="py-4 my-4" style="background-color: rgba(255, 255, 255, 0)!important;"><?php echo e($category->getTranslation('name')); ?></span></a>
+                                        <a class=" border-0 button fw-700 px-4 py-4 text-uppercase text-reset fs-12 opacity-60" style="display: inline-block;" data-toggle="tab" href="#category-<?php echo e($category->id); ?>"><span class="py-4 my-4" style="background-color: rgba(255, 255, 255, 0)!important;"><?php echo e($category->getTranslation('name')); ?></span></a>
                                     <?php endif; ?>
                                 <?php endif; ?>
                             <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>

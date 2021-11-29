@@ -4,7 +4,7 @@
     {{-- Sliders  --}}
     @if (get_setting('home_slider_images') != null)
     <div class="home-banner-area text-white">
-        <div class="aiz-carousel dots-inside-bottom mobile-img-auto-height dot-small-white" data-dots="true" data-autoplay='true'>
+        <div class="aiz-carousel dots-inside-bottom mobile-img-auto-height dot-small-white" data-dots="false" data-autoplay='true'>
             @php $slider_images = json_decode(get_setting('home_slider_images'), true);  @endphp
             @foreach ($slider_images as $key => $value)
                 <div class="carousel-box">
@@ -16,36 +16,36 @@
         </div>
     </div>
     @endif
-    @php
-        $featured_categories = \App\Category::where('featured', 1)->get();
-    @endphp
 
-    @if (count($featured_categories) > 0)
-    <div class="py-5">
-        <div class="container">
-            <div class="px-md-3 px-xl-5">
-                <div class="aiz-carousel gutters-10 full-outside-arrow ihw-arrow" data-items="7" data-xl-items="6" data-lg-items="5"  data-md-items="4" data-sm-items="3" data-xs-items="2" data-arrows='true'>
-                    @foreach ($featured_categories as $key => $category)
-                        <div class="carousel-box py-2">
-                            <a href="{{ route('products.category', $category->slug) }}" class="d-block p-2 text-reset text-center hov-shadow-md rounded">
-                                <span class="h-50px d-block mb-3">
-                                    <img
-                                        src="{{ static_asset('assets/img/placeholder.jpg') }}"
-                                        data-src="{{ uploaded_asset($category->banner) }}"
-                                        alt="{{ $category->getTranslation('name') }}"
-                                        class="lazyload img-fluid mh-100 mx-auto"
-                                        onerror="this.onerror=null;this.src='{{ static_asset('assets/img/placeholder-rect.jpg') }}';"
-                                    >
-                                </span>
-                                <div class="text-truncate fs-11 text-uppercase fw-700 opacity-70">{{ $category->getTranslation('name') }}</div>
-                            </a>
-                        </div>
-                    @endforeach
+    <div class="container-fluid mx-1 my-4">
+
+      <div class="row m y-3">
+        @if (get_setting('home_categories_2') != null)
+        @foreach (json_decode(get_setting('home_categories_2'), true) as $key => $value)
+            @php
+                $category=App\Category::findOrFAil($value)
+            @endphp
+            <div class="col " >
+                <div>
+                    <div style="position: relative;">
+                        <img src="{{ uploaded_Asset($category->banner) }}" alt="">
+                    </div>
+
+                    <div class="mx-2 py-3" style="margin-top:-1.5rem;background-color:#ffff;position:relative;">
+                       <div  style="background-color:#ffff;">
+                        <h6 class="text-center py-2"><b>{{ $category->cat_min_desc }}</b></h6>
+                        <p class="opacity-70 text-center text-truncate-2 lh-3-4 h-35px px-4">{{ $category->cat_long_desc }}</p>
+                       <a href="{{ route('products.category',$category->slug)}}"> <p class="text-center fw-500 text-uppercase text-alter-2"><span class=" border-bottom border-primary py-1">view products</span></p></a>
+                       </div>
+                    </div>
+
                 </div>
             </div>
-        </div>
-    </div>
+        @endforeach
     @endif
+      </div>
+    </div>
+
 
 
     {{-- Flash Deal --}}
@@ -84,12 +84,15 @@
         </div>
     </section>
     @endif
+   {{-- Best Selling Sectrion--}}
+   <div id="section_home_categories_2">
 
+    </div>
 
     {{-- Banner section 1 --}}
     @if (get_setting('home_banner1_images') != null)
     <div class="mb-4">
-        <div class="container-fluid px-10px">
+        <div class="container px-10px">
             <div class="row gutters-5">
                 @php $banner_1_imags = json_decode(get_setting('home_banner1_images')); @endphp
                 @foreach ($banner_1_imags as $key => $value)
@@ -134,7 +137,36 @@
     </div>
     @endif
 
+    <div class="container my-2">
+        <div class="row d-flex align-items-center">
+            <div class="col-md-3 col">
+                <h1 class="text-uppercase ">{{ get_setting('midbanner_text_title')  }}</h1>
+                <p class="text-left">{{ get_setting('midbanner_text_subtitle') }}</p>
+                <div class="">
+                    @if (get_setting('mid_banner_icons') != null)
+                        @foreach (json_decode(get_setting('mid_banner_icons'), true) as $key => $value)
+                            <img src="{{ uploaded_asset($value) }}" class="mr-2" alt="">
+                        @endforeach
+                    @endif
+                </div>
+            </div>
+            <div class="col-md-9 d-flex flex-row ">
+                @if(get_setting('mid_banner_images') != null)
+                @forelse (json_decode(get_setting('mid_banner_images'), true)  as $key => $value)
+                <div class="ml-2">
+                    <a href="{{  json_decode(get_setting('mid_banner_links'), true)[$key] }}" class="mx-0 px-0">
+                        <img src="{{ uploaded_asset($value) }}" class="img-fit" alt=""></a>
+                </div>
 
+                @empty
+
+                @endforelse
+            @endif
+            </div>
+
+
+        </div>
+    </div>
     {{-- Category wise Products --}}
     <div id="section_home_categories">
 
@@ -167,10 +199,7 @@
     </div>
     @endif
 
-    {{-- Category wise Products --}}
-    <div id="section_home_categories_2">
 
-    </div>
 
     {{-- Banner Section 2 --}}
     @if (get_setting('home_banner2_images') != null)
@@ -198,40 +227,22 @@
     @endif
 
 
-
-    <div class="py-5 border-top">
-        <div class="container">
-            <div class="text-center mb-5">
-                <h3 class="h5 text-uppercase fw-600">{{ translate('BRANDS') }}</h3>
+{{-- {{ dd(uploaded_asset(get_setting('bottom_image'))) }} --}}
+<div style="background-image: url({{uploaded_asset(get_setting('bottom_image'))}});">
+    <div class="container">
+        <div class="row" style="height: 333px;">
+            <div class="col-md-6"></div>
+            <div class="col-md-4 d-flex align-items-center">
+              <div>
+                <h1 class="text-uppercase text-left">{{ get_setting('bottom_title')  }}</h1>
+                <p class="text-left text-white pr-5">{{ get_setting('bottom_sub_title') }}</p>
+                <span class="text-uppercase border-bottom border-primary p-1 text-alter">view all</span>
+              </div>
             </div>
-            <div>
-                <div class="aiz-carousel gutters-10 dot-small-black" data-items="3" data-xl-items="3" data-lg-items="2"  data-md-items="2" data-sm-items="1" data-xs-items="1" data-dots='true' data-infinite='true'>
-                    @if (get_setting('customer_reviews_image') != null)
-                        @foreach (json_decode(get_setting('customer_reviews_image'), true) as $key => $value)
-                            <div class="carousel-box">
-                                <div class="mb-4">
-                                    <img src="{{ uploaded_asset($value) }}" class="h-60px mb-3">
-                                    <!--<div class="rating rating-sm mb-2">-->
-                                    <!--    <i class="las la-star text-primary"></i>-->
-                                    <!--    <i class="las la-star text-primary"></i>-->
-                                    <!--    <i class="las la-star text-primary"></i>-->
-                                    <!--    <i class="las la-star text-primary"></i>-->
-                                    <!--    <i class="las la-star text-primary"></i>-->
-                                    <!--</div>-->
-                                    <div class="mb-3">
-                                        <span class="fw-600">{{ json_decode(get_setting('customer_reviews_name'), true)[$key] }}</span>
-                                        <span class="ml-2 text-alter">{{ json_decode(get_setting('customer_reviews_title'), true)[$key] }}</span>
-                                    </div>
-                                    <div class="lh-1-8 font-italic">{{ json_decode(get_setting('customer_reviews_details'), true)[$key] }}</div>
-                                </div>
-                            </div>
-                        @endforeach
-                    @endif
-                </div>
-            </div>
+            <div class="col-md-2"></div>
         </div>
     </div>
-
+</div>
 
 @endsection
 
@@ -243,7 +254,7 @@
                 AIZ.plugins.slickCarousel();
             });
 
-            $.post('{{ route('home.section.best_sellers') }}', {_token:'{{ csrf_token() }}'}, function(data){
+            $.post('{{ route('home.section.best_selling') }}', {_token:'{{ csrf_token() }}'}, function(data){
                 $('#section_home_categories_2').html(data);
                 AIZ.plugins.slickCarousel();
             });

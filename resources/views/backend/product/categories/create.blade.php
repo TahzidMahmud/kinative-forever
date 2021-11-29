@@ -18,6 +18,18 @@
                         </div>
                     </div>
                     <div class="form-group row">
+                        <label class="col-md-3 col-form-label">{{translate('Short Description')}}</label>
+                        <div class="col-md-9">
+                            <textarea name="cat_min_desc" rows="5" class="form-control"></textarea>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-md-3 col-form-label">{{translate('Long Description')}}</label>
+                        <div class="col-md-9">
+                            <textarea name="cat_long_desc" rows="5" class="form-control"></textarea>
+                        </div>
+                    </div>
+                    <div class="form-group row">
                         <label class="col-md-3 col-form-label">{{translate('Parent Category')}}</label>
                         <div class="col-md-9">
                             <select class="select2 form-control aiz-selectpicker" name="parent_id" data-toggle="select2" data-placeholder="Choose ..." data-live-search="true">

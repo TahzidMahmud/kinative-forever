@@ -2,16 +2,16 @@
 <section class="mb-4">
     <div class="container" >
                <div class="row">
-                   <div class="col" style="min-width: 15%;max-width:20%;"></div>
-                   <div class="col"style="max-width:80%;">
-                        <div class="nav flex-grow filters-button-group text-uppercase  mobile-hor-swipe d-block d-md-flex justify-content-around " style="background-color: rgba(255, 255, 255, 0)!important;">
+                   {{-- <div class="col" style="min-width: 15%;max-width:20%;"></div> --}}
+                   <div class="col d-flex justify-content-center">
+                        <div class="nav flex-grow filters-button-group text-uppercase  mobile-hor-swipe d-block d-md-flex justify-content-around text-dark" style="background-color: rgba(255, 255, 255, 0)!important;">
                             @foreach ($home_categories as $key => $value)
                                 @php $category = \App\Category::find($value); @endphp
                                 @if($category != null)
                                     @if($key==0)
-                                        <a class=" border-0 button fw-700 px-2 py-4 text-uppercase text-reset fs-12 opacity-40 active" style="display: inline-block;" data-toggle="tab" href="#category-{{ $category->id }}"><span class="py-4 my-4" style="background-color: rgba(255, 255, 255, 0.007)!important;">{{ $category->getTranslation('name') }}</span></a>
+                                        <a class=" border-0 button fw-700 px-4 py-4 text-uppercase text-reset fs-12 opacity-60 active" style="display: inline-block;" data-toggle="tab" href="#category-{{ $category->id }}"><span class="py-4 my-4" style="background-color: rgba(255, 255, 255, 0.007)!important;">{{ $category->getTranslation('name') }}</span></a>
                                     @else
-                                        <a class=" border-0 button fw-700 px-2 py-4 text-uppercase text-reset fs-12 opacity-40" style="display: inline-block;" data-toggle="tab" href="#category-{{ $category->id }}"><span class="py-4 my-4" style="background-color: rgba(255, 255, 255, 0)!important;">{{ $category->getTranslation('name') }}</span></a>
+                                        <a class=" border-0 button fw-700 px-4 py-4 text-uppercase text-reset fs-12 opacity-60" style="display: inline-block;" data-toggle="tab" href="#category-{{ $category->id }}"><span class="py-4 my-4" style="background-color: rgba(255, 255, 255, 0)!important;">{{ $category->getTranslation('name') }}</span></a>
                                     @endif
                                 @endif
                             @endforeach
