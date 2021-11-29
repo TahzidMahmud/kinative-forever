@@ -69,54 +69,85 @@
                             @endif
                             <div class="col order-1 order-md-2">
                                 <div class="aiz-carousel product-gallery" data-nav-for='.product-gallery-thumb' data-fade='true' data-auto-height='true'>
-                                    @foreach ($photos as $key => $photo)
-                                        <div class="carousel-box img-zoom rounded">
-                                            <img
-                                                class="img-fluid lazyload"
-                                                src="{{ static_asset('assets/img/placeholder.jpg') }}"
-                                                data-src="{{ uploaded_asset($photo) }}"
-                                                onerror="this.onerror=null;this.src='{{ static_asset('assets/img/placeholder.jpg') }}';"
-                                            >
-                                        </div>
-                                    @endforeach
-                                    @foreach ($detailedProduct->stocks as $key => $stock)
-                                        @if ($stock->image != null)
+                                    @if($photos[0]!= "")
+                                        @foreach ($photos as $key => $photo)
+
                                             <div class="carousel-box img-zoom rounded">
                                                 <img
                                                     class="img-fluid lazyload"
                                                     src="{{ static_asset('assets/img/placeholder.jpg') }}"
-                                                    data-src="{{ uploaded_asset($stock->image) }}"
+                                                    data-src="{{ uploaded_asset($photo) }}"
                                                     onerror="this.onerror=null;this.src='{{ static_asset('assets/img/placeholder.jpg') }}';"
                                                 >
                                             </div>
+                                        @endforeach
+                                    @endif
+                                    {{-- for variants pics  --}}
+                                    @foreach ($detailedProduct->stocks as $key => $stock)
+                                        @if ($stock->image != null)
+                                        @php
+                                            $imgs=explode(",",$stock->image);
+                                        @endphp
+                                          @foreach ($imgs as $key => $img)
+                                        {{-- {{ dd( uploaded_asset($imgs[0])) }} --}}
+                                            <div class="carousel-box img-zoom rounded">
+                                                <img
+                                                    class="img-fluid lazyload"
+                                                    src="{{ static_asset('assets/img/placeholder.jpg') }}"
+                                                    data-src="{{ uploaded_asset($imgs[$key]) }}"
+                                                    onerror="this.onerror=null;this.src='{{ static_asset('assets/img/placeholder.jpg') }}';"
+                                                >
+                                            </div>
+                                        @endforeach
                                         @endif
                                     @endforeach
                                 </div>
                             </div>
                             <div class="col-12 col-md-auto w-md-80px order-2 order-md-1 mt-3 mt-md-0">
                                 <div class="aiz-carousel product-gallery-thumb" data-items='5' data-nav-for='.product-gallery' data-vertical='true' data-vertical-sm='false' data-focus-select='true' data-arrows='true'>
-                                    @foreach ($photos as $key => $photo)
-                                    <div class="carousel-box c-pointer border p-1 rounded">
-                                        <img
-                                            class="lazyload mw-100 size-50px mx-auto"
-                                            src="{{ static_asset('assets/img/placeholder.jpg') }}"
-                                            data-src="{{ uploaded_asset($photo) }}"
-                                            onerror="this.onerror=null;this.src='{{ static_asset('assets/img/placeholder.jpg') }}';"
-                                        >
-                                    </div>
-                                    @endforeach
+                                    @if($photos[0]!= "")
+                                        @foreach ($photos as $key => $photo)
+                                        <div class="carousel-box c-pointer border p-1 rounded" id="slider-{{ $key }}">
+                                            <img
+                                                class="lazyload mw-100 size-50px mx-auto"
+                                                src="{{ static_asset('assets/img/placeholder.jpg') }}"
+                                                data-src="{{ uploaded_asset($photo) }}"
+                                                onerror="this.onerror=null;this.src='{{ static_asset('assets/img/placeholder.jpg') }}';"
+                                            >
+                                        </div>
+                                        @endforeach
+                                    @endif
+                                    {{-- for variants thumbnails  --}}
                                     @foreach ($detailedProduct->stocks as $key => $stock)
-                                        @if ($stock->image != null)
-                                            <div class="carousel-box c-pointer border p-1 rounded" data-variation="{{ $stock->variant }}">
+                                    @if ($stock->image != null)
+                                    @php
+                                        $imgs=explode(",",$stock->image);
+                                    @endphp
+                                     @foreach ($imgs as $key => $img)
+
+                                       @if($key==0)
+                                        <div class="carousel-box c-pointer border p-1 rounded" data-variation="{{ $stock->variant }}">
+                                            <img
+                                                class="lazyload mw-100 size-50px mx-auto"
+                                                    src="{{ static_asset('assets/img/placeholder.jpg') }}"
+                                                    data-src="{{ uploaded_asset($img) }}"
+                                                    onerror="this.onerror=null;this.src='{{ static_asset('assets/img/placeholder.jpg') }}';"
+                                            >
+                                        </div>
+                                        @else
+                                            <div class="carousel-box c-pointer border p-1 rounded" data-variation="{{ $stock->variant }}" >
                                                 <img
                                                     class="lazyload mw-100 size-50px mx-auto"
                                                     src="{{ static_asset('assets/img/placeholder.jpg') }}"
-                                                    data-src="{{ uploaded_asset($stock->image) }}"
+                                                    data-src="{{ uploaded_asset($img) }}"
                                                     onerror="this.onerror=null;this.src='{{ static_asset('assets/img/placeholder.jpg') }}';"
                                                 >
                                             </div>
-                                        @endif
-                                    @endforeach
+                                       @endif
+                                     @endforeach
+
+                                    @endif
+                                @endforeach
                                 </div>
                             </div>
                         </div>
@@ -127,6 +158,15 @@
                             <h1 class="mb-2 fs-20 fw-600">
                                 {{ $detailedProduct->getTranslation('name') }}
                             </h1>
+                            @php
+                                $model=explode("-",$detailedProduct->name)
+                            @endphp
+                            @if($detailedProduct->stocks[0]->sku)
+                                <h3 class="fw-500 fs-17 fw-600 text-truncate-2 lh-1-4 h-35px mb-1">
+
+                                    Model: {{$detailedProduct->stocks[0]->sku}}
+                                </h3>
+                            @endif
                             <div class="row align-items-center">
                                 <div class="col-12">
                                     @php
@@ -298,6 +338,7 @@
 
                                     <hr>
                                 @endif
+
 
                                 <!-- Quantity + Add to cart -->
                                 <div class="row no-gutters">
@@ -893,6 +934,11 @@
     <script type="text/javascript">
         $(document).ready(function() {
             getVariantPrice();
+            setTimeout(function(){
+                $("#slider-2").trigger("click");
+                console.log( $("#slider-2"));
+            }, 4000);
+
     	});
 
         function CopyToClipboard(e) {

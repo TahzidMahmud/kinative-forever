@@ -67,54 +67,85 @@
                             <?php endif; ?>
                             <div class="col order-1 order-md-2">
                                 <div class="aiz-carousel product-gallery" data-nav-for='.product-gallery-thumb' data-fade='true' data-auto-height='true'>
-                                    <?php $__currentLoopData = $photos; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $key => $photo): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                                        <div class="carousel-box img-zoom rounded">
-                                            <img
-                                                class="img-fluid lazyload"
-                                                src="<?php echo e(static_asset('assets/img/placeholder.jpg')); ?>"
-                                                data-src="<?php echo e(uploaded_asset($photo)); ?>"
-                                                onerror="this.onerror=null;this.src='<?php echo e(static_asset('assets/img/placeholder.jpg')); ?>';"
-                                            >
-                                        </div>
-                                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
-                                    <?php $__currentLoopData = $detailedProduct->stocks; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $key => $stock): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                                        <?php if($stock->image != null): ?>
+                                    <?php if($photos[0]!= ""): ?>
+                                        <?php $__currentLoopData = $photos; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $key => $photo): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+
                                             <div class="carousel-box img-zoom rounded">
                                                 <img
                                                     class="img-fluid lazyload"
                                                     src="<?php echo e(static_asset('assets/img/placeholder.jpg')); ?>"
-                                                    data-src="<?php echo e(uploaded_asset($stock->image)); ?>"
+                                                    data-src="<?php echo e(uploaded_asset($photo)); ?>"
                                                     onerror="this.onerror=null;this.src='<?php echo e(static_asset('assets/img/placeholder.jpg')); ?>';"
                                                 >
                                             </div>
+                                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                                    <?php endif; ?>
+                                    
+                                    <?php $__currentLoopData = $detailedProduct->stocks; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $key => $stock): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                        <?php if($stock->image != null): ?>
+                                        <?php
+                                            $imgs=explode(",",$stock->image);
+                                        ?>
+                                          <?php $__currentLoopData = $imgs; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $key => $img): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                        
+                                            <div class="carousel-box img-zoom rounded">
+                                                <img
+                                                    class="img-fluid lazyload"
+                                                    src="<?php echo e(static_asset('assets/img/placeholder.jpg')); ?>"
+                                                    data-src="<?php echo e(uploaded_asset($imgs[$key])); ?>"
+                                                    onerror="this.onerror=null;this.src='<?php echo e(static_asset('assets/img/placeholder.jpg')); ?>';"
+                                                >
+                                            </div>
+                                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                                         <?php endif; ?>
                                     <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                                 </div>
                             </div>
                             <div class="col-12 col-md-auto w-md-80px order-2 order-md-1 mt-3 mt-md-0">
                                 <div class="aiz-carousel product-gallery-thumb" data-items='5' data-nav-for='.product-gallery' data-vertical='true' data-vertical-sm='false' data-focus-select='true' data-arrows='true'>
-                                    <?php $__currentLoopData = $photos; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $key => $photo): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                                    <div class="carousel-box c-pointer border p-1 rounded">
-                                        <img
-                                            class="lazyload mw-100 size-50px mx-auto"
-                                            src="<?php echo e(static_asset('assets/img/placeholder.jpg')); ?>"
-                                            data-src="<?php echo e(uploaded_asset($photo)); ?>"
-                                            onerror="this.onerror=null;this.src='<?php echo e(static_asset('assets/img/placeholder.jpg')); ?>';"
-                                        >
-                                    </div>
-                                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                                    <?php if($photos[0]!= ""): ?>
+                                        <?php $__currentLoopData = $photos; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $key => $photo): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                        <div class="carousel-box c-pointer border p-1 rounded" id="slider-<?php echo e($key); ?>">
+                                            <img
+                                                class="lazyload mw-100 size-50px mx-auto"
+                                                src="<?php echo e(static_asset('assets/img/placeholder.jpg')); ?>"
+                                                data-src="<?php echo e(uploaded_asset($photo)); ?>"
+                                                onerror="this.onerror=null;this.src='<?php echo e(static_asset('assets/img/placeholder.jpg')); ?>';"
+                                            >
+                                        </div>
+                                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                                    <?php endif; ?>
+                                    
                                     <?php $__currentLoopData = $detailedProduct->stocks; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $key => $stock): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                                        <?php if($stock->image != null): ?>
-                                            <div class="carousel-box c-pointer border p-1 rounded" data-variation="<?php echo e($stock->variant); ?>">
+                                    <?php if($stock->image != null): ?>
+                                    <?php
+                                        $imgs=explode(",",$stock->image);
+                                    ?>
+                                     <?php $__currentLoopData = $imgs; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $key => $img): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+
+                                       <?php if($key==0): ?>
+                                        <div class="carousel-box c-pointer border p-1 rounded" data-variation="<?php echo e($stock->variant); ?>">
+                                            <img
+                                                class="lazyload mw-100 size-50px mx-auto"
+                                                    src="<?php echo e(static_asset('assets/img/placeholder.jpg')); ?>"
+                                                    data-src="<?php echo e(uploaded_asset($img)); ?>"
+                                                    onerror="this.onerror=null;this.src='<?php echo e(static_asset('assets/img/placeholder.jpg')); ?>';"
+                                            >
+                                        </div>
+                                        <?php else: ?>
+                                            <div class="carousel-box c-pointer border p-1 rounded" data-variation="<?php echo e($stock->variant); ?>" >
                                                 <img
                                                     class="lazyload mw-100 size-50px mx-auto"
                                                     src="<?php echo e(static_asset('assets/img/placeholder.jpg')); ?>"
-                                                    data-src="<?php echo e(uploaded_asset($stock->image)); ?>"
+                                                    data-src="<?php echo e(uploaded_asset($img)); ?>"
                                                     onerror="this.onerror=null;this.src='<?php echo e(static_asset('assets/img/placeholder.jpg')); ?>';"
                                                 >
                                             </div>
-                                        <?php endif; ?>
-                                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                                       <?php endif; ?>
+                                     <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+
+                                    <?php endif; ?>
+                                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                                 </div>
                             </div>
                         </div>
@@ -126,6 +157,16 @@
                                 <?php echo e($detailedProduct->getTranslation('name')); ?>
 
                             </h1>
+                            <?php
+                                $model=explode("-",$detailedProduct->name)
+                            ?>
+                            <?php if($detailedProduct->stocks[0]->sku): ?>
+                                <h3 class="fw-500 fs-17 fw-600 text-truncate-2 lh-1-4 h-35px mb-1">
+
+                                    Model: <?php echo e($detailedProduct->stocks[0]->sku); ?>
+
+                                </h3>
+                            <?php endif; ?>
                             <div class="row align-items-center">
                                 <div class="col-12">
                                     <?php
@@ -304,6 +345,7 @@
 
                                     <hr>
                                 <?php endif; ?>
+
 
                                 <!-- Quantity + Add to cart -->
                                 <div class="row no-gutters">
@@ -913,6 +955,11 @@
     <script type="text/javascript">
         $(document).ready(function() {
             getVariantPrice();
+            setTimeout(function(){
+                $("#slider-2").trigger("click");
+                console.log( $("#slider-2"));
+            }, 4000);
+
     	});
 
         function CopyToClipboard(e) {
