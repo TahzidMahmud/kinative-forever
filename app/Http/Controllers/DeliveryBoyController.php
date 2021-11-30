@@ -571,5 +571,15 @@ class DeliveryBoyController extends Controller
         send_notification_FCM($title, $message, $id,$type);
         return 1;
     }
+    public function test_send_notification_to_deliveryboy(){
+        $order = Order::findOrFail('91');
+        $title="New Order Delivery Has Assigned";
+        $message="Order Code".$order->code."";
+        $id=$order->assign_delivery_boy;
+        $type="delivery_boy";
+        send_notification_FCM($title, $message, $id,$type);
+        return "delivery assigned";
+    }
+
 
 }

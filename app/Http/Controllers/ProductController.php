@@ -26,6 +26,15 @@ use Artisan;
 
 class ProductController extends Controller
 {
+    public function get_image(Request $request){
+        $product=Product::findOrFail($request->id);
+        $images=$product->stocks[$request->variation]->image;
+        $image=explode(",",$images);
+        $image1=$image[0];
+        // dd(uploaded_asset($image1));
+        return response(["image"=>uploaded_asset($image1)]);
+
+    }
     /**
      * Display a listing of the resource.
      *
@@ -43,7 +52,7 @@ class ProductController extends Controller
         $brand_id = null;
 
         $products = Product::where('added_by', 'admin');
-        
+
         if ($request->category_id != null) {
             $products = $products->where('category_id', $request->category_id);
             $category_id = $request->category_id;
@@ -730,7 +739,7 @@ class ProductController extends Controller
                     $product_stock->product_id = $product->id;
                 }
                 if(isset($request['price_'.str_replace('.', '_', $str)])) {
-                    
+
                     $product_stock->variant = $str;
                     $product_stock->price = $request['price_'.str_replace('.', '_', $str)];
                     $product_stock->sku = $request['sku_'.str_replace('.', '_', $str)];

@@ -26,6 +26,7 @@ Route::get('/proxy-pay', 'ProxypayController@create_reference');
 Route::get('/mock_payments', 'ProxypayController@webhook_response');
 Route::post('/test-me', 'ProxypayController@mock_payment');
 
+Route::post('/variant/image', 'ProductController@get_image')->name('image.get');
 
 // test flas-deal
 Route::get('/test-flash-deals', 'FlashDealController@test')->name('flash_deals.test');
