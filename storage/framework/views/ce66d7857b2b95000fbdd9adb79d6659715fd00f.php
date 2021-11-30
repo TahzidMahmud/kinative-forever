@@ -32,17 +32,20 @@
         <?php if($discount_percent > 0): ?>
         <span class="badge badge-inline badge-danger absolute-top-right z-1 fs-12 text-uppercase px-2 py-1 d-inline-block h-auto" style="background:#f00"><?php echo e($discount_percent); ?>% OFF</span>
         <?php endif; ?>
+        <?php if($product->todays_deal == 1): ?>
+        <div class=" absolute-top-right z-1 fs-12 text-uppercase mx-2 my-2 px-3 py-3 d-inline-block h-auto d-flex justify-content-center align-items-center text-white" style="background:#f00;height:3rem;width:3rem;border-radius:50%;"><span class="fw-700 fs-11">Sale</span></div>
+        <?php endif; ?>
         <div class=""  data-fade='true' data-auto-height='true'>
             <?php if($photos[0]!= ""): ?>
                 
 
-                    <div class="carousel-box img-zoom rounded">
+                    <div class="rounded">
                         <a href="<?php echo e(route('product', $product->slug)); ?>" class="d-block">
                         <img
                         id="productimg-<?php echo e($product->id); ?>"
-                            class="img-fluid lazyload"
+                            class="img-fluid lazyload img-cus"
                             src="<?php echo e(static_asset('assets/img/placeholder.jpg')); ?>"
-                            style="height: 240px;"
+
                             data-src="<?php echo e(uploaded_asset($photos[0])); ?>"
                             onerror="this.onerror=null;this.src='<?php echo e(static_asset('assets/img/placeholder.jpg')); ?>';"
                         >
@@ -57,12 +60,12 @@
                     $imgs=explode(",",$product->stocks[0]->image);
                 ?>
                 
-                    <div class="carousel-box img-zoom rounded">
+                    <div class=" rounded">
                         <a href="<?php echo e(route('product', $product->slug)); ?>" class="d-block">
                             <img
                             id="productimg-<?php echo e($product->id); ?>"
-                                class="img-fluid lazyload"
-                                style="height: 240px;"
+                                class="img-fluid lazyload img-cus"
+
                                 src="<?php echo e(static_asset('assets/img/placeholder.jpg')); ?>"
                                 data-src="<?php echo e(uploaded_asset($imgs[0])); ?>"
                                 onerror="this.onerror=null;this.src='<?php echo e(static_asset('assets/img/placeholder.jpg')); ?>';"

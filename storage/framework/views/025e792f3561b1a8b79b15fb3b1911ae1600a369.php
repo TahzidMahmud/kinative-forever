@@ -15,33 +15,62 @@
     </div>
     <?php endif; ?>
 
-    <div class="container-fluid mx-1 my-4">
+    <div class="container-fluid mx-1 my-4 d-none d-lg-block">
+        <div class="row " >
+            <?php if(get_setting('home_categories_2') != null): ?>
+                <?php $__currentLoopData = json_decode(get_setting('home_categories_2'), true); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $key => $value): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                    <?php
+                        $category=App\Category::findOrFAil($value)
+                    ?>
+                    <div class="col" >
+                        <div>
+                            <div style="position: relative;">
+                                <img src="<?php echo e(uploaded_Asset($category->banner)); ?>" alt="">
+                            </div>
 
-      <div class="row m y-3">
-        <?php if(get_setting('home_categories_2') != null): ?>
-        <?php $__currentLoopData = json_decode(get_setting('home_categories_2'), true); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $key => $value): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-            <?php
-                $category=App\Category::findOrFAil($value)
-            ?>
-            <div class="col " >
-                <div>
-                    <div style="position: relative;">
-                        <img src="<?php echo e(uploaded_Asset($category->banner)); ?>" alt="">
+                            <div class="mx-2 py-3" style="margin-top:-1.5rem;background-color:#ffff;position:relative;">
+                            <div  style="background-color:#ffff;">
+                                <h6 class="text-center py-2"><b><?php echo e($category->cat_min_desc); ?></b></h6>
+                                <p class="opacity-70 text-center text-truncate-2 lh-3-4 h-35px px-4"><?php echo e($category->cat_long_desc); ?></p>
+                            <a href="<?php echo e(route('products.category',$category->slug)); ?>"> <p class="text-center fw-500 text-uppercase text-alter-2"><span class=" border-bottom border-primary py-1">view products</span></p></a>
+                            </div>
+                            </div>
+
+                        </div>
                     </div>
+                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+            <?php endif; ?>
+        </div>
+    </div>
+    
+        <div class="container my-4 ">
+            <div class="aiz-carousel gutters-5 half-outside-arrow custmb" data-items="6" data-xl-items="5" data-lg-items="4"  data-md-items="3" data-sm-items="1" data-xs-items="1" data-arrows='true' data-autoplay="true">
 
-                    <div class="mx-2 py-3" style="margin-top:-1.5rem;background-color:#ffff;position:relative;">
-                       <div  style="background-color:#ffff;">
-                        <h6 class="text-center py-2"><b><?php echo e($category->cat_min_desc); ?></b></h6>
-                        <p class="opacity-70 text-center text-truncate-2 lh-3-4 h-35px px-4"><?php echo e($category->cat_long_desc); ?></p>
-                       <a href="<?php echo e(route('products.category',$category->slug)); ?>"> <p class="text-center fw-500 text-uppercase text-alter-2"><span class=" border-bottom border-primary py-1">view products</span></p></a>
-                       </div>
-                    </div>
 
-                </div>
+                <?php $__currentLoopData = json_decode(get_setting('home_categories_2'), true); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $key => $value): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                    <?php
+                        $category=App\Category::findOrFAil($value)
+                    ?>
+
+                        <div class="carousel-box">
+                            <div style="position: relative;">
+                                <img src="<?php echo e(uploaded_Asset($category->banner)); ?>" alt="">
+                            </div>
+
+                            <div class="mx-2 py-3" style="margin-top:-1.5rem;background-color:#ffff;position:relative;">
+                            <div  style="background-color:#ffff;">
+                                <h6 class="text-center py-2"><b><?php echo e($category->cat_min_desc); ?></b></h6>
+                                <p class="opacity-70 text-center text-truncate-2 lh-3-4 h-35px px-4"><?php echo e($category->cat_long_desc); ?></p>
+                            <a href="<?php echo e(route('products.category',$category->slug)); ?>"> <p class="text-center fw-500 text-uppercase text-alter-2"><span class=" border-bottom border-primary py-1">view products</span></p></a>
+                            </div>
+                            </div>
+
+                        </div>
+
+                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
             </div>
-        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
-    <?php endif; ?>
-      </div>
+        </div>
+        </div>
     </div>
 
 
@@ -100,7 +129,7 @@
                                 <img src="<?php echo e(static_asset('assets/img/placeholder-rect.jpg')); ?>" data-src="<?php echo e(uploaded_asset($banner_1_imags[$key])); ?>" alt="<?php echo e(env('APP_NAME')); ?> promo" class="img-fluid lazyload w-100">
                                 <div class="absolute-bottom-left align-items-center d-flex justify-content-between mb-3 px-5 text-white w-100">
                                     <span class="broadcast display-4"><?php echo e(json_decode(get_setting('home_banner1_labels'), true)[$key]); ?></span>
-                                    <i class="las la-arrow-right size-25px bg-primary d-inline-flex ml-2 justify-content-center align-items-center rounded-circle text-white"></i>
+                                    
                                 </div>
                             </a>
                         </div>
@@ -135,12 +164,37 @@
     </div>
     <?php endif; ?>
 
+    
+    <?php if(get_setting('best_selling') == 1): ?>
+    <section class="mb-4">
+        <div class="container my-2">
+            <div class="px-2 py-4 px-md-4 py-md-3">
+                <div class="d-flex mb-3 align-items-baseline">
+                    <h5 class="h5 fw-600 mb-0 mt-5">
+                        <span class=" pb-3 d-inline-block"><?php echo e(translate('On Sele Items')); ?></span>
+                    </h5>
+                    <a href="javascript:void(0)" class="ml-auto mr-0  text-alter-2 text-uppercase"><span class="border-bottom border-primary py-1"><?php echo e(translate('View aLL')); ?></span></a>
+                </div>
+                <div class="aiz-carousel gutters-10 half-outside-arrow" data-items="5" data-xl-items="5" data-lg-items="5"  data-md-items="5" data-sm-items="2" data-xs-items="2" data-arrows='false' data-infinite='true' data-autoplay="true">
+                    <?php $__currentLoopData = filter_products(\App\Product::where('published', 1)->where('todays_deal','1')->orderBy('num_of_sale', 'desc'))->limit(12)->get(); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $key => $product): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                        <div class="carousel-box">
+                            <?php echo $__env->make('frontend.partials.product_box_1',['product' => $product], \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?>
+                        </div>
+                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                </div>
+            </div>
+        </div>
+    </section>
+<?php endif; ?>
+
+
+
     <div class="container my-2">
         <div class="row d-flex align-items-center">
             <div class="col-md-3 col">
                 <h1 class="text-uppercase "><?php echo e(get_setting('midbanner_text_title')); ?></h1>
                 <p class="text-left"><?php echo e(get_setting('midbanner_text_subtitle')); ?></p>
-                <div class="">
+                <div class="mb-3">
                     <?php if(get_setting('mid_banner_icons') != null): ?>
                         <?php $__currentLoopData = json_decode(get_setting('mid_banner_icons'), true); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $key => $value): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                             <img src="<?php echo e(uploaded_asset($value)); ?>" class="mr-2" alt="">
@@ -213,7 +267,7 @@
                                 <div class="absolute-bottom-left align-items-center d-flex justify-content-center flex-column mb-3 px-5 text-white w-100">
                                     <span class="broadcast display-4"><?php echo e(json_decode(get_setting('home_banner2_titles'), true)[$key]); ?></span>
                                     <span class="mb-3"><?php echo e(json_decode(get_setting('home_banner2_sub_titles'), true)[$key]); ?></span>
-                                    <i class="las la-arrow-right size-25px bg-primary d-inline-flex ml-2 justify-content-center align-items-center rounded-circle text-white"></i>
+                                    
                                 </div>
                             </a>
                         </div>
@@ -224,9 +278,25 @@
     </div>
     <?php endif; ?>
 
+    
+   <div class="container mt-5 py-5">
+        <div class="row row-cols-lg-5 row-cols-md-3 row-cols-2 justify-content-center align-items-center">
+            <?php if(get_setting('feature_icon_images') != null): ?>
+                <?php $__currentLoopData = json_decode(get_setting('feature_icon_images'), true); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $key => $value): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                    <div class="col d-flex flex-column align-items-center">
+                        <img src="<?php echo e(uploaded_asset($value)); ?>" alt="" style="height: 2.5rem;" class="my-4">
+                        <div>
+                            <h6 class="text-center py-2"><?php echo e(json_decode(get_setting('feature_icon_titles'), true)[$key]); ?></h6>
+                            <p class="opacity-50 text-center"><?php echo e(json_decode(get_setting('feature_icon_sub_titles'), true)[$key]); ?></p>
+                        </div>
+                    </div>
+                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+            <?php endif; ?>
+        </div>
+   </div>
 
      
-     <section class="py-5">
+     <section class="">
         <div class="container">
             <div class="d-flex my-5 justify-content-center align-items-center">
                 <h5 class="h5 fw-600 mb-0 text-center text-alter-6">

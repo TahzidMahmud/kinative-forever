@@ -1,7 +1,7 @@
 @if (get_setting('best_selling') == 1)
     <section class="mb-4">
         <div class="container">
-            <div class="px-2 py-4 px-md-4 py-md-3  shadow-sm rounded">
+            <div class="px-2 py-4 px-md-4 py-md-3">
                 <div class="d-flex mb-3 align-items-baseline">
                     <h5 class="h5 fw-600 mb-0">
                         <span class=" pb-3 d-inline-block">{{ translate('Best Selelr Items') }}</span>

@@ -10,12 +10,11 @@
 <?php endif; ?>
 <!-- END Top Bar -->
 <!-- Top Bar -->
-<div class="top-navbar bg-alter-4 py-10px z-1035 text-white fs-13 fw-500 ">
+<div class="top-navbar bg-alter-4 py-10px z-1035 text-white fs-11 fw-500 ">
     <div class="container">
         <div class="row align-items-center">
             <div class="col-6 col-lg-3  ">
-                <?php echo e(get_setting('topbar_call_text')); ?>:<?php echo e(get_setting('topbar_call_number')); ?>
-
+               <span class="d-none d-lg-block"><?php echo e(get_setting('topbar_call_text')); ?>:<?php echo e(get_setting('topbar_call_number')); ?></span><span class=" custmb">Care:<?php echo e(get_setting('topbar_call_number')); ?></span>
             </div>
             <div class="col-12 col-lg-6 text-center d-none d-lg-block ml-auto">
                 <div class="text-center">
@@ -26,11 +25,11 @@
             </div>
             <div class="col-6 col-lg-3 d-flex justify-content-end">
                 <ul class="list-inline mb-0 pl-0 mobile-hor-swipe text-center d-flex justify-content-between align-items-center">
-                    <li  class="list-inline-item mr-0 "> <a href="#faq" class="text-white">About Us</a> </li>
+                    <li  class="list-inline-item   d-none d-lg-block "> <a href="#faq" class="text-white mx-1">About Us</a> </li>
 
-                    <li  class="list-inline-item   d-none d-lg-block mx-2 px-3 "><a href=" <?php echo e(get_setting('policy_link')); ?>" class="text-white">Store Locations</a></li>
+                    <li  class="list-inline-item "><a href=" <?php echo e(get_setting('policy_link')); ?>" class="text-white">Store Locations</a></li>
 
-                    <li  class="list-inline-item mr-0 "><a href=" <?php echo e(get_setting('topbar_left')); ?>" class="text-white">Contact </a></li>
+                    <li  class="list-inline-item  d-none d-lg-block mr-0 "><a href=" <?php echo e(get_setting('topbar_left')); ?>" class="text-white">Contact </a></li>
 
                 </ul>
             </div>
@@ -43,7 +42,7 @@
         <div class="container">
             <div class="d-flex align-items-center justify-content-between">
 
-                <div class="pl-0 pr-2 d-flex align-items-center pr-xl-3 t-logo py-2">
+                <div class="pl-0 pr-2 d-flex align-items-center pr-xl-3 t-logo py-2 ">
                     <a class="d-block py-5px mr-2 ml-0" href="<?php echo e(route('home')); ?>">
                         <?php
                             $header_logo = get_setting('header_logo');
@@ -56,9 +55,9 @@
                     </a>
                 </div>
 
-                <div class="d-lg-none ml-auto mr-0">
-                    <a class="p-1 d-block text-reset text-primary fw-600" href="javascript:void(0);" data-toggle="class-toggle" data-target=".front-header-search">
-                        <i class="las la-search la-flip-horizontal la-2x"></i>
+                <div class="d-lg-none ml-auto mr-0 my-2">
+                    <a href="javascript:void(0)" class="active d-block lh-1 p-1 position-relative rounded text-white" data-toggle="class-toggle" data-target=".topbar-search" data-backdrop="static">
+                        <img src="<?php echo e(static_asset("assets/img/search.png")); ?>" alt="" class="mr-2">
                     </a>
                 </div>
 
@@ -122,7 +121,7 @@
                        <div class=" d-flex justify-content-between align-items-center">
                         <div class="">
                             <div class="h-100 d-flex align-items-center">
-                                <a href="javascript:void(0)" class="active  lh-1 p-1 position-relative rounded text-white" data-toggle="class-toggle" data-target=".topbar-search" data-backdrop="static">
+                                <a href="javascript:void(0)" class="active lh-1 p-1 position-relative rounded text-white" data-toggle="class-toggle" data-target=".topbar-search" data-backdrop="static">
                                     <img src="<?php echo e(static_asset("assets/img/search.png")); ?>" alt="" class="mr-2">
                                 </a>
                             </div>

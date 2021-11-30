@@ -925,6 +925,112 @@
 			</div>
 		</div>
 
+        {{-- icon row  --}}
+		<div class="card">
+			<div class="card-header">
+				<h6 class="mb-0">{{ translate('Feature Icons (Max 5)') }}</h6>
+			</div>
+			<div class="card-body">
+				<form action="{{ route('business_settings.update') }}" method="POST" enctype="multipart/form-data">
+					@csrf
+					<div class="form-group">
+						<label>{{ translate('Banner & Links') }}</label>
+						<div class="feature_icons">
+							<input type="hidden" name="types[]" value="feature_icon_images">
+							@if (get_setting('feature_icon_images') != null)
+								@foreach (json_decode(get_setting('feature_icon_images'), true) as $key => $value)
+									<div class="row gutters-5">
+										<div class="col-md-4">
+											<div class="form-group">
+												<div class="input-group" data-toggle="aizuploader" data-type="image">
+					                                <div class="input-group-prepend">
+					                                    <div class="input-group-text bg-soft-secondary font-weight-medium">{{ translate('Browse')}}</div>
+					                                </div>
+					                                <div class="form-control file-amount">{{ translate('Choose File') }}</div>
+													<input type="hidden" name="types[]" value="feature_icon_images">
+					                                <input type="hidden" name="feature_icon_images[]" class="selected-files" value="{{ json_decode(get_setting('feature_icon_images'), true)[$key] }}">
+					                            </div>
+					                            <div class="file-preview box sm">
+					                            </div>
+				                            </div>
+										</div>
+										<div class="col-md">
+											<div class="form-group">
+												<input type="hidden" name="types[]" value="feature_icon_titles">
+												<input type="text" class="form-control" placeholder="Title" name="feature_icon_titles[]" value="{{ json_decode(get_setting('feature_icon_titles'), true)[$key] }}">
+											</div>
+										</div>
+										<div class="col-md">
+											<div class="form-group">
+												<input type="hidden" name="types[]" value="feature_icon_sub_titles">
+												<input type="text" class="form-control" placeholder="Subtitle" name="feature_icon_sub_titles[]" value="{{ json_decode(get_setting('feature_icon_sub_titles'), true)[$key] }}">
+											</div>
+										</div>
+
+										<div class="col-md-auto">
+											<div class="form-group">
+												<button type="button" class="mt-1 btn btn-icon btn-circle btn-sm btn-soft-danger" data-toggle="remove-parent" data-parent=".row">
+													<i class="las la-times"></i>
+												</button>
+											</div>
+										</div>
+									</div>
+								@endforeach
+							@endif
+						</div>
+						<button
+							type="button"
+							class="btn btn-soft-secondary btn-sm"
+							data-toggle="add-more"
+							data-content='
+							<div class="row gutters-5">
+								<div class="col-md-4">
+									<div class="form-group">
+										<div class="input-group" data-toggle="aizuploader" data-type="image">
+											<div class="input-group-prepend">
+												<div class="input-group-text bg-soft-secondary font-weight-medium">{{ translate('Browse')}}</div>
+											</div>
+											<div class="form-control file-amount">{{ translate('Choose File') }}</div>
+											<input type="hidden" name="types[]" value="feature_icon_images">
+											<input type="hidden" name="feature_icon_images[]" class="selected-files">
+										</div>
+										<div class="file-preview box sm">
+										</div>
+									</div>
+								</div>
+								<div class="col-md">
+									<div class="form-group">
+										<input type="hidden" name="types[]" value="feature_icon_titles">
+										<input type="text" class="form-control" placeholder="Title" name="feature_icon_titles[]">
+									</div>
+								</div>
+								<div class="col-md">
+									<div class="form-group">
+										<input type="hidden" name="types[]" value="feature_icon_sub_titles">
+										<input type="text" class="form-control" placeholder="Subtitle" name="feature_icon_sub_titles[]">
+									</div>
+								</div>
+
+								<div class="col-md-auto">
+									<div class="form-group">
+										<button type="button" class="mt-1 btn btn-icon btn-circle btn-sm btn-soft-danger" data-toggle="remove-parent" data-parent=".row">
+											<i class="las la-times"></i>
+										</button>
+									</div>
+								</div>
+							</div>'
+							data-target=".feature_icons">
+							{{ translate('Add New') }}
+						</button>
+					</div>
+					<div class="text-right">
+						<button type="submit" class="btn btn-primary">{{ translate('Update') }}</button>
+					</div>
+				</form>
+			</div>
+		</div>
+
+
 	</div>
 </div>
 

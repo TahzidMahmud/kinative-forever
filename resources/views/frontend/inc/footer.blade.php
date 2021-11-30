@@ -377,7 +377,7 @@
     <div class="overlay dark c-pointer overlay-fixed" data-toggle="class-toggle" data-target=".mobile-category-sidebar" data-same=".mobile-category-trigger"></div>
     <div class="collapse-sidebar bg-white overflow-hidden">
         <div class="position-relative z-1 shadow-sm">
-            <div class="sticky-top z-1 bg-dark p-3">
+            <div class="sticky-top z-1 bg-primary p-3">
                 <a class="d-block mr-3 ml-0" href="{{ route('home') }}">
                     @php
                         $footer_logo = get_setting('footer_logo');
@@ -397,7 +397,7 @@
             <div class="side-menu">
                 <div class="side-menu-main c-scrollbar-light">
                     <div class="p-3 fs-16 fw-700 d-flex justify-content-between align-items-center border-bottom">
-                        <span>{{ translate('Departments') }}</span>
+                        <span>{{ translate('Categories') }}</span>
                         <a href="{{ route('categories.all') }}" class="text-reset fs-11">{{ translate('See All') }}</a>
                     </div>
                     <div class="p-3">
@@ -406,12 +406,12 @@
                                 $childs = \App\Utility\CategoryUtility::get_immediate_children_ids($category)
                             @endphp
                             @if(count($childs) > 0)
-                                <a class="text-reset py-2 fw-600 fs-13 d-block opacity-70 d-flex mb-2 justify-content-between" href="javascript:void(0)" data-id="{{ $category->id }}">
+                                <a class="text-reset py-2 fw-600 fs-13 d-block opacity-70 d-flex mb-2 justify-content-between text-uppercase" href="javascript:void(0)" data-id="{{ $category->id }}">
                                     {{  $category->getTranslation('name') }}
                                     <i class="las la-angle-right"></i>
                                 </a>
                             @else
-                                <a class="text-reset py-2 fw-600 fs-13 d-block opacity-70 d-flex mb-2 justify-content-between" href="{{ route('products.category', $category->slug) }}">
+                                <a class="text-reset py-2 fw-600 fs-13 d-block opacity-70 d-flex mb-2 justify-content-between text-uppercase" href="{{ route('products.category', $category->slug) }}">
                                     {{  $category->getTranslation('name') }}
                                     <i class="las la-angle-right"></i>
                                 </a>

@@ -272,7 +272,19 @@ main-btn{
 .home-banner-area img{
     height: 70vh
 }
+.custmb{
+    display: none!important;
+}
+.img-cus{
+    height: 240px;
+}
 @media (max-width: 767.98px) {
+    .img-cus{
+        height: auto!important;
+    }
+    .custmb{
+        display: block!important;
+    }
     .hd{
         display: none !important;
     }

@@ -143,7 +143,7 @@
 @endphp
 
 </head>
-<body class="@if(Route::currentRouteName() == 'home') homepage @endif">
+<body class="@if(Route::currentRouteName() == 'home') homepage @endif" style="background-image: url({{static_asset('assets/img/whole_bg.jpg')}});">
     <script src="https://www.gstatic.com/firebasejs/7.23.0/firebase.js"></script>
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script>
     <script>
