@@ -225,6 +225,61 @@
     <?php endif; ?>
 
 
+     
+     <section class="py-5">
+        <div class="container">
+            <div class="d-flex my-5 justify-content-center align-items-center">
+                <h5 class="h5 fw-600 mb-0 text-center text-alter-6">
+
+                   <?php echo e(translate('From our blog')); ?>
+
+                </h5>
+
+            </div>
+            <?php
+            $latest_blogs= \App\Blog::where('status', 1)->latest()->limit(3)->get();
+            ?>
+            <?php if(!empty($latest_blogs)): ?>
+                <div class="row ">
+                    <?php $__currentLoopData = $latest_blogs; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $blog): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                        <div class="col-md-4 col-12 mb-3 overflow-hidden  px-4" style="padding-bottom: 2px;">
+                            <a href="<?php echo e(route('blog.details', $blog->slug)); ?>" class="">
+                                <img
+                                    src="<?php echo e(static_asset('assets/img/placeholder-rect.jpg')); ?>"
+                                    data-src="<?php echo e(uploaded_asset($blog->banner)); ?>"
+                                    alt="<?php echo e($blog->title); ?>"
+                                    class="img-fluid lazyload"
+                                >
+                            </a>
+                            <div class="pb-4 px-4 d-flex flex-column align-items-center  bg-white shadow-md ">
+                                <div class="bg-alter-2 " style="margin-top:-.7rem;">
+                                    <span class="text-uppercase fs-12 fw-500 px-5 py-4 text-white " style="width:10rem;"><?php echo e($blog->category->category_name); ?></span>
+                                </div>
+                                <h2 class="fs-18 fw-600 mb-1 text-center mt-4">
+                                    <a href="<?php echo e(route('blog.details', $blog->slug)); ?>" class="text-reset lh-1-6 text-turncate-2">
+                                        <?php echo e($blog->title); ?>
+
+                                    </a>
+                                </h2>
+                                <p class="opacity-70  my-2 text-center lh-2  text-truncate-2 ">
+                                    <?php echo e($blog->short_description); ?>
+
+                                </p>
+                                <a href="<?php echo e(route('blog.details', $blog->slug)); ?>" class="text-uppercase text-alter-2 fs-12 fw-500 py-1" style="border-radius: 0px;">
+                                    <?php echo e(translate('continue reading')); ?>
+
+                                </a>
+                            </div>
+                        </div>
+                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                   <div class="col d-flex justify-content-center align-items-center my-3">
+                       <a href="<?php echo e(route('blog')); ?>"> <span class="text-uppercase border-bottom border-primary text-alter-2">view all</span></a>
+                   </div>
+                </div>
+            <?php endif; ?>
+        </div>
+    </section>
+
 
 <div style="background-image: url(<?php echo e(uploaded_asset(get_setting('bottom_image'))); ?>);">
     <div class="container">
