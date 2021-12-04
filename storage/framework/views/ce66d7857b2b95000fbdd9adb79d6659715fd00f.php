@@ -33,7 +33,7 @@
         <span class="badge badge-inline badge-danger absolute-top-right z-1 fs-12 text-uppercase px-2 py-1 d-inline-block h-auto" style="background:#f00"><?php echo e($discount_percent); ?>% OFF</span>
         <?php endif; ?>
         <?php if($product->todays_deal == 1): ?>
-        <div class=" absolute-top-right z-1 fs-12 text-uppercase mx-2 my-2 px-3 py-3 d-inline-block h-auto d-flex justify-content-center align-items-center text-white" style="background:#f00;height:3rem;width:3rem;border-radius:50%;"><span class="fw-700 fs-11">Sale</span></div>
+        <div class=" absolute-top-right fs-12 text-uppercase mx-2 my-2 px-3 py-3 d-inline-block h-auto d-flex justify-content-center align-items-center text-white" style="background:#f00;height:3rem;width:3rem;border-radius:50%;"><span class="fw-700 fs-11">Sale</span></div>
         <?php endif; ?>
         <div class=""  data-fade='true' data-auto-height='true'>
             <?php if($photos[0]!= ""): ?>
@@ -98,13 +98,13 @@
        <div style="height: 2rem;">
             <?php if(count(json_decode($product->colors)) > 0): ?>
                 <div class="row no-gutters d-flex justify-content-center align-items-center">
-                    <div class="col ">
+                    <div class="col newcar">
                         <div class="aiz-radio-inline">
-                            <div class="aiz-carousel mobile-img-auto-height dot-small-white " data-dots="false" data-autoplay='true'  data-items="5" data-xl-items="5" data-lg-items="5"  data-md-items="5" data-sm-items="3" data-xs-items="3" data-arrows="true">
+                            <div class="aiz-carousel half-outside-arrow mobile-img-auto-height dot-small-white " data-dots="false" data-autoplay='true'  data-items="5" data-xl-items="5" data-lg-items="5"  data-md-items="5" data-sm-items="3" data-xs-items="3" data-arrows="true">
                                 <?php $__currentLoopData = json_decode($product->colors); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $key => $color): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
 
-                                    <div class="carousel-box" onclick="changephoto(<?php echo e($product->id); ?>,<?php echo e($key); ?>)">
-                                            <label class="aiz-megabox " data-toggle="tooltip" data-title="<?php echo e(\App\Color::where('code', $color)->first()->name); ?>">
+                                    <div class="carousel-box d-flex align-items-center" onclick="changephoto(<?php echo e($product->id); ?>,<?php echo e($key); ?>)">
+                                            <label class="aiz-megabox my-0 py-0" data-toggle="tooltip" data-title="<?php echo e(\App\Color::where('code', $color)->first()->name); ?>">
 
                                                 <input
                                                 type="radio"

@@ -198,15 +198,26 @@
             </a>
         </div>
         <div class="col-auto">
-            <a href="<?php echo e(url('/cart')); ?>" class="text-reset d-block text-center pb-2 pt-3 " >
+            <?php
+            if(auth()->user() != null) {
+                $user_id = Auth::user()->id;
+                $cart = \App\Cart::where('user_id', $user_id)->get();
+            } else {
+                $temp_user_id = Session()->get('temp_user_id');
+                if($temp_user_id) {
+                    $cart = \App\Cart::where('temp_user_id', $temp_user_id)->get();
+                }
+            }
+            ?>
+            <a href="javascript:void(0)" class="text-reset d-block text-center pb-2 pt-3 cart-toggler cart-trigger" data-toggle="class-toggle" data-target=".cart-sidebar"  data-toggle="dropdown" data-display="static">
                 <span class="align-items-center bg-primary border border-white border-width-4 d-flex justify-content-center position-relative rounded-circle size-50px" style="margin-top: -33px;box-shadow: 0px -5px 10px rgb(0 0 0 / 15%);border-color: #fff !important;">
-                    <i class="las la-shopping-bag la-2x text-white"></i>
+                    <i class="las la-shopping-cart la-2x text-white"></i>
                 </span>
                         <?php if(isset($cart) && count($cart) > 0): ?>
 
-                            <span class="d-block fs-12 fw-600 opacity-60 "><?php echo e(translate('Cart')); ?> <?php echo e(count($cart)); ?></span>
+                            <span class="d-block fs-10 fw-600  opacity-60 "><?php echo e(translate('Cart')); ?> (<?php echo e(count($cart)); ?>)</span>
                         <?php else: ?>
-                        <span class="d-block fs-12 fw-600 opacity-60 "><?php echo e(translate('Cart')); ?> 0</span>
+                        <span class="d-block fs-10 fw-600  opacity-60 "><?php echo e(translate('Cart')); ?> (0)</span>
                         <?php endif; ?>
             </a>
         </div>

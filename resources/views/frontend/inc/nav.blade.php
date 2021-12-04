@@ -64,17 +64,17 @@
                         <div class="col-xl d-none d-xl-block d-lg-block mx-auto">
                             <ul class="list-inline mb-0 pl-0 mobile-hor-swipe text-center">
                                 <li class="list-inline-item mr-0 ml-0 text-white">
-                                    <a href="{{ route('home') }}" class="fs-14 px-3 py-2 d-inline-block fw-500 hov-opacity-100 text-reset  text-uppercase">
+                                    <a href="{{ route('home') }}" class="fs-13 px-3 py-2 d-inline-block fw-500 hov-opacity-100 text-reset  text-uppercase">
                                         home
                                     </a>
                                 </li>
                                 <li class="list-inline-item mr-0 ml-0 text-white">
-                                    <a href="{{ route('home') }}" class="fs-14 px-3 py-2 d-inline-block fw-500 hov-opacity-100 text-reset  text-uppercase">
+                                    <a href="{{ route('home') }}" class="fs-13 px-3 py-2 d-inline-block fw-500 hov-opacity-100 text-reset  text-uppercase">
                                        shop
                                     </a>
                                 </li>
                                 <li class="list-inline-item mr-0 ml-0 text-white">
-                                    <a href="javascript:void(0)" class="fs-14 px-3 py-2 d-inline-block fw-500 hov-opacity-100 text-reset  text-uppercase " data-toggle="class-toggle" data-target=".mobile-category-sidebar">
+                                    <a href="javascript:void(0)" class="fs-13 px-3 py-2 d-inline-block fw-500 hov-opacity-100 text-reset  text-uppercase " data-toggle="class-toggle" data-target=".mobile-category-sidebar">
                                         categories <i class="las la-angle-down" style=""></i>
                                      </a>
                                 </li>
@@ -84,7 +84,7 @@
                                     <li class="list-inline-item mr-0 ml-0 text-white">
 
                                         <div class="dropdown">
-                                            <a href="{{ json_decode( get_setting('topbar_menu_links'), true)[$key] }}" class="fs-14 px-3 py-2 d-inline-block fw-500 hov-opacity-100 text-reset  text-uppercase">
+                                            <a href="{{ json_decode( get_setting('topbar_menu_links'), true)[$key] }}" class="fs-13 px-3 py-2 d-inline-block fw-500 hov-opacity-100 text-reset  text-uppercase">
                                                 {{ $value }}
                                             </a>
                                         @if( get_setting('sub_menu_labels')!=null)

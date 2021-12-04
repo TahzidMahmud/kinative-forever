@@ -1,9 +1,9 @@
 @if (get_setting('best_selling') == 1)
     <section class="mb-4">
         <div class="container">
-            <div class="px-2 py-4 px-md-4 py-md-3">
+            <div class=" py-4  py-md-3">
                 <div class="d-flex mb-3 align-items-baseline">
-                    <h5 class="h5 fw-600 mb-0">
+                    <h5 class="h5 fw-500 mb-0">
                         <span class=" pb-3 d-inline-block">{{ translate('Best Selelr Items') }}</span>
                     </h5>
                     <a href="javascript:void(0)" class="ml-auto mr-0  text-alter-2 text-uppercase"><span class="border-bottom border-primary py-1">{{ translate('View aLL') }}</span></a>

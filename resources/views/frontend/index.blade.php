@@ -32,7 +32,7 @@
 
                             <div class="mx-2 py-3" style="margin-top:-1.5rem;background-color:#ffff;position:relative;">
                             <div  style="background-color:#ffff;">
-                                <h6 class="text-center py-2"><b>{{ $category->cat_min_desc }}</b></h6>
+                                <h6 class="text-center py-2">{{ $category->cat_min_desc }}</h6>
                                 <p class="opacity-70 text-center text-truncate-2 lh-3-4 h-35px px-4">{{ $category->cat_long_desc }}</p>
                             <a href="{{ route('products.category',$category->slug)}}"> <p class="text-center fw-500 text-uppercase text-alter-2"><span class=" border-bottom border-primary py-1">view products</span></p></a>
                             </div>
@@ -46,17 +46,15 @@
     </div>
     {{-- for mobile   --}}
         <div class="container my-4 ">
-            <div class="aiz-carousel gutters-5 half-outside-arrow custmb" data-items="6" data-xl-items="5" data-lg-items="4"  data-md-items="3" data-sm-items="1" data-xs-items="1" data-arrows='true' data-autoplay="true">
-
-
+            <div class="aiz-carousel half-outside-arrow custmb" data-items="6" data-xl-items="5" data-lg-items="4"  data-md-items="3" data-sm-items="1" data-xs-items="1" data-arrows='true' data-autoplay="true">
                 @foreach (json_decode(get_setting('home_categories_2'), true) as $key => $value)
                     @php
                         $category=App\Category::findOrFAil($value)
                     @endphp
 
-                        <div class="carousel-box">
+                        <div class="carousel-box ">
                             <div style="position: relative;">
-                                <img src="{{ uploaded_Asset($category->banner) }}" alt="">
+                                <img src="{{ uploaded_Asset($category->banner) }}" class="mr-1" alt="">
                             </div>
 
                             <div class="mx-2 py-3" style="margin-top:-1.5rem;background-color:#ffff;position:relative;">
@@ -170,9 +168,9 @@
     @if (get_setting('best_selling') == 1)
     <section class="mb-4">
         <div class="container my-2">
-            <div class="px-2 py-4 px-md-4 py-md-3">
+            <div class=" py-4 py-md-3">
                 <div class="d-flex mb-3 align-items-baseline">
-                    <h5 class="h5 fw-600 mb-0 mt-5">
+                    <h5 class="h5 fw-500 mb-0 mt-5">
                         <span class=" pb-3 d-inline-block">{{ translate('On Sele Items') }}</span>
                     </h5>
                     <a href="javascript:void(0)" class="ml-auto mr-0  text-alter-2 text-uppercase"><span class="border-bottom border-primary py-1">{{ translate('View aLL') }}</span></a>
@@ -281,14 +279,14 @@
     @endif
 
     {{-- feature icons  --}}
-   <div class="container mt-5 py-5">
+   <div class="container  py-5">
         <div class="row row-cols-lg-5 row-cols-md-3 row-cols-2 justify-content-center align-items-center">
             @if (get_setting('feature_icon_images') != null)
                 @foreach (json_decode(get_setting('feature_icon_images'), true) as $key => $value)
                     <div class="col d-flex flex-column align-items-center">
                         <img src="{{ uploaded_asset($value) }}" alt="" style="height: 2.5rem;" class="my-4">
                         <div>
-                            <h6 class="text-center py-2">{{ json_decode(get_setting('feature_icon_titles'), true)[$key] }}</h6>
+                            <h5 class="text-center py-2">{{ json_decode(get_setting('feature_icon_titles'), true)[$key] }}</h5>
                             <p class="opacity-50 text-center">{{ json_decode(get_setting('feature_icon_sub_titles'), true)[$key] }}</p>
                         </div>
                     </div>
@@ -299,9 +297,9 @@
 
      {{-- blog --}}
      <section class="">
-        <div class="container">
+        <div class="container d-none d-lg-block">
             <div class="d-flex my-5 justify-content-center align-items-center">
-                <h5 class="h5 fw-600 mb-0 text-center text-alter-6">
+                <h5 class="h5 fw-500 mb-0 text-center text-alter-6">
 
                    {{ translate('From our blog') }}
                 </h5>
@@ -326,11 +324,11 @@
                                 <div class="bg-alter-2 " style="margin-top:-.7rem;">
                                     <span class="text-uppercase fs-12 fw-500 px-5 py-4 text-white " style="width:10rem;">{{ $blog->category->category_name }}</span>
                                 </div>
-                                <h2 class="fs-18 fw-600 mb-1 text-center mt-4">
+                                <h5 class="fs-18 fw-500 mb-1 text-center mt-4">
                                     <a href="{{ route('blog.details', $blog->slug) }}" class="text-reset lh-1-6 text-turncate-2">
                                         {{ $blog->title }}
                                     </a>
-                                </h2>
+                                </h5>
                                 <p class="opacity-70  my-2 text-center lh-2  text-truncate-2 ">
                                     {{ $blog->short_description }}
                                 </p>
@@ -344,6 +342,46 @@
                        <a href="{{ route('blog') }}"> <span class="text-uppercase border-bottom border-primary text-alter-2">view all</span></a>
                    </div>
                 </div>
+            @endif
+        </div>
+        {{-- mobile section  --}}
+        <div class="aiz-carousel d-lg-none ">
+            @php
+            $latest_blogs= \App\Blog::where('status', 1)->latest()->limit(3)->get();
+            @endphp
+            @if (!empty($latest_blogs))
+            <div class="aiz-carousel "  data-sm-items="1" data-xs-items="1" data-arrows='true' data-autoplay="true">
+                @foreach($latest_blogs as $blog)
+                <div class="carousel-box overflow-hidden  px-4" >
+                    <a href="{{ route('blog.details', $blog->slug) }}" class="">
+                        <img
+                            src="{{ static_asset('assets/img/placeholder-rect.jpg') }}"
+                            data-src="{{ uploaded_asset($blog->banner) }}"
+                            alt="{{ $blog->title }}"
+                            class="img-fluid lazyload"
+                        >
+                    </a>
+                    <div class="pb-4 px-4 d-flex flex-column align-items-center  bg-white shadow-md ">
+                        <div class="bg-alter-2 " style="margin-top:-.7rem;">
+                            <span class="text-uppercase fs-12 fw-500 px-2 py-4 text-white " style="width:10rem;">{{ $blog->category->category_name }}</span>
+                        </div>
+                        <h5 class="fs-18 fw-500 mb-1 text-center mt-4">
+                            <a href="{{ route('blog.details', $blog->slug) }}" class="text-reset lh-1-6 text-turncate-2">
+                                {{ $blog->title }}
+                            </a>
+                        </h5>
+                        <p class="opacity-70  my-2 text-center lh-2  text-truncate-2 ">
+                            {{ $blog->short_description }}
+                        </p>
+                        <a href="{{ route('blog.details', $blog->slug) }}" class="text-uppercase text-alter-2 fs-12 fw-500 py-1" style="border-radius: 0px;">
+                            {{ translate('continue reading') }}
+                        </a>
+                    </div>
+                </div>
+
+                @endforeach
+
+            </div>
             @endif
         </div>
     </section>

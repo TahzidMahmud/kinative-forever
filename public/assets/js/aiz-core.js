@@ -1331,9 +1331,9 @@ $.fn.toggleAttr = function (attr, attr1, attr2) {
                         centerPadding: "60px",
                         slidesToScroll: 1,
                         prevArrow:
-                            '<button type="button" class="slick-prev"><i class="las la-angle-left"></i></button>',
+                            '<button type="button" class="slick-prev"><i class="las la-caret-left mb-arrow-l"></i></button>',
                         nextArrow:
-                            '<button type="button" class="slick-next"><i class="las la-angle-right"></i></button>',
+                            '<button type="button" class="slick-next"><i class="las la-caret-right mb-arrow-r"></i></button>',
                         responsive: [
                             {
                                 breakpoint: 1500,

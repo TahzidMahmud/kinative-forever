@@ -31,6 +31,18 @@
                         </div>
                     </div>
                     <div class="form-group row">
+                        <label class="col-md-3 col-form-label">{{translate('Short Description')}}</label>
+                        <div class="col-md-9">
+                            <textarea name="cat_min_desc" rows="5" class="form-control">{{ $category->cat_min_desc }}</textarea>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-md-3 col-form-label">{{translate('Long Description')}}</label>
+                        <div class="col-md-9">
+                            <textarea name="cat_long_desc" rows="5" class="form-control">{{ $category->cat_long_desc }}</textarea>
+                        </div>
+                    </div>
+                    <div class="form-group row">
                         <label class="col-md-3 col-form-label">{{translate('Parent Category')}}</label>
                         <div class="col-md-9">
                             <select class="select2 form-control aiz-selectpicker" name="parent_id" data-toggle="select2" data-placeholder="Choose ..."data-live-search="true" data-selected="{{ $category->parent_id }}">
@@ -46,7 +58,7 @@
                     </div>
                     <div class="form-group row">
                         <label class="col-md-3 col-form-label">
-                            {{translate('Ordering Number')}} 
+                            {{translate('Ordering Number')}}
                         </label>
                         <div class="col-md-9">
                             <input type="number" name="order_level" value="{{ $category->order_level }}" class="form-control" id="order_level" placeholder="{{translate('Order Level')}}">

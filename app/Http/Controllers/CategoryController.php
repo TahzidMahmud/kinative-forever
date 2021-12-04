@@ -144,6 +144,9 @@ class CategoryController extends Controller
         $category->banner = $request->banner;
         $category->icon = $request->icon;
         $category->meta_title = $request->meta_title;
+        $category->cat_min_desc = $request->cat_min_desc;
+        $category->cat_long_desc = $request->cat_long_desc;
+
         $category->meta_description = $request->meta_description;
 
         $previous_level = $category->level;

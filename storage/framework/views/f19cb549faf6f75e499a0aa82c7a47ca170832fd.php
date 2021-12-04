@@ -54,7 +54,6 @@
 
     <link href="https://fonts.googleapis.com/css2?family=Lato&family=Raleway:wght@400&family=Roboto&display=swap" rel="stylesheet">
 
-
     
     <!-- CSS Files -->
     <link rel="stylesheet" href="<?php echo e(static_asset('assets/css/vendors.css')); ?>">
@@ -96,7 +95,7 @@
             font-family:'Raleway',sans-serif;
             font-family: 'georgia', sans-serif;
             font-family: 'Lato', sans-serif;
-            font-family: 'Roboto', sans-serif;
+            /* font-family: 'Roboto', sans-serif; */
             font-weight: 500;
         }
         :root{
