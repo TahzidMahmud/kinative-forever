@@ -27,7 +27,7 @@
                     <div class="col" >
                         <div>
                             <div style="position: relative;">
-                                <img src="{{ uploaded_Asset($category->banner) }}" alt="">
+                                <img src="{{ uploaded_Asset($category->banner) }}" class="img-fit" alt="">
                             </div>
 
                             <div class="mx-2 py-3" style="margin-top:-1.5rem;background-color:#ffff;position:relative;">
@@ -47,27 +47,29 @@
     {{-- for mobile   --}}
         <div class="container my-4 ">
             <div class="aiz-carousel half-outside-arrow custmb" data-items="6" data-xl-items="5" data-lg-items="4"  data-md-items="3" data-sm-items="1" data-xs-items="1" data-arrows='true' data-autoplay="true">
-                @foreach (json_decode(get_setting('home_categories_2'), true) as $key => $value)
-                    @php
-                        $category=App\Category::findOrFAil($value)
-                    @endphp
+                @if (get_setting('home_categories_2') != null)
+               @foreach (json_decode(get_setting('home_categories_2'), true) as $key => $value)
+               @php
+                   $category=App\Category::findOrFAil($value)
+               @endphp
 
-                        <div class="carousel-box ">
-                            <div style="position: relative;">
-                                <img src="{{ uploaded_Asset($category->banner) }}" class="mr-1" alt="">
-                            </div>
+                   <div class="carousel-box ">
+                       <div style="position: relative;">
+                           <img src="{{ uploaded_Asset($category->banner) }}" class="mr-1" alt="">
+                       </div>
 
-                            <div class="mx-2 py-3" style="margin-top:-1.5rem;background-color:#ffff;position:relative;">
-                            <div  style="background-color:#ffff;">
-                                <h6 class="text-center py-2"><b>{{ $category->cat_min_desc }}</b></h6>
-                                <p class="opacity-70 text-center text-truncate-2 lh-3-4 h-35px px-4">{{ $category->cat_long_desc }}</p>
-                            <a href="{{ route('products.category',$category->slug)}}"> <p class="text-center fw-500 text-uppercase text-alter-2"><span class=" border-bottom border-primary py-1">view products</span></p></a>
-                            </div>
-                            </div>
+                       <div class="mx-2 py-3" style="margin-top:-1.5rem;background-color:#ffff;position:relative;">
+                       <div  style="background-color:#ffff;">
+                           <h6 class="text-center py-2"><b>{{ $category->cat_min_desc }}</b></h6>
+                           <p class="opacity-70 text-center text-truncate-2 lh-3-4 h-35px px-4">{{ $category->cat_long_desc }}</p>
+                       <a href="{{ route('products.category',$category->slug)}}"> <p class="text-center fw-500 text-uppercase text-alter-2"><span class=" border-bottom border-primary py-1">view products</span></p></a>
+                       </div>
+                       </div>
 
-                        </div>
+                   </div>
 
-                @endforeach
+           @endforeach
+               @endif
             </div>
         </div>
         </div>

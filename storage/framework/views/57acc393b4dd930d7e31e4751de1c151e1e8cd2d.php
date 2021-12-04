@@ -63,7 +63,18 @@
 
                 <div class="d-none d-lg-block">
                         <div class="col-xl d-none d-xl-block d-lg-block mx-auto">
-                            <ul class="list-inline mb-0 pl-0 mobile-hor-swipe text-center">
+                            <ul class="list-inline mb-0 pl-0 mobile-hor-swipe text-center d-flex align-items-center">
+                                <li class="list-inline-item mr-0 ml-0 text-white">
+                                    
+
+                                        
+                                    
+                                    <a href="javascript:void(0)" class="fs-13 px-3 py-2 d-inline-block fw-500 hov-opacity-100 text-reset  text-uppercase " data-toggle="class-toggle" data-target=".mobile-category-sidebar">
+                                        <button class="aiz-mobile-toggler mt-0 mp-0">
+                                            <span></span>
+                                        </button>
+                                     </a>
+                                </li>
                                 <li class="list-inline-item mr-0 ml-0 text-white">
                                     <a href="<?php echo e(route('home')); ?>" class="fs-13 px-3 py-2 d-inline-block fw-500 hov-opacity-100 text-reset  text-uppercase">
                                         home
@@ -74,11 +85,7 @@
                                        shop
                                     </a>
                                 </li>
-                                <li class="list-inline-item mr-0 ml-0 text-white">
-                                    <a href="javascript:void(0)" class="fs-13 px-3 py-2 d-inline-block fw-500 hov-opacity-100 text-reset  text-uppercase " data-toggle="class-toggle" data-target=".mobile-category-sidebar">
-                                        categories <i class="las la-angle-down" style=""></i>
-                                     </a>
-                                </li>
+
                                 <?php if( get_setting('topbar_menu_labels') !=  null ): ?>
                                     <?php $__currentLoopData = json_decode( get_setting('topbar_menu_labels', null, App::getLocale()), true); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $key => $value): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
 
