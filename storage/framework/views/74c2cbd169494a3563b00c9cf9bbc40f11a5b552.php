@@ -42,7 +42,7 @@
                     <div class="rounded">
                         <a href="<?php echo e(route('product', $product->slug)); ?>" class="d-block">
                         <img
-                        id="productimg-<?php echo e($product->id); ?>"
+                        id="bstselling-<?php echo e($product->id); ?>"
                             class="img-fluid lazyload img-cus"
                             src="<?php echo e(static_asset('assets/img/placeholder.jpg')); ?>"
 
@@ -63,7 +63,7 @@
                     <div class=" rounded">
                         <a href="<?php echo e(route('product', $product->slug)); ?>" class="d-block">
                             <img
-                            id="productimg-<?php echo e($product->id); ?>"
+                            id="bstselling-<?php echo e($product->id); ?>"
                                 class="img-fluid lazyload img-cus"
 
                                 src="<?php echo e(static_asset('assets/img/placeholder.jpg')); ?>"
@@ -103,7 +103,7 @@
                             <div class="aiz-carousel half-outside-arrow mobile-img-auto-height dot-small-white " data-dots="false" data-autoplay='true'  data-items="5" data-xl-items="5" data-lg-items="5"  data-md-items="5" data-sm-items="3" data-xs-items="3" data-arrows="true">
                                 <?php $__currentLoopData = json_decode($product->colors); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $key => $color): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
 
-                                    <div class="carousel-box d-flex align-items-center" onclick="changephoto3(<?php echo e($product->id); ?>,<?php echo e($key); ?>)">
+                                    <div class="carousel-box d-flex align-items-center" onclick="changephoto10(<?php echo e($product->id); ?>,<?php echo e($key); ?>)">
                                             <label class="aiz-megabox my-0 py-0" data-toggle="tooltip" data-title="<?php echo e(\App\Color::where('code', $color)->first()->name); ?>">
 
                                                 <input
@@ -145,7 +145,7 @@
 
 <script>
 
-    function changephoto3(id,tt){
+    function changephoto10(id,tt){
         var p_id=id;
         var variation_id=tt;
 
@@ -159,11 +159,11 @@
                    },
                    success: function(data){
 
-                    var ids=`#productimg-${p_id}`;
+                    var ids=`#bstselling-${p_id}`;
 
                        $(ids).attr("src",data.image);
                     }
                });
     }
 </script>
-<?php /**PATH C:\xampp\htdocs\kinative-top-face\resources\views/frontend/partials/product_box_1.blade.php ENDPATH**/ ?>
+<?php /**PATH C:\xampp\htdocs\kinative-top-face\resources\views/frontend/partials/product_box_4.blade.php ENDPATH**/ ?>

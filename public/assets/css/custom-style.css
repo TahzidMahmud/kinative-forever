@@ -281,6 +281,30 @@ h1,h2,h4,h5,h6,.h1,.h2,.h4,.h5,.georgia{
 .img-cus{
     height: 240px;
 }
+.newcar .aiz-carousel .slick-arrow {
+    position: absolute;
+    top: 50%;
+    /* z-index: 2; */
+    transform: translateY(-50%);
+    -webkit-transform: translateY(-50%);
+    width: 20px;
+    height: 20px;
+    background: rgba(255, 255, 255, 0);
+    border-radius: 50em;
+    border: 0;
+    box-shadow: 0 0 1px 1px rgba(20, 23, 28, 0),
+        0 3px 1px 0 rgba(20, 23, 28, 0);
+    font-size: 15px;
+    line-height: 10px;
+    padding: 0;
+    text-align: center;
+}
+.newcar .aiz-carousel .slick-arrow .mb-arrow-l{
+    margin-right: 5px!important;
+}
+.newcar .aiz-carousel .slick-arrow .mb-arrow-r{
+    margin-left: 5px!important;
+}
 @media (max-width: 991.98px){
     .tst{
         display: flex;
@@ -290,6 +314,9 @@ h1,h2,h4,h5,h6,.h1,.h2,.h4,.h5,.georgia{
         height: 4.5rem;
         overflow-y: scroll;
         width:auto;
+    }
+    .img-cus{
+        height:230px!important;
     }
 }
 @media (max-width: 767.98px) {
@@ -303,7 +330,6 @@ h1,h2,h4,h5,h6,.h1,.h2,.h4,.h5,.georgia{
         display: flex;
         flex-direction: column;
         justify-content: space-between;
-
         height: 4.5rem;
         overflow-y: scroll;
         width:auto;
