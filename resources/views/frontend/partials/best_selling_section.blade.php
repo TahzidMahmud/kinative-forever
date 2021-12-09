@@ -13,7 +13,7 @@
                 <div class="aiz-carousel gutters-10 half-outside-arrow" data-items="5" data-xl-items="5" data-lg-items="5"  data-md-items="5" data-sm-items="2" data-xs-items="2" data-arrows='false' data-infinite='true' data-autoplay="true">
                     @foreach (filter_products(\App\Product::where('published', 1)->orderBy('num_of_sale', 'desc'))->limit(12)->get() as $key => $product)
                         <div class="carousel-box">
-                            @include('frontend.partials.product_box_1',['product' => $product])
+                            @include('frontend.partials.product_box_4',['product' => $product])
                         </div>
                     @endforeach
                 </div>

@@ -42,7 +42,7 @@
                     <div class="rounded">
                         <a href="{{ route('product', $product->slug) }}" class="d-block">
                         <img
-                        id="productimg-{{ $product->id }}"
+                        id="productimg-{{$type}}-{{ $cat }}-{{ $product->id }}"
                             class="img-fluid lazyload img-cus"
                             src="{{ static_asset('assets/img/placeholder.jpg') }}"
 
@@ -63,7 +63,7 @@
                     <div class=" rounded">
                         <a href="{{ route('product', $product->slug) }}" class="d-block">
                             <img
-                            id="productimg-{{ $product->id }}"
+                            id="productimg-{{$type}}-{{ $cat }}-{{ $product->id }}"
                                 class="img-fluid lazyload img-cus"
 
                                 src="{{ static_asset('assets/img/placeholder.jpg') }}"
@@ -103,7 +103,7 @@
                             <div class="aiz-carousel half-outside-arrow mobile-img-auto-height dot-small-white " data-dots="false" data-autoplay='true'  data-items="5" data-xl-items="5" data-lg-items="5"  data-md-items="5" data-sm-items="3" data-xs-items="3" data-arrows="true">
                                 @foreach (json_decode($product->colors) as $key => $color)
 
-                                    <div class="carousel-box d-flex align-items-center" onclick="changephoto3({{ $product->id}},{{$key}})">
+                                    <div class="carousel-box d-flex align-items-center" onclick="changephoto({{ $product->id}},{{$key}})">
                                             <label class="aiz-megabox my-0 py-0" data-toggle="tooltip" data-title="{{ \App\Color::where('code', $color)->first()->name }}">
 
                                                 <input
@@ -145,7 +145,7 @@
 
 <script>
 
-    function changephoto3(id,tt){
+    function changephoto(id,tt){
         var p_id=id;
         var variation_id=tt;
 
@@ -159,7 +159,7 @@
                    },
                    success: function(data){
 
-                    var ids=`#productimg-${p_id}`;
+                    var ids=`#productimg-{{$type}}-{{ $cat }}-${p_id}`;
 
                        $(ids).attr("src",data.image);
                     }
