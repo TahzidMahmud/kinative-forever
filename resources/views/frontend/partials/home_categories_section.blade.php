@@ -45,7 +45,7 @@
                         <div class="row row-cols-xl-6 row-cols-lg-5 row-cols-md-4 row-cols-sm-3 row-cols-2 gutters-5">
                             @foreach (get_cached_products($category->id) as $key => $product)
                             <div class="col mb-2">
-                                @include('frontend.partials.product_box_2',['product'=>$product,'type'=>'handpick','cat'=>$value])
+                                @include('frontend.partials.product_box_2',['product'=>$product,'type'=>'handpick','cati'=>$category->slug])
                             </div>
                             @endforeach
                         </div>
