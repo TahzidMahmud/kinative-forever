@@ -284,19 +284,19 @@
     <div class="overlay dark c-pointer overlay-fixed" data-toggle="class-toggle" data-target=".mobile-category-sidebar" data-same=".mobile-category-trigger"></div>
     <div class="collapse-sidebar bg-white overflow-hidden">
         <div class="position-relative z-1 shadow-sm">
-            <div class="sticky-top z-1 bg-primary p-3">
+            <div class="sticky-top z-1 p-3 border-bottom">
                 <a class="d-block mr-3 ml-0" href="<?php echo e(route('home')); ?>">
                     <?php
-                        $footer_logo = get_setting('footer_logo');
+                        $header_logo = get_setting('header_logo');
                     ?>
-                    <?php if($footer_logo != null): ?>
-                        <img src="<?php echo e(uploaded_asset($footer_logo)); ?>" alt="<?php echo e(env('APP_NAME')); ?>" class="mw-100 h-30px" height="30">
+                    <?php if($header_logo != null): ?>
+                        <img src="<?php echo e(uploaded_asset($header_logo)); ?>" alt="<?php echo e(env('APP_NAME')); ?>" class="mw-100 h-30px" height="30">
                     <?php else: ?>
                         <img src="<?php echo e(static_asset('assets/img/logo.png')); ?>" alt="<?php echo e(env('APP_NAME')); ?>" class="mw-100 h-30px" height="30">
                     <?php endif; ?>
                 </a>
                 <div class="absolute-top-right mt-2">
-                    <button class="btn btn-sm p-2 text-white" data-toggle="class-toggle" data-target=".mobile-category-sidebar" data-same=".mobile-category-trigger">
+                    <button class="btn btn-sm p-2 " data-toggle="class-toggle" data-target=".mobile-category-sidebar" data-same=".mobile-category-trigger">
                         <i class="las la-times la-2x"></i>
                     </button>
                 </div>
@@ -308,18 +308,21 @@
                         <a href="<?php echo e(route('categories.all')); ?>" class="text-reset fs-11"><?php echo e(translate('See All')); ?></a>
                     </div>
                     <div class="p-3">
-                        <?php $__currentLoopData = \App\Category::where('level', 0)->orderBy('name', 'asc')->get(); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $key => $category): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                        <?php $__currentLoopData = \App\Category::where('level', 0)->orderBy('created_at', 'asc')->get(); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $key => $category): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                             <?php
                                 $childs = \App\Utility\CategoryUtility::get_immediate_children_ids($category)
                             ?>
                             <?php if(count($childs) > 0): ?>
-                                <a class="text-reset py-2 fw-600 fs-13 d-block opacity-70 d-flex mb-2 justify-content-between text-uppercase" href="javascript:void(0)" data-id="<?php echo e($category->id); ?>">
-                                    <?php echo e($category->getTranslation('name')); ?>
+                               <div class="d-flex align-items-center">
+                                    <a class="text-reset py-2 fw-600 fs-13 d-block opacity-70 d-flex mb-2 justify-content-between" href="<?php echo e(route('products.category', $category->slug)); ?>">
+                                        <?php echo e($category->getTranslation('name')); ?>
 
-                                    <i class="las la-angle-right"></i>
-                                </a>
+                                    </a>
+                                    <i class="las la-angle-right ml-auto"  data-id="<?php echo e($category->id); ?>"></i>
+                               </div>
+
                             <?php else: ?>
-                                <a class="text-reset py-2 fw-600 fs-13 d-block opacity-70 d-flex mb-2 justify-content-between text-uppercase" href="<?php echo e(route('products.category', $category->slug)); ?>">
+                                <a class="text-reset py-2 fw-600 fs-13 d-block opacity-70 d-flex mb-2 justify-content-between" href="<?php echo e(route('products.category', $category->slug)); ?>">
                                     <?php echo e($category->getTranslation('name')); ?>
 
                                     <i class="las la-angle-right"></i>
@@ -359,7 +362,6 @@
         </div>
     </div>
 </div>
-
 <div class="sidebar-cart">
     <div class="collapse-sidebar-wrap sidebar-all sidebar-right z-1035 cart-sidebar">
         <div class="overlay overlay-fixed dark c-pointer" data-toggle="class-toggle" data-target=".cart-sidebar" data-same=".cart-trigger"></div>

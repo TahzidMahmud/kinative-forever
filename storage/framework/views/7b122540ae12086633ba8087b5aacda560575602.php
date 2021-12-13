@@ -42,7 +42,7 @@
                     <div class="rounded">
                         <a href="<?php echo e(route('product', $product->slug)); ?>" class="d-block">
                         <img
-                        id="productimg-<?php echo e($type); ?>-<?php echo e($cat); ?>-<?php echo e($product->id); ?>"
+                        id="productimg-<?php echo e($type); ?>-<?php echo e($cati); ?>-<?php echo e($product->id); ?>"
                             class="img-fluid lazyload img-cus"
                             src="<?php echo e(static_asset('assets/img/placeholder.jpg')); ?>"
 
@@ -63,7 +63,7 @@
                     <div class=" rounded">
                         <a href="<?php echo e(route('product', $product->slug)); ?>" class="d-block">
                             <img
-                            id="productimg-<?php echo e($type); ?>-<?php echo e($cat); ?>-<?php echo e($product->id); ?>"
+                            id="productimg-<?php echo e($type); ?>-<?php echo e($cati); ?>-<?php echo e($product->id); ?>"
                                 class="img-fluid lazyload img-cus"
 
                                 src="<?php echo e(static_asset('assets/img/placeholder.jpg')); ?>"
@@ -103,7 +103,7 @@
                             <div class="aiz-carousel half-outside-arrow mobile-img-auto-height dot-small-white " data-dots="false" data-autoplay='true'  data-items="5" data-xl-items="5" data-lg-items="5"  data-md-items="5" data-sm-items="3" data-xs-items="3" data-arrows="true">
                                 <?php $__currentLoopData = json_decode($product->colors); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $key => $color): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
 
-                                    <div class="carousel-box d-flex align-items-center" onclick="changephoto(<?php echo e($product->id); ?>,<?php echo e($key); ?>)">
+                                    <div class="carousel-box d-flex align-items-center" id="<?php echo e($cati); ?>" onclick="changephoto1(<?php echo e($product->id); ?>,<?php echo e($key); ?>,this.id)">
                                             <label class="aiz-megabox my-0 py-0" data-toggle="tooltip" data-title="<?php echo e(\App\Color::where('code', $color)->first()->name); ?>">
 
                                                 <input
@@ -145,7 +145,7 @@
 
 <script>
 
-    function changephoto(id,tt){
+    function changephoto1(id,tt,dd){
         var p_id=id;
         var variation_id=tt;
 
@@ -159,8 +159,8 @@
                    },
                    success: function(data){
 
-                    var ids=`#productimg-<?php echo e($type); ?>-<?php echo e($cat); ?>-${p_id}`;
-
+                    var ids=`#productimg-<?php echo e($type); ?>-${dd}-${p_id}`;
+                    console.log('from1',ids);
                        $(ids).attr("src",data.image);
                     }
                });

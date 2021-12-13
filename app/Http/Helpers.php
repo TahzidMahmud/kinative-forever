@@ -320,12 +320,12 @@ if (! function_exists('get_cached_products')) {
             return Cache::remember('products-category-'.$category_id, 86400, function () use ($category_id, $products) {
                 $category_ids = CategoryUtility::children_ids($category_id);
                 $category_ids[] = $category_id;
-                return $products->whereIn('category_id', $category_ids)->latest()->take(10)->get();
+                return $products->whereIn('category_id', $category_ids)->inRandomOrder()->take(10)->get();
             });
         }
         else {
             return Cache::remember('products', 86400, function () use ($products) {
-                return $products->latest()->get();
+                return $products->inRandomOrder()->get();
             });
         }
     }

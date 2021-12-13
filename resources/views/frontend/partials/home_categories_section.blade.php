@@ -31,7 +31,7 @@
         <div class="tab-content  ttb" >
             <div class="tab-pane fade show active" id="all-category" >
                 <div class="row row-cols-xxl-6 row-cols-lg-5 row-cols-md-4 row-cols-sm-3 row-cols-2 gutters-5">
-                    @foreach (\App\Product::where('published', '1')->where('featured', '1')->latest()->get() as $key => $product)
+                    @foreach (\App\Product::where('published', '1')->where('featured', '1')->inRandomOrder()->get() as $key => $product)
                     <div class="col mb-2">
                         @include('frontend.partials.product_box_3',['product'=>$product])
                     </div>

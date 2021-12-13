@@ -178,7 +178,7 @@
                     <a href="javascript:void(0)" class="ml-auto mr-0  text-alter-2 text-uppercase"><span class="border-bottom border-primary py-1">{{ translate('View aLL') }}</span></a>
                 </div>
                 <div class="aiz-carousel gutters-10 half-outside-arrow" data-items="5" data-xl-items="5" data-lg-items="5"  data-md-items="5" data-sm-items="2" data-xs-items="2" data-arrows='false' data-infinite='true' data-autoplay="true">
-                    @foreach (filter_products(\App\Product::where('published', 1)->where('todays_deal','1')->orderBy('num_of_sale', 'desc'))->limit(12)->get() as $key => $product)
+                    @foreach (filter_products(\App\Product::where('published', 1)->where('todays_deal','1')->orderBy('num_of_sale', 'desc'))->get() as $key => $product)
                         <div class="carousel-box">
                             @include('frontend.partials.product_box_1',['product' => $product])
                         </div>
