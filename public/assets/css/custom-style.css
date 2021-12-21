@@ -299,6 +299,10 @@ h1,h2,h4,h5,h6,.h1,.h2,.h4,.h5,.georgia{
     padding: 0;
     text-align: center;
 }
+.sticky {
+    position: sticky;
+    top: 0;
+}
 .newcar .aiz-carousel .slick-arrow .mb-arrow-l{
     margin-right: 5px!important;
 }
@@ -453,4 +457,20 @@ h1,h2,h4,h5,h6,.h1,.h2,.h4,.h5,.georgia{
     width: 3rem;
     border-radius: 50%;
 }
-
+.mainbnr .aiz-carousel .slick-arrow {
+    position: absolute;
+    top: 50%;
+    z-index: 2;
+    transform: translateY(-50%);
+    -webkit-transform: translateY(-50%);
+    width: 40px;
+    height: 40px;
+    background: rgba(255, 255, 255, 0.26);
+    border-radius: 50em;
+    border: 0;
+    box-shadow: 0 0 1px 1px rgb(20 23 28 / 10%), 0 3px 1px 0 rgb(20 23 28 / 10%);
+    font-size: 15px;
+    line-height: 40px;
+    padding: 0;
+    text-align: center;
+}

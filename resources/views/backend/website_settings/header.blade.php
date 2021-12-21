@@ -33,9 +33,34 @@
 						</div><br>
                         <label class="col-md-3 col-from-label">{{ translate('Coupon /Offer text') }}</label>
                         <div class="col-md-8">
+
 							<div class="form-group">
 								<input type="hidden" name="types[]" value="topbar_left">
 								<input type="text" class="form-control" placeholder="" name="topbar_left" value="{{ get_setting('topbar_left') }}">
+							</div>
+						</div>
+                        <label class="col-md-3 col-from-label">{{ translate('Contact Link') }}</label>
+                        <div class="col-md-8">
+
+							<div class="form-group">
+								<input type="hidden" name="types[]" value="topbar_contact">
+								<input type="text" class="form-control" placeholder="" name="topbar_contact" value="{{ get_setting('topbar_contact') }}">
+							</div>
+						</div>
+                        <label class="col-md-3 col-from-label">{{ translate('Store Location Link') }}</label>
+                        <div class="col-md-8">
+
+							<div class="form-group">
+								<input type="hidden" name="types[]" value="store_location">
+								<input type="text" class="form-control" placeholder="" name="store_location" value="{{ get_setting('store_location') }}">
+							</div>
+						</div>
+                        <label class="col-md-3 col-from-label">{{ translate('About Us Link') }}</label>
+                        <div class="col-md-8">
+
+							<div class="form-group">
+								<input type="hidden" name="types[]" value="topbar_about_us">
+								<input type="text" class="form-control" placeholder="" name="topbar_about_us" value="{{ get_setting('topbar_about_us') }}">
 							</div>
 						</div>
                         <br>

@@ -24,11 +24,11 @@
             </div>
             <div class="col-6 col-lg-3 d-flex justify-content-end">
                 <ul class="list-inline mb-0 pl-0 mobile-hor-swipe text-center d-flex justify-content-between align-items-center">
-                    <li  class="list-inline-item   d-none d-lg-block "> <a href="#faq" class="text-white mx-1">About Us</a> </li>
+                    <li  class="list-inline-item   d-none d-lg-block "> <a href="{{ get_setting('topbar_about_us') }}" class="text-white mx-1">About Us</a> </li>
 
-                    <li  class="list-inline-item "><a href=" {{ get_setting('policy_link') }}" class="text-white">Store Locations</a></li>
+                    <li  class="list-inline-item "><a href="{{get_setting('store_location') }}" class="text-white">Store Locations</a></li>
 
-                    <li  class="list-inline-item  d-none d-lg-block mr-0 "><a href=" {{ get_setting('topbar_left') }}" class="text-white">Contact </a></li>
+                    <li  class="list-inline-item  d-none d-lg-block mr-0 "><a href="{{ get_setting('topbar_contact') }}" class="text-white">Contact </a></li>
 
                 </ul>
             </div>
