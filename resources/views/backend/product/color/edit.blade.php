@@ -23,7 +23,7 @@
                 @csrf
                 <div class="form-group row">
                     <label class="col-sm-3 col-from-label" for="name">
-                        {{ translate('Name')}} 
+                        {{ translate('Name')}}
                     </label>
                     <div class="col-sm-9">
                         <input type="text" placeholder="{{ translate('Name')}}" id="name" name="name" class="form-control" required value="{{ $color->name }}">
@@ -31,12 +31,32 @@
                 </div>
                 <div class="form-group row">
                     <label class="col-sm-3 col-from-label" for="code">
-                        {{ translate('Color Code')}} 
+                        {{ translate('Color Code')}}
                     </label>
                     <div class="col-sm-9">
                         <input type="text" placeholder="{{ translate('Color Code')}}" id="code" name="code" class="form-control" required value="{{ $color->code }}">
                     </div>
                 </div>
+                <div class="form-group row">
+                    <label class="col-sm-3 col-from-label" for="code">
+                        <label for="name">{{ translate('Color Image') }}</label>
+                    </label>
+                    <div class="col-sm-9">
+                        <div class="input-group" data-toggle="aizuploader" data-type="image">
+                            <div class="input-group-prepend">
+                                <div class="input-group-text bg-soft-secondary font-weight-medium">{{ translate('Browse')}}</div>
+                            </div>
+                            <div class="form-control file-amount">{{ translate('Choose File') }}</div>
+
+                            <input type="hidden" name="image" value="{{ $color->image }}" class="selected-files">
+                        </div>
+                        <div class="file-preview box sm">
+                        </div>
+                    </div>
+
+
+                </div>
+
                 <div class="form-group mb-0 text-right">
                     <button type="submit" class="btn btn-primary">{{translate('Save')}}</button>
                 </div>

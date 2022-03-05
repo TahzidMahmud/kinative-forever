@@ -23,7 +23,7 @@
                         </div>
                     </div>
                 </form>
-                
+
                 <div class="card-body">
                     <table class="table aiz-table mb-0">
                         <thead>
@@ -75,7 +75,7 @@
                             </ul>
                         </div>
                     @endif
-                    <form action="{{ route('colors.store') }}" method="POST">
+                    <form action="{{ route('colors.store') }}" method="POST" enctype="multipart/form-data">
                         @csrf
                         <div class="form-group mb-3">
                             <label for="name">{{ translate('Name') }}</label>
@@ -87,6 +87,17 @@
                             <input type="text" placeholder="{{ translate('Color Code') }}" id="code" name="code"
                                 class="form-control" value="{{ old('code') }}" required>
                         </div>
+                        <div class="form-group mb-3">
+                            <label for="name">{{ translate('Color Image') }}</label>
+                            <div class="input-group" data-toggle="aizuploader" data-type="image">
+                                <div class="input-group-prepend">
+                                    <div class="input-group-text bg-soft-secondary font-weight-medium">{{ translate('Browse')}}</div>
+                                </div>
+                                <div class="form-control file-amount">{{ translate('Choose File') }}</div>
+                                <input type="hidden" name="image" class="selected-files">
+                            </div>
+                            <div class="file-preview box sm">
+                            </div>
                         <div class="form-group mb-3 text-right">
                             <button type="submit" class="btn btn-primary">{{ translate('Save') }}</button>
                         </div>

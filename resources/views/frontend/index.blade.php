@@ -163,7 +163,7 @@
                 </div>
             </div>
         </div>
-    </div>
+    </div>z
     @endif
 
     {{-- on sale items  --}}

@@ -91,7 +91,19 @@ h1,h2,h4,h5,h6,.h1,.h2,.h4,.h5,.georgia{
 .full-outside-arrow .slick-prev {
     left: -28px;
 }
+.outside-arrow .slick-next{
+    right: -30px;
+  }
+  .outside-arrow .slick-prev{
+    left: -45px;
+  }
 @media(max-width: 667px){
+    .outside-arrow .slick-next{
+        right: -30px;
+      }
+      .outside-arrow .slick-prev{
+        left: -30px;
+      }
     .full-outside-arrow .slick-next {
         right: 0px;
     }

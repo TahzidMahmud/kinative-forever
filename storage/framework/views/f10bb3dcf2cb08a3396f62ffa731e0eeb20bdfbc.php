@@ -320,26 +320,35 @@
                                 <?php endif; ?>
 
                                 <?php if(count(json_decode($detailedProduct->colors)) > 0): ?>
-                                    <div class="row no-gutters">
+                                    <div class="row no-gutters d-flex align-items-center">
                                         <div class="col-sm-2">
                                             <div class="opacity-50 my-2"><?php echo e(translate('Color')); ?>:</div>
                                         </div>
                                         <div class="col-sm-10">
-                                            <div class="aiz-radio-inline">
-                                                <?php $__currentLoopData = json_decode($detailedProduct->colors); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $key => $color): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                                                <label class="aiz-megabox pl-0 mr-2" data-toggle="tooltip" data-title="<?php echo e(\App\Color::where('code', $color)->first()->name); ?>">
-                                                    <input
-                                                        type="radio"
-                                                        name="color"
-                                                        value="<?php echo e(\App\Color::where('code', $color)->first()->name); ?>"
-                                                        <?php if($key == 0): ?> checked <?php endif; ?>
-                                                    >
-                                                    <span class="aiz-megabox-elem rounded d-flex align-items-center justify-content-center p-1 mb-2">
-                                                        <span class="size-30px d-inline-block rounded" style="background: <?php echo e($color); ?>;"></span>
-                                                    </span>
-                                                </label>
-                                                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
-                                            </div>
+                                                    <div class="aiz-radio-inline">
+                                                        <div class="aiz-carousel  outside-arrow" data-items="6" data-xl-items="6" data-lg-items="6"  data-md-items="6" data-sm-items="3" data-xs-items="3" data-vertical='false' data-arrows="true" >
+
+                                                            <?php $__currentLoopData = json_decode($detailedProduct->colors); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $key => $color): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                                            <?php
+                                                                $clr=\App\Color::where('code', $color)->first();
+                                                            ?>
+                                                            <div class="carousel-box" >
+                                                                <label class="aiz-megabox " data-toggle="tooltip" data-title="<?php echo e(\App\Color::where('code', $color)->first()->name); ?>">
+                                                                    <input
+                                                                        type="radio"
+                                                                        name="color"
+                                                                        value="<?php echo e($clr->name); ?>"
+                                                                        <?php if($key == 0): ?> checked <?php endif; ?>
+                                                                    >
+                                                                    <span class="aiz-megabox-elem rounded d-flex align-items-center justify-content-center p-1 mb-2">
+                                                                        <span class="size-60px d-inline-block rounded" style="background-image:url('<?php echo e(uploaded_asset($clr->image)); ?>'); background-repeat: no-repeat;
+                                                                            background-size: cover;"></span>
+                                                                    </span>
+                                                                </label>
+                                                            </div>
+                                                            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                                                        </div>
+                                                    </div>
                                         </div>
                                     </div>
 
@@ -998,6 +1007,7 @@
                 $('#login_modal').modal('show');
             <?php endif; ?>
         }
+        AIZ.plugins.slickCarousel();
 
     </script>
 <?php $__env->stopSection(); ?>

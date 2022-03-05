@@ -135,7 +135,7 @@
         
         <?php if(\App\Addon::where('unique_identifier', 'club_point')->first() != null && \App\Addon::where('unique_identifier', 'club_point')->first()->activated): ?>
             <div class="rounded px-2 mt-2 bg-soft-primary border-soft-primary border">
-                <?php echo e(translate('Club Point')); ?>:
+                <?php echo e(translate('Reward Point')); ?>:
                 <span class="fw-500 float-right "><?php echo e($product->earn_point); ?></span>
             </div>
         <?php endif; ?>

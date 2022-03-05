@@ -313,26 +313,35 @@
                                 @endif
 
                                 @if (count(json_decode($detailedProduct->colors)) > 0)
-                                    <div class="row no-gutters">
+                                    <div class="row no-gutters d-flex align-items-center">
                                         <div class="col-sm-2">
                                             <div class="opacity-50 my-2">{{ translate('Color')}}:</div>
                                         </div>
                                         <div class="col-sm-10">
-                                            <div class="aiz-radio-inline">
-                                                @foreach (json_decode($detailedProduct->colors) as $key => $color)
-                                                <label class="aiz-megabox pl-0 mr-2" data-toggle="tooltip" data-title="{{ \App\Color::where('code', $color)->first()->name }}">
-                                                    <input
-                                                        type="radio"
-                                                        name="color"
-                                                        value="{{ \App\Color::where('code', $color)->first()->name }}"
-                                                        @if($key == 0) checked @endif
-                                                    >
-                                                    <span class="aiz-megabox-elem rounded d-flex align-items-center justify-content-center p-1 mb-2">
-                                                        <span class="size-30px d-inline-block rounded" style="background: {{ $color }};"></span>
-                                                    </span>
-                                                </label>
-                                                @endforeach
-                                            </div>
+                                                    <div class="aiz-radio-inline">
+                                                        <div class="aiz-carousel  outside-arrow" data-items="6" data-xl-items="6" data-lg-items="6"  data-md-items="6" data-sm-items="3" data-xs-items="3" data-vertical='false' data-arrows="true" >
+
+                                                            @foreach (json_decode($detailedProduct->colors) as $key => $color)
+                                                            @php
+                                                                $clr=\App\Color::where('code', $color)->first();
+                                                            @endphp
+                                                            <div class="carousel-box" >
+                                                                <label class="aiz-megabox " data-toggle="tooltip" data-title="{{ \App\Color::where('code', $color)->first()->name }}">
+                                                                    <input
+                                                                        type="radio"
+                                                                        name="color"
+                                                                        value="{{$clr->name }}"
+                                                                        @if($key == 0) checked @endif
+                                                                    >
+                                                                    <span class="aiz-megabox-elem rounded d-flex align-items-center justify-content-center p-1 mb-2">
+                                                                        <span class="size-60px d-inline-block rounded" style="background-image:url('{{ uploaded_asset($clr->image) }}'); background-repeat: no-repeat;
+                                                                            background-size: cover;"></span>
+                                                                    </span>
+                                                                </label>
+                                                            </div>
+                                                            @endforeach
+                                                        </div>
+                                                    </div>
                                         </div>
                                     </div>
 
@@ -977,6 +986,7 @@
                 $('#login_modal').modal('show');
             @endif
         }
+        AIZ.plugins.slickCarousel();
 
     </script>
 @endsection
