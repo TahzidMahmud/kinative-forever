@@ -325,6 +325,7 @@
                                                             @php
                                                                 $clr=\App\Color::where('code', $color)->first();
                                                             @endphp
+                                                           @if($clr)
                                                             <div class="carousel-box" >
                                                                 <label class="aiz-megabox " data-toggle="tooltip" data-title="{{ \App\Color::where('code', $color)->first()->name }}">
                                                                     <input
@@ -339,6 +340,8 @@
                                                                     </span>
                                                                 </label>
                                                             </div>
+
+                                                           @endif
                                                             @endforeach
                                                         </div>
                                                     </div>

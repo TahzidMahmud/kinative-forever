@@ -140,7 +140,11 @@
                                     <div class="p-3">
                                         <div class="aiz-radio-inline">
                                             @foreach ($all_colors as $key => $color)
-                                            <label class="aiz-megabox pl-0 mr-2" data-toggle="tooltip" data-title="{{ \App\Color::where('code', $color)->first()->name }}">
+                                            @php
+                                                $col=\App\Color::where('code', $color)->first();
+                                            @endphp
+                                            @if($col)
+                                            <label class="aiz-megabox pl-0 mr-2" data-toggle="tooltip" data-title="{{ $col->name }}">
                                                 <input
                                                     type="radio"
                                                     name="color"
@@ -149,9 +153,11 @@
                                                     @if(isset($selected_color) && $selected_color == $color) checked @endif
                                                 >
                                                 <span class="aiz-megabox-elem rounded d-flex align-items-center justify-content-center p-1 mb-2">
-                                                    <span class="size-30px d-inline-block rounded" style="background: {{ $color }};"></span>
+                                                    <span class="size-30px d-inline-block rounded" style="background-image:url('{{ uploaded_asset($col->image) }}'); background-repeat: no-repeat;
+                                                        background-size: cover; border-radius: 25px;"></span>
                                                 </span>
                                             </label>
+                                            @endif
                                             @endforeach
                                         </div>
                                     </div>

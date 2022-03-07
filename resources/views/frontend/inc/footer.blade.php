@@ -433,7 +433,7 @@
                         @endforeach
                     </div>
                 </div>
-                <div class="sub-menu-wrap">
+                {{-- <div class="sub-menu-wrap"> --}}
                     @foreach (\App\Category::where('level', 0)->orderBy('name', 'asc')->get() as $key => $category)
                         <div class="sub-menu c-scrollbar-light" id="cat-menu-{{ $category->id }}">
                             <a href="javascript:void(0)" class="back-to-menu border-bottom d-block fs-16 fw-600 p-3 text-reset">
@@ -459,7 +459,7 @@
                             @endforeach
                         </div>
                     @endforeach
-                </div>
+                {{-- </div> --}}
             </div>
         </div>
     </div>

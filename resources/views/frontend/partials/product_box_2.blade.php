@@ -30,7 +30,7 @@
 
     <div class="position-relative">
         @if($discount_percent > 0)
-        <span class="badge badge-inline badge-danger absolute-top-right z-1 fs-12 text-uppercase px-2 py-1 d-inline-block h-auto" style="background:#f00">{{ $discount_percent }}% OFF</span>
+        <span class="badge badge-inline badge-danger absolute-top-left z-1 fs-12 text-uppercase px-2 py-1 d-inline-block h-auto" style="background:#f00">{{ $discount_percent }}% OFF</span>
         @endif
         @if($product->todays_deal == 1)
         <div class=" absolute-top-right fs-12 text-uppercase mx-2 my-2 px-3 py-3 d-inline-block h-auto d-flex justify-content-center align-items-center text-white" style="background:#f00;height:3rem;width:3rem;border-radius:50%;"><span class="fw-700 fs-11">Sale</span></div>
@@ -102,20 +102,25 @@
                         <div class="aiz-radio-inline">
                             <div class="aiz-carousel half-outside-arrow mobile-img-auto-height dot-small-white " data-dots="false" data-autoplay='true'  data-items="5" data-xl-items="5" data-lg-items="5"  data-md-items="5" data-sm-items="3" data-xs-items="3" data-arrows="true">
                                 @foreach (json_decode($product->colors) as $key => $color)
-
+@php
+                                                                $clr=\App\Color::where('code', $color)->first();
+                                                            @endphp
+                                   @if($clr)
                                     <div class="carousel-box d-flex align-items-center" id="{{ $cati}}" onclick="changephoto1({{ $product->id}},{{$key}},this.id)">
-                                            <label class="aiz-megabox my-0 py-0" data-toggle="tooltip" data-title="{{ \App\Color::where('code', $color)->first()->name }}">
+                                            <label class="aiz-megabox my-0 py-0" data-toggle="tooltip" data-title="{{ $clr->name }}">
 
                                                 <input
                                                 type="radio"
                                                 name="color"
-                                                value="{{ \App\Color::where('code', $color)->first()->name }}"
+                                                value="{{$clr->name}}"
 
                                             >
-                                            <span class="size-25px d-inline-block  aiz-megabox-elem px-1" style="background: {{ $color }};border-radius: 25px;"></span>
+                                            <span class="size-25px d-inline-block  aiz-megabox-elem px-1" style="background-image:url('{{ uploaded_asset($clr->image) }}'); background-repeat: no-repeat;
+                                                background-size: cover;border-radius:50%!important"></span>
                                             </label>
 
                                     </div>
+                                   @endif
                                 @endforeach
 
                             </div>
@@ -135,7 +140,7 @@
         {{-- <a href="{{ route('product', $product->slug) }}" class="text-alter text-uppercase fs-10 fw-500">{{ translate('View Product') }}</a> --}}
         @if (\App\Addon::where('unique_identifier', 'club_point')->first() != null && \App\Addon::where('unique_identifier', 'club_point')->first()->activated)
             <div class="rounded px-2 mt-2 bg-soft-primary border-soft-primary border">
-                {{ translate('Reward Point') }}:
+               {{ translate('Reward Point') }}:
                 <span class="fw-500 float-right ">{{ $product->earn_point }}</span>
             </div>
         @endif
